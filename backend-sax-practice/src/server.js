@@ -32,9 +32,24 @@ app.get('/api/getExercises/', async (req,res) => {
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
-  }
-  
+  } 
 });
+
+app.get('/api/getPrograms/', async (req,res) => { 
+  try {
+    const programs = await db.collection("programs").find().toArray();
+    if (programs){
+      console.log(programs)
+      res.json(programs);
+    }else {
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  } 
+});
+
 
 app.put('/api/updateExerciseList/:studentName/', async (req, res) => {
   const { studentName } = req.params;
