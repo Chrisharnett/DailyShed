@@ -46,6 +46,21 @@ app.get("/api/getExercises/", async (req, res) => {
   }
 });
 
+app.get("/api/getStudents", async (req, res) => {
+  try {
+    const exercises = await db.collection("students").find().toArray();
+    if (exercises) {
+      console.log(exercises);
+      res.json(exercises);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
 app.get("/api/getPrograms/", async (req, res) => {
   try {
     const programs = await db.collection("programs").find().toArray();
