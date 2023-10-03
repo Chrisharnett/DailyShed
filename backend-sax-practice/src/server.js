@@ -1,13 +1,10 @@
 import express from "express";
 import { db, connectToDb } from "./db.js";
 import "dotenv/config";
-// import cors from "cors";
 
 const app = express();
 const port = 8000;
 app.use(express.json());
-
-// app.use(cors({ origin: "http://localhost:3000" }));
 
 app.post("/api/addNewProgram/", async (req, res) => {
   const { newProgram } = req.body;
