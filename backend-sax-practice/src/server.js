@@ -1,13 +1,13 @@
 import express from "express";
 import { db, connectToDb } from "./db.js";
 import "dotenv/config";
-import cors from "cors";
+// import cors from "cors";
 
 const app = express();
 const port = 8000;
 app.use(express.json());
 
-app.use(cors({ origin: "http://localhost:3000" }));
+// app.use(cors({ origin: "http://localhost:3000" }));
 
 app.post("/api/addNewProgram/", async (req, res) => {
   const { newProgram } = req.body;
@@ -36,7 +36,6 @@ app.get("/api/getExercises/", async (req, res) => {
   try {
     const exercises = await db.collection("exercises").find().toArray();
     if (exercises) {
-      console.log(exercises);
       res.json(exercises);
     } else {
       res.sendStatus(404);
@@ -49,10 +48,10 @@ app.get("/api/getExercises/", async (req, res) => {
 
 app.get("/api/getStudents", async (req, res) => {
   try {
-    const exercises = await db.collection("students").find().toArray();
-    if (exercises) {
-      console.log(exercises);
-      res.json(exercises);
+    const students = await db.collection("students").find().toArray();
+    if (students) {
+      console.log(students);
+      res.json(students);
     } else {
       res.sendStatus(404);
     }
