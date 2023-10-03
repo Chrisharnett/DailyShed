@@ -143,9 +143,8 @@ app.get("/api/students/:studentName", async (req, res) => {
 app.put("/api/addStudent/", async (req, res) => {
   try {
     const { newStudent } = req.body;
-
     await db.collection("students").insertOne(newStudent);
-    // res.send(`${newStudent.studentName} added.`);
+    res.send(`${newStudent.studentName} added.`);
   } catch (error) {
     console.error("Error adding program", error);
     res.status(500).json({ error: "Internal server error" });
