@@ -77,14 +77,12 @@ app.put("/api/updateExerciseList/:studentName/", async (req, res) => {
   const { studentName } = req.params;
   const { currentExercise } = req.body;
 
-  // Find the exercise by exerciseName
   let existingExercise = await db.collection("students").findOne({
     studentName,
     "exerciseList.exerciseId": currentExercise.exerciseId,
   });
 
   if (existingExercise) {
-    // Update the existing exercise
     let response = await db.collection("students").updateOne(
       {
         studentName,
