@@ -6,6 +6,10 @@ const app = express();
 const port = 8000;
 app.use(express.json());
 
+// Build related code
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(express.static(path.join(__dirname, `../build`)))
+
 app.post("/api/addNewProgram/", async (req, res) => {
   const { newProgram } = req.body;
   try {
@@ -74,39 +78,48 @@ app.get("/api/getPrograms/", async (req, res) => {
 });
 
 app.put("/api/updateExerciseList/:studentName/", async (req, res) => {
-  const { studentName } = req.params;
-  const { currentExercise } = req.body;
+  try {
+    const { studentName } = req.params;
+    const { currentExercise } = req.body;
 
-  let existingExercise = await db.collection("students").findOne({
-    studentName,
-    "exerciseList.exerciseId": currentExercise.exerciseId,
-  });
+    let existingExercise = await db.collection("students").findOne({
+      studentName,
+      "exerciseList.exerciseId": currentExercise.exerciseId,
+    });
 
-  if (existingExercise) {
-    let response = await db.collection("students").updateOne(
-      {
-        studentName,
-        "exerciseList.exerciseId": currentExercise.exerciseId,
-      },
-      {
-        $inc: { "exerciseList.$.playCount": 1, "exerciseList.$.assessment": 1 },
-      }
-    );
-  } else {
-    // Exercise doesn't exist, insert a new exercise
-    let assessmentUpdate = await db.collection("students").updateOne(
-      { studentName },
-      {
-        $push: {
-          exerciseList: {
-            exerciseId: currentExercise.exerciseId,
-            playCount: 1,
-            assessment: 2,
+    if (existingExercise) {
+      let response = await db.collection("students").updateOne(
+        {
+          studentName,
+          "exerciseList.exerciseId": currentExercise.exerciseId,
+        },
+        {
+          $inc: {
+            "exerciseList.$.playCount": 1,
+            "exerciseList.$.assessment": 1,
+          },
+        }
+      );
+    } else {
+      // Exercise doesn't exist, insert a new exercise
+      let assessmentUpdate = await db.collection("students").updateOne(
+        { studentName },
+        {
+          $push: {
+            exerciseList: {
+              exerciseId: currentExercise.exerciseId,
+              playCount: 1,
+              assessment: 2,
+            },
           },
         },
-      },
-      { upsert: true }
-    );
+        { upsert: true }
+      );
+    }
+    res.status(200).send("Student exercise list updated");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -145,6 +158,22 @@ app.put("/api/addStudent/", async (req, res) => {
     const { newStudent } = req.body;
     await db.collection("students").insertOne(newStudent);
     res.send(`${newStudent.studentName} added.`);
+  } catch (error) {
+    console.error("Error adding program", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//
+app.put("api/replaceExercises", async (req, res) => {
+  try {
+    const { apiKey } = req.body.apiKey;
+    const { newExercises } = req.body.newExercises;
+    if (apiKey === process.env.API_KEY) {
+      await db.collection("exercises").deleteMany({});
+      await db.collection("exercises").insertMany(newExercises);
+      res.send(`${newStudent.studentName} added.`);
+    }
   } catch (error) {
     console.error("Error adding program", error);
     res.status(500).json({ error: "Internal server error" });
