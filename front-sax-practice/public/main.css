@@ -1,0 +1,4 @@
+/* FROM CHECKLIST TUTORIAL */
+.checked-item{
+    text-decoration: line-through;
+}
