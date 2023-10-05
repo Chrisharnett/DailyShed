@@ -1,14 +1,21 @@
 import express from "express";
 import { db, connectToDb } from "./db.js";
 import "dotenv/config";
+import path from "path";
+
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = 8000;
 app.use(express.json());
 
-// Build related code
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(express.static(path.join(__dirname, `../build`)))
+app.use(express.static(path.join(__dirname, "../build")));
+
+app.get(/^(?!\/api).+/, (req, res) => {
+  res.sendFile(path.join(__dirname, "../build/index.html"));
+});
 
 app.post("/api/addNewProgram/", async (req, res) => {
   const { newProgram } = req.body;
@@ -51,7 +58,6 @@ app.get("/api/getStudents", async (req, res) => {
   try {
     const students = await db.collection("students").find().toArray();
     if (students) {
-      console.log(students);
       res.json(students);
     } else {
       res.sendStatus(404);
@@ -66,7 +72,6 @@ app.get("/api/getPrograms/", async (req, res) => {
   try {
     const programs = await db.collection("programs").find().toArray();
     if (programs) {
-      console.log(programs);
       res.json(programs);
     } else {
       res.sendStatus(404);
@@ -78,48 +83,45 @@ app.get("/api/getPrograms/", async (req, res) => {
 });
 
 app.put("/api/updateExerciseList/:studentName/", async (req, res) => {
-  try {
-    const { studentName } = req.params;
-    const { currentExercise } = req.body;
+  const { studentName } = req.params;
+  const { currentExercise } = req.body;
 
-    let existingExercise = await db.collection("students").findOne({
-      studentName,
-      "exerciseList.exerciseId": currentExercise.exerciseId,
-    });
+  let existingExercise = await db.collection("students").findOne({
+    studentName,
+    "exerciseList.exerciseId": currentExercise.exerciseId,
+  });
 
-    if (existingExercise) {
-      let response = await db.collection("students").updateOne(
-        {
-          studentName,
-          "exerciseList.exerciseId": currentExercise.exerciseId,
-        },
-        {
-          $inc: {
-            "exerciseList.$.playCount": 1,
-            "exerciseList.$.assessment": 1,
+  if (existingExercise) {
+    console.log("exercise exists");
+    let response = await db.collection("students").updateOne(
+      {
+        studentName,
+        "exerciseList.exerciseId": currentExercise.exerciseId,
+      },
+      {
+        $inc: { "exerciseList.$.playCount": 1, "exerciseList.$.assessment": 1 },
+      }
+    );
+    console.log(
+      `exerciseList updated with ${currentExercise.exerciseName} for ${studentName}`
+    );
+  } else {
+    // Exercise doesn't exist, insert a new exercise
+    console.log("exercise is new");
+    let assessmentUpdate = await db.collection("students").updateOne(
+      { studentName },
+      {
+        $push: {
+          exerciseList: {
+            exerciseId: currentExercise.exerciseId,
+            playCount: 1,
+            assessment: 2,
           },
-        }
-      );
-    } else {
-      // Exercise doesn't exist, insert a new exercise
-      let assessmentUpdate = await db.collection("students").updateOne(
-        { studentName },
-        {
-          $push: {
-            exerciseList: {
-              exerciseId: currentExercise.exerciseId,
-              playCount: 1,
-              assessment: 2,
-            },
-          },
         },
-        { upsert: true }
-      );
-    }
-    res.status(200).send("Student exercise list updated");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
+      },
+      { upsert: true }
+    );
+    console.log(`new exercise added`);
   }
 });
 
@@ -127,7 +129,7 @@ app.put("/api/studentUpdate/:studentName", async (req, res) => {
   try {
     const { studentName } = req.params;
     const { student } = req.body;
-    await db.collection("students").updateOne(
+    let response = await db.collection("students").updateOne(
       { studentName },
       {
         $set: {
@@ -137,6 +139,7 @@ app.put("/api/studentUpdate/:studentName", async (req, res) => {
       }
     );
     res.json({ message: "Student Updated " });
+    console.log("Student Update");
   } catch (error) {
     console.error("An error occured", error);
     res.status(500).send("Internal server error");
@@ -156,27 +159,23 @@ app.get("/api/students/:studentName", async (req, res) => {
 app.put("/api/addStudent/", async (req, res) => {
   try {
     const { newStudent } = req.body;
+
     await db.collection("students").insertOne(newStudent);
-    res.send(`${newStudent.studentName} added.`);
   } catch (error) {
     console.error("Error adding program", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-//
-app.put("api/replaceExercises", async (req, res) => {
-  try {
-    const { apiKey } = req.body.apiKey;
-    const { newExercises } = req.body.newExercises;
-    if (apiKey === process.env.API_KEY) {
-      await db.collection("exercises").deleteMany({});
-      await db.collection("exercises").insertMany(newExercises);
-      res.send(`${newStudent.studentName} added.`);
+app.post("/api/replacePrograms/", async (req, res) => {
+  if (req.body.apiKey === process.env.API_KEY) {
+    try {
+      await db.collection("programs").deleteMany({});
+      await db.collection("programs").insertMany(req.body.programs);
+      res.json("Programs replaced");
+    } catch (error) {
+      res.error("Internal Server Error", error);
     }
-  } catch (error) {
-    console.error("Error adding program", error);
-    res.status(500).json({ error: "Internal server error" });
   }
 });
 
