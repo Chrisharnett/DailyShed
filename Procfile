@@ -1,1 +1,1 @@
-web: node ../backend-sax-practice/src/server.js
+web: node server.js
