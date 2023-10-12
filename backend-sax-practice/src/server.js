@@ -187,7 +187,8 @@ app.post("/api/replacePrograms/", async (req, res) => {
   }
 });
 
-const httpServer = https.createServer(
+const httpServer = https.createServer(app);
+const httpsServer = https.createServer(
   {
     key: fs.readFileSync(
       "/etc/letsencrypt/live/thesaxophoneshed.com/privkey.pem"
