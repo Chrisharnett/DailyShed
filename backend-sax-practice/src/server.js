@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = 8080;
+const port = 8000;
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "../build")));
@@ -188,6 +188,6 @@ app.post("/api/replacePrograms/", async (req, res) => {
 connectToDb(() => {
   console.log("Connected to Database");
   app.listen(port, () => {
-    console.log("Server is listening on port 8080");
+    console.log("Server is listening on port 8000");
   });
 });
