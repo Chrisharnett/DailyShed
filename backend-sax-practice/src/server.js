@@ -6,11 +6,13 @@ import https from "https";
 import fs from "fs";
 
 import { fileURLToPath } from "url";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = 8000;
+
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "../build")));
@@ -188,25 +190,25 @@ app.post("/api/replacePrograms/", async (req, res) => {
 });
 
 // const httpServer = https.createServer(app);
-const httpsServer = https.createServer(
-  {
-    key: fs.readFileSync(
-      "/etc/letsencrypt/live/thesaxophoneshed.com/privkey.pem"
-    ),
-    cert: fs.readFileSync(
-      "/etc/letsencrypt/live/thesaxophoneshed.com/fullchain.pem"
-    ),
-  },
-  app
-);
+// const httpsServer = https.createServer(
+//   {
+//     key: fs.readFileSync(
+//       "/etc/letsencrypt/live/thesaxophoneshed.com/privkey.pem"
+//     ),
+//     cert: fs.readFileSync(
+//       "/etc/letsencrypt/live/thesaxophoneshed.com/fullchain.pem"
+//     ),
+//   },
+//   app
+// );
 
 // httpServer.listen(80, () => {
 //   console.log("HTTP Server running on port 80");
 // });
 
-httpsServer.listen(443, () => {
-  console.log("HTTPS Server running on port 443");
-});
+// httpsServer.listen(443, () => {
+//   console.log("HTTPS Server running on port 443");
+// });
 
 connectToDb(() => {
   console.log("Connected to Database");
