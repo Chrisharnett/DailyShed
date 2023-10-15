@@ -8,24 +8,29 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CurrentExercise, ExSelection, ExerciseList } from "./exercise";
+import HomePage from "./pages/HomePage";
+import NotFoundPage from "./pages/NotFoundPage";
+import StudentExercisePage from "./pages/StudentExercisePage";
+import TeacherPage from "./pages/TeacherPage";
 import axios from "axios";
 
 function Home() {
   return (
     <div>
       <Navigation />
-      <h1>Home</h1>
-      <p>
-        Please note. A teacher must first create a routine for a student before
-        they can sign in
-      </p>
+      <HomePage />
     </div>
   );
 }
 
 // TODO: Finish putting this together
-export function NotFoundPage() {
-  return <h1>404 Error, Page Not Found</h1>;
+function NotFoundPage() {
+  return (
+    <>
+      <Navigation />
+      <NotFoundPage />
+    </>
+  );
 }
 
 function Navigation() {
