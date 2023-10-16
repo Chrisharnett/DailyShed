@@ -7,9 +7,13 @@ import Form from "react-bootstrap/Form";
 import "./App.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CurrentExercise, ExSelection, ExerciseList } from "./exercise";
+import {
+  CurrentExercise,
+  ExSelection,
+  ExerciseList,
+} from "./components/exercise";
 import HomePage from "./pages/HomePage";
-import NotFoundPage from "./pages/NotFoundPage";
+// import NotFoundPage from "./pages/NotFoundPage";
 import StudentExercisePage from "./pages/StudentExercisePage";
 import TeacherPage from "./pages/TeacherPage";
 import axios from "axios";
@@ -24,20 +28,20 @@ function Home() {
 }
 
 // TODO: Finish putting this together
-function NotFoundPage() {
-  return (
-    <>
-      <Navigation />
-      <NotFoundPage />
-    </>
-  );
-}
+// function NotFoundPage() {
+//   return (
+//     <>
+//       <Navigation />
+//       <NotFoundPage />
+//     </>
+//   );
+// }
 
 function Navigation() {
   return (
     <Navbar expand="lg" className="navbar-dark bg-dark p-2">
       <Container>
-        <Navbar.Brand href="/">Harnett Music Studio</Navbar.Brand>
+        <Navbar.Brand href="/">The Daily Shed</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">

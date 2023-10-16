@@ -11,7 +11,6 @@ import {
 } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -47,6 +46,7 @@ root.render(
         path="/studentPracticePage/:studentName"
         element={<StudentPracticePage />}
       />
+      {/* <Route path="/pageNotFound" element={<NotFoundPage />} /> */}
     </Routes>
   </BrowserRouter>
 );
