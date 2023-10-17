@@ -1,7 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import "./App.css";
@@ -12,6 +10,7 @@ import {
   ExSelection,
   ExerciseList,
 } from "./components/exercise";
+import Navigation from "./components/NavBar";
 import HomePage from "./pages/HomePage";
 // import NotFoundPage from "./pages/NotFoundPage";
 import StudentExercisePage from "./pages/StudentExercisePage";
@@ -36,24 +35,6 @@ function Home() {
 //     </>
 //   );
 // }
-
-function Navigation() {
-  return (
-    <Navbar expand="lg" className="navbar-dark bg-dark p-2">
-      <Container>
-        <Navbar.Brand href="/">The Daily Shed</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="/teacher">Teacher</Nav.Link>
-            <Nav.Link href="/studentSignIn">Student Sign-In</Nav.Link>
-            <Nav.Link href="/exerciseList">Exercise List</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-  );
-}
 
 // TODO: improve set building algorithm.
 export function StudentPracticePage() {

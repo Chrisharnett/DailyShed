@@ -13,6 +13,8 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import StudentExercisePage from "./pages/StudentExercisePage";
+import TeacherPage from "./pages/TeacherPage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -39,14 +41,14 @@ root.render(
       {/* Update with new pages SEE chapt1.4 ~ 8 minutes  */}
       <Route path="/" element={<App />} />
       {/* <Route path="/student" element={<Student />} /> */}
-      <Route path="/teacher" element={<Teacher />} />
+      <Route path="/teacher" element={<TeacherPage />} />
       <Route path="/studentSignIn" element={<StudentSignIn />} />
       <Route path="/exerciseList" element={<Exercises />} />
       <Route
         path="/studentPracticePage/:studentName"
         element={<StudentPracticePage />}
       />
-      {/* <Route path="/pageNotFound" element={<NotFoundPage />} /> */}
+      <Route path="/studentExercisePage" element={<StudentExercisePage />} />
     </Routes>
   </BrowserRouter>
 );
