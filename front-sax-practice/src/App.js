@@ -160,7 +160,6 @@ export function StudentPracticePage() {
   };
 
   const updateExercise = async () => {
-    console.log("exercise update");
     const response = await axios.put(
       `/api/updateExerciseList/${student.studentName}`,
       { currentExercise }
@@ -168,7 +167,6 @@ export function StudentPracticePage() {
   };
 
   const handleNextExercise = async () => {
-    console.log("handler");
     updateExercise();
 
     if (count < thisSet.length - 1) {
