@@ -1,3 +1,4 @@
+// TEST COMMENT
 import express from "express";
 import { db, connectToDb } from "./db.js";
 import "dotenv/config";
@@ -195,3 +196,4 @@ connectToDb(() => {
     console.log("Server is listening on port 8000");
   });
 });
+// TEST COMMENT
