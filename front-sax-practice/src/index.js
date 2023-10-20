@@ -2,19 +2,16 @@ import "bootstrap/dist/css/bootstrap.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import {
-  App,
-  Teacher,
-  StudentSignIn,
-  Exercises,
-  StudentPracticePage,
-} from "./App";
+import { App, StudentSignIn, Exercises } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import StudentExercisePage from "./pages/StudentExercisePage";
 import TeacherPage from "./pages/TeacherPage";
+import LoginPage from "./pages/LoginPage";
+import CreateAccountPage from "./pages/CreateAccountPage";
+import NotFoundPage from "./pages/NotFoundPage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -45,9 +42,12 @@ root.render(
       <Route path="/studentSignIn" element={<StudentSignIn />} />
       <Route path="/exerciseList" element={<Exercises />} />
       <Route
-        path="/studentPracticePage/:studentName"
-        element={<StudentPracticePage />}
+        path="/studentExercisePage/:studentName"
+        element={<StudentExercisePage />}
       />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/createAccount" element={<CreateAccountPage />} />
+      <Route path="*" element={<NotFoundPage />} />
       <Route path="/studentExercisePage" element={<StudentExercisePage />} />
     </Routes>
   </BrowserRouter>
