@@ -4,13 +4,8 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import "./App.css";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-
-import {
-  CurrentExercise,
-  ExSelection,
-  ExerciseList,
-} from "./components/exercise";
+import { useNavigate } from "react-router-dom";
+import { ExSelection, ExerciseList } from "./components/exercise";
 import Navigation from "./components/NavBar";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";

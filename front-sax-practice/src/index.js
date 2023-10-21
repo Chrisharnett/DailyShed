@@ -2,12 +2,13 @@ import "bootstrap/dist/css/bootstrap.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { App, StudentSignIn, Exercises } from "./App";
+import { App, StudentSignIn, Exercises, Teacher } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import StudentExercisePage from "./pages/StudentExercisePage";
+import ExerciseTestPage from "./pages/ExerciseTestPage";
 import TeacherPage from "./pages/TeacherPage";
 import LoginPage from "./pages/LoginPage";
 import CreateAccountPage from "./pages/CreateAccountPage";
@@ -35,10 +36,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <Routes>
-      {/* Update with new pages SEE chapt1.4 ~ 8 minutes  */}
       <Route path="/" element={<App />} />
       {/* <Route path="/student" element={<Student />} /> */}
-      <Route path="/teacher" element={<TeacherPage />} />
+      <Route path="/teacher" element={<Teacher />} />
       <Route path="/studentSignIn" element={<StudentSignIn />} />
       <Route path="/exerciseList" element={<Exercises />} />
       <Route
@@ -49,6 +49,7 @@ root.render(
       <Route path="/createAccount" element={<CreateAccountPage />} />
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/studentExercisePage" element={<StudentExercisePage />} />
+      <Route path="/exerciseTestPage" element={<ExerciseTestPage />} />
     </Routes>
   </BrowserRouter>
 );

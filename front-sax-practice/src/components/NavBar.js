@@ -14,6 +14,7 @@ const Navigation = () => {
             <Nav.Link href="/studentExercisePage/Paula">
               Student Exercise Page
             </Nav.Link>
+            <Nav.Link href="/exerciseTestPage">Exercise Test Page</Nav.Link>
             <Nav.Link href="/exerciseList">Exercise List</Nav.Link>
           </Nav>
         </Navbar.Collapse>

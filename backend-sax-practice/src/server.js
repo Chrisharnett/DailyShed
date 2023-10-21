@@ -5,6 +5,7 @@ import "dotenv/config";
 import path from "path";
 import https from "https";
 import fs from "fs";
+import { spawn } from "child_process";
 
 import { fileURLToPath } from "url";
 
@@ -20,6 +21,31 @@ app.use(express.static(path.join(__dirname, "../build")));
 
 app.get(/^(?!\/api).+/, (req, res) => {
   res.sendFile(path.join(__dirname, "../build/index.html"));
+});
+
+app.post("/api/generateExercise/", async (req, res) => {
+  const { exercise } = req.body;
+
+  const exerciseGeneratorPath = "../python scripts/exerciseMaker.py";
+  const exerciseProcess = spawn("python", [exerciseGeneratorPath], {
+    stdio: "pipe",
+    input: JSON.stringify(exercise),
+  });
+
+  // Capture the image data from the Python Script
+  let imageData = "";
+
+  exerciseProcess.stdout.on("data", (data) => {
+    imageData += data.toString();
+  });
+
+  exerciseProcess.on("close", (code) => {
+    if (code === 0) {
+      res.status(200).json({ image: imageData });
+    } else {
+      res.status(500).json({ error: "Image generation failed" });
+    }
+  });
 });
 
 app.post("/api/addNewProgram/", async (req, res) => {
@@ -196,4 +222,3 @@ connectToDb(() => {
     console.log("Server is listening on port 8000");
   });
 });
-// TEST COMMENT

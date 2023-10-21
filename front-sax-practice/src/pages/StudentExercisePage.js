@@ -3,9 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CurrentExercise } from "../components/exercise";
 import Navigation from "../components/NavBar";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import axios from "axios";
 import useUser from "../hooks/useUser";
 
