@@ -1,4 +1,3 @@
-from flask import Flask, request, jsonify, Response
 from exerciseObjects import Exercise
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
