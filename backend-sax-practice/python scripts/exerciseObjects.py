@@ -1,8 +1,7 @@
 import os
+import boto3
 import abjad
 import math
-import boto3
-
 
 class Exercise:
     def __init__(
@@ -107,11 +106,12 @@ class Exercise:
         # score = self.buildScore()
 
         lilypond_file = abjad.LilyPondFile([self.__preamble, self.buildScore])
-        localPath = os.path.join("static/img/" + self.__exerciseFileName)
+        #  It only works with absolute path here, but still places files in root instead of /temp
+        absolutePath = "/Users/christopherharnett/Library/CloudStorage/OneDrive-CollegeoftheNorthAtlantic/Documents/Software Development/ASD/Fall/Capstone 3540/reactSaxPracticeApp/backend-sax-practice/python scripts/temp/"
+        localPath = os.path.join(absolutePath + self.__exerciseFileName)
         abjad.persist.as_png(lilypond_file, localPath, flags="-dcrop", resolution=300)
 
         # os.remove(os.path.join("static/img/" + self.exerciseFileName) + ".ly")
-
         s3BucketName = "mysaxpracticeexercisebucket"
         png = os.path.join(localPath + ".cropped.png")
 

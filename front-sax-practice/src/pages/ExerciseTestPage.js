@@ -8,13 +8,9 @@ import useUser from "../hooks/useUser";
 import CurrentExercise from "../components/CurrentExercise";
 
 const ExerciseTestPage = () => {
-  const [imageData, setImageData] = useState(null);
-  const [currentExercise, setCurrentExercise] = useState(null);
-  const [exerciseURL, setExerciseURL] = useState(null);
-
-  setCurrentExercise({
+  const [currentExercise, setCurrentExercise] = useState({
     exerciseId: -1,
-    exerciseURL: "NA",
+    exerciseFileName: "fronty",
     noteRhythmPattern: [
       [
         "repeat",
@@ -44,19 +40,26 @@ const ExerciseTestPage = () => {
     articulation: [],
     dynamics: [],
     preamble: "#(set-global-staff-size 14)",
-    })
+  });
+  const [exerciseURL, setExerciseURL] = useState(null);
 
   useEffect(() => {
-    await axios
-      .post("/api/generateExercise", currentExercise)
-      .then((response) => {
+    const getImage = async () => {
+      try {
+        let response = await axios.post(
+          "/api/generateExercise",
+          currentExercise
+        );
         console.log("Image data received:", response.data);
-        setExercise(response.data.image);
-      })
-      .catch((error) => {
+        setExerciseURL(response.data);
+      } catch (error) {
         console.error("Error: ", error);
-      });
+      }
+    };
+    getImage();
+  }, [currentExercise]);
 
+  if (exerciseURL) {
     return (
       <>
         <Navigation />
@@ -64,7 +67,7 @@ const ExerciseTestPage = () => {
         <CurrentExercise exercise={currentExercise} src={exerciseURL} />
       </>
     );
-  });
+  }
 };
 
 export default ExerciseTestPage;

@@ -1,12 +1,9 @@
-const CurrentExercise = ({ exercise }, props) => {
+const CurrentExercise = (props) => {
+  const { exercise } = props;
   return (
     <>
       <h4>{exercise.exerciseName}</h4>
-      <img
-        src={exercise.exerciseURL}
-        alt={exercise.description}
-        height={100}
-      ></img>
+      <img src={props.src} alt={exercise.description} height={100}></img>
       <p>{exercise.description}</p>
     </>
   );

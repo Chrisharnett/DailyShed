@@ -3,6 +3,7 @@ import express from "express";
 import { db, connectToDb } from "./db.js";
 import "dotenv/config";
 import path from "path";
+import axios from "axios";
 import https from "https";
 import fs from "fs";
 import { spawn } from "child_process";
@@ -19,33 +20,57 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "../build")));
 
+const venvPath = "python scripts/exGenerator";
+
+const flaskServerScriptPath = path.join(
+  __dirname,
+  "python scripts/exerciseMaker.py"
+);
+
+const flaskExerciseMaker = spawn(path.join(venvPath, "bin/python"), [
+  "-m",
+  "venv",
+  "exGenerator",
+  flaskServerScriptPath,
+]);
+
+flaskExerciseMaker.stdout.on("data", (data) => {
+  console.log(`Flask Server Output: ${data}`);
+});
+
+flaskExerciseMaker.stderr.on("data", (data) => {
+  console.error(`Flask Server Error: ${data}`);
+});
+
+flaskExerciseMaker.on("close", (code) => {
+  console.log(`Flask Server exited with code ${code}`);
+});
+
 app.get(/^(?!\/api).+/, (req, res) => {
   res.sendFile(path.join(__dirname, "../build/index.html"));
 });
 
 app.post("/api/generateExercise/", async (req, res) => {
-  const { exercise } = req.body;
+  const exercise = req.body;
+  // valid data: console.log(req.body);
 
-  const exerciseGeneratorPath = "../python scripts/exerciseMaker.py";
-  const exerciseProcess = spawn("python", [exerciseGeneratorPath], {
-    stdio: "pipe",
-    input: JSON.stringify(exercise),
-  });
+  const exerciseMaker = "http://127.0.0.1:5000/generateExercise";
 
-  // Capture the image data from the Python Script
-  let imageData = "";
+  try {
+    const response = await axios.post(exerciseMaker, exercise, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  exerciseProcess.stdout.on("data", (data) => {
-    imageData += data.toString();
-  });
-
-  exerciseProcess.on("close", (code) => {
-    if (code === 0) {
-      res.status(200).json({ image: imageData });
+    if (response.status === 200) {
+      res.status(200).json(response.data);
     } else {
       res.status(500).json({ error: "Image generation failed" });
     }
-  });
+  } catch (error) {
+    res.status(500).json({ error: "Error communicating with Flask server" });
+  }
 });
 
 app.post("/api/addNewProgram/", async (req, res) => {
