@@ -18,21 +18,19 @@ const port = 8000;
 
 app.use(express.json());
 
+// TODO: Is this approach acceptable for production??
 app.use(express.static(path.join(__dirname, "../build")));
 
-const venvPath = "python scripts/exGenerator";
+const venvPath = "./python scripts/exGenerator";
+
+const pythonExecutable = path.join(venvPath, "bin/python");
 
 const flaskServerScriptPath = path.join(
   __dirname,
-  "python scripts/exerciseMaker.py"
+  "../python scripts/exerciseMaker.py"
 );
 
-const flaskExerciseMaker = spawn(path.join(venvPath, "bin/python"), [
-  "-m",
-  "venv",
-  "exGenerator",
-  flaskServerScriptPath,
-]);
+const flaskExerciseMaker = spawn(pythonExecutable, [flaskServerScriptPath]);
 
 flaskExerciseMaker.stdout.on("data", (data) => {
   console.log(`Flask Server Output: ${data}`);
