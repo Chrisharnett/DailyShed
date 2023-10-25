@@ -6,7 +6,7 @@ def noDuplicateRhythms(newPattern, patternList):
     # If the loop completes without finding a duplicate, add the new pattern
     return True
 
-
+# TODO: Use rhythmPattern objects.
 def rhythmPatterns(numerator, denominator):
     rhythm = str(denominator)
     rhythmPatternDictionary = []

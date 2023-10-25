@@ -3,6 +3,29 @@ import boto3
 import abjad
 import math
 
+class Set:
+    def __init__(self, currentSetPattern, notePatterns, rhythmPatterns, previousSet=None):
+        self.__currentSetPattern = currentSetPattern
+        self.__notePatterns = notePatterns
+        self.__rhythmPatterns = rhythmPatterns
+        self.__previousSet= previousSet
+        self.__exercises = []
+
+        # TODO PICK THINGS UP HERE
+        def getPossibleRhythms():
+            pass
+        def getNextSet(self):
+            newSet = []
+            # If it's a new player, no previous set. Use the first notePatterns and first matching rhythm patterns.
+            if (len(previousSet == 0)):
+                for i in range(len(self.__currentSetPattern) - 1):
+                    if newSet[i] == None:
+                        possiblePitchesPatterns = [x for x in self.__notePatterns if x.get('notePatternType') == self.__currentSetPattern[i].get('type')]
+                        for j in range(len(self.__currentSetPattern) - 1):
+                            if currentSetPattern[j].get('notePatternType') == self.__currentSetPattern:
+                                pitchPattern = possiblePitchesPatterns[j]
+                                possibleRhythms = getPossibleRhythms(self.__rhythmPatterns, pitchPattern)
+
 class Exercise:
     def __init__(
         self,
@@ -13,8 +36,8 @@ class Exercise:
         key="g",
         mode="major",
         timeSignature=[4, 4],
-        articulation=[],
-        dynamics=[],
+        articulation=None,
+        dynamics=None,
         preamble=r"#(set-global-staff-size 28)",
     ):
         self.__exerciseId = exerciseId
@@ -127,7 +150,6 @@ class Exercise:
 
         return exerciseURL
 
-
 class Collection:
     def __init__(self, name):
         self.__name = name
@@ -178,6 +200,38 @@ class NotePattern:
     def __str__(self):
         return f"{self.__direction} {self.__patternType} {self.__description}"
 
+class RhythmPattern:
+    def __init__(self, rhythmPatternId, rhythmType, rhythmPattern, timeSignature, articulation = None):
+        self.__rhythmPatternId = rhythmPatternId
+        self.__rhythmType = rhythmType
+        self.__rhythmPattern = rhythmPattern
+        self.__timeSignature = timeSignature
+        self.__articulation = articulation
+
+    @property
+    def getRhythmPatternId(self):
+        return self.__rhythmPatternId
+    @property
+    def getRhythmPattern(self):
+        return self.__rhythmPattern
+
+    @property
+    def getTimeSignature(self):
+        return self.__timeSignature
+
+    @property
+    def getRhythmType(self):
+        return self.__rhythmType
+
+    @property
+    def getArticulation(self):
+        return self.__articulation
+
+    def __str__(self):
+        string = f"{self.__rhythmType} rhythm {self.__rhythmPatternId}, in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
+        if self.__articulation is not None:
+            string += f" with {self.__articulation.get('name')}."
+        return string
 
 class Scale:
     def __init__(self, tonic, mode):
@@ -200,7 +254,6 @@ class Scale:
             pitch = tonic + scalePitch
             pitches.append(pitch)
         return pitches
-
 
 def main():
     exercise = Exercise(
