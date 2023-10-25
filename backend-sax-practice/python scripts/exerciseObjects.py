@@ -128,25 +128,36 @@ class Exercise:
         return exerciseURL
 
 
+class Collection:
+    def __init__(self, name):
+        self.__name = name
+        self.__notePatterns = []
+
+    def __str__(self):
+        return self.__name
+
+    def getNotePatterns(self):
+        return self.__notePatterns
+
+    def addPattern(self, pattern):
+        self.__notePatterns.append(pattern)
+
 class NotePattern:
     def __init__(
         self,
-        patternId,
-        patternType,
+        notePatternId,
+        notePatternType,
         notePattern,
-        preamble,
         description="",
-        timeSignature=(4, 4),
-        rhythm="",
-        articulation="",
         dynamic="",
-        direction="",
+        direction=""
     ):
-        self.__patternId = patternId
-        self.__patternType = patternType
+        self.__patternId = notePatternId
+        self.__patternType = notePatternType
         self.__notePattern = notePattern
-        self.__preamble = preamble
         self.__description = description
+        self.__dynamic = dynamic
+        self.__direction = direction
 
     @property
     def getPatternId(self):
@@ -161,16 +172,11 @@ class NotePattern:
         return self.__notePattern
 
     @property
-    def getPreamble(self):
-        return self.__preamble
-
-    @property
     def getDescription(self):
         return self.__description
 
     def __str__(self):
-        name = self.__patternType + "_" + str(self.__patternId)
-        return name
+        return f"{self.__direction} {self.__patternType} {self.__description}"
 
 
 class Scale:
