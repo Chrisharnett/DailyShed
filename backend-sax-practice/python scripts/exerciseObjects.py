@@ -3,29 +3,49 @@ import boto3
 import abjad
 import math
 
-class Set:
-    def __init__(self, currentSetPattern, notePatterns, rhythmPatterns, previousSet=None):
+class PracticeSet:
+    def __init__(self, currentSetPattern, notePatternCollections, rhythmPatterns):
         self.__currentSetPattern = currentSetPattern
-        self.__notePatterns = notePatterns
+        self.__notePatternCollections = notePatternCollections
         self.__rhythmPatterns = rhythmPatterns
-        self.__previousSet= previousSet
-        self.__exercises = []
 
-        # TODO PICK THINGS UP HERE
-        def getPossibleRhythms():
-            pass
-        def getNextSet(self):
-            newSet = []
-            # If it's a new player, no previous set. Use the first notePatterns and first matching rhythm patterns.
-            if (len(previousSet == 0)):
-                for i in range(len(self.__currentSetPattern) - 1):
-                    if newSet[i] == None:
-                        possiblePitchesPatterns = [x for x in self.__notePatterns if x.get('notePatternType') == self.__currentSetPattern[i].get('type')]
-                        for j in range(len(self.__currentSetPattern) - 1):
-                            if currentSetPattern[j].get('notePatternType') == self.__currentSetPattern:
-                                pitchPattern = possiblePitchesPatterns[j]
-                                possibleRhythms = getPossibleRhythms(self.__rhythmPatterns, pitchPattern)
+    # TODO PICK THINGS UP HERE
 
+
+    def getNextSet(self, previousSet, player):
+        newSet = []
+        setLength = len(self.__currentSetPattern)
+        # set the length of the new set with None values
+        for n in range(setLength):
+            newSet.append(None)
+        # If it's a new player, no previous set. Use the first notePatterns and first matching rhythm patterns.
+        if previousSet is None:
+            for i in range(setLength - 1):
+                # if there's not already an exercise
+                if newSet[i] is None:
+                    # if it's a tone exercise...
+                    if self.__currentSetPattern[i].get('type') == 'tone':
+                        # Get the tone pitchPatterns
+                        print(len(newSet))
+                        tonePatternCollection = [x for x in self.__notePatternCollections if x.getName() == 'tone']
+                        toneRhythms = [x for x in self.__rhythmPatterns if x.getNotePatternType() == 'tone']
+                        for j in range(setLength - 1):
+                            if self.__notePatternCollections[j].get('notePatternType') == self.__currentSetPattern:
+                                pitchPattern = tonePatternCollection[j]
+                                possibleRhythms = [x for x in self.__rhythmPatterns if
+                                                   len(x.getRhythmPattern()) == len(pitchPattern) and
+                                                   x.getRhythmType == 'tone']
+                                rhythmPattern = possibleRhythms[j]
+                                notePattern = []
+                                for k in range(len(pitchPattern)):
+                                    note=[pitchPattern[k], rhythmPattern[k]]
+                                    notePattern.extend(note)
+                            else:
+                                newSet[k] = None
+
+
+
+# Add notePatternId and rhythmPatternId
 class Exercise:
     def __init__(
         self,
@@ -153,16 +173,24 @@ class Exercise:
 class Collection:
     def __init__(self, name):
         self.__name = name
-        self.__notePatterns = []
+        self.__patterns = []
 
     def __str__(self):
         return self.__name
 
-    def getNotePatterns(self):
-        return self.__notePatterns
+    def __iter__(self):
+        return iter(self.__patterns)
+
+    @property
+    def getName(self):
+        return self.__name
+
+    @property
+    def getPatterns(self):
+        return self.__patterns
 
     def addPattern(self, pattern):
-        self.__notePatterns.append(pattern)
+        self.__patterns.append(pattern)
 
 class NotePattern:
     def __init__(
@@ -175,7 +203,7 @@ class NotePattern:
         direction=""
     ):
         self.__patternId = notePatternId
-        self.__patternType = notePatternType
+        self.__notePatternType = notePatternType
         self.__notePattern = notePattern
         self.__description = description
         self.__dynamic = dynamic
@@ -186,8 +214,8 @@ class NotePattern:
         return self.__patternId
 
     @property
-    def getPatternType(self):
-        return self.__patternType
+    def getNotePatternType(self):
+        return self.__notePatternType
 
     @property
     def getNotePattern(self):
@@ -198,7 +226,7 @@ class NotePattern:
         return self.__description
 
     def __str__(self):
-        return f"{self.__direction} {self.__patternType} {self.__description}"
+        return f"{self.__direction} {self.__notePatternType} {self.__description}"
 
 class RhythmPattern:
     def __init__(self, rhythmPatternId, rhythmType, rhythmPattern, timeSignature, articulation = None):
@@ -232,6 +260,10 @@ class RhythmPattern:
         if self.__articulation is not None:
             string += f" with {self.__articulation.get('name')}."
         return string
+
+    def __iter__(self):
+        for pattern in self:
+            yield pattern
 
 class Scale:
     def __init__(self, tonic, mode):
