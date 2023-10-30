@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useHistory } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
@@ -8,7 +8,7 @@ import Form from "react-bootstrap/Form";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errorMessage, setError] = useState("");
 
   const navigate = useNavigate();
   const logIn = async () => {
@@ -23,7 +23,7 @@ const LoginPage = () => {
   return (
     <>
       <h1> Log-in. </h1>
-      {error && <p className="error">{error}</p>}
+      {errorMessage && <p className="fail">{errorMessage}</p>}
       <Form.Group className="mb-3">
         <Form.Label>Your Email Address</Form.Label>
         <Form.Control
@@ -46,6 +46,8 @@ const LoginPage = () => {
         {" "}
         Log In{" "}
       </Button>
+      {/* From video in class, incomplete (obviously) */}
+      <Button disabled={!email || !password} onClick="" />
       <Link to="/createAccount">Don't have an account? Create one here.</Link>
     </>
   );

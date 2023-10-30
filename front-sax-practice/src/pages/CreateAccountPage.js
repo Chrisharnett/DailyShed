@@ -52,6 +52,12 @@ const CreateAccountPage = () => {
       <Button variant="success" onClick={createAccount}>
         Create Account
       </Button>
+      <Button
+        variant="success"
+        onClick={() => history.pushState("/forgot-password")}
+      >
+        Create Account
+      </Button>
       <Link to="/login">Already have an account? Log in here.</Link>
     </>
   );

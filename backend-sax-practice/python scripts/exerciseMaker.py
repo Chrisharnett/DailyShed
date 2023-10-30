@@ -1,5 +1,5 @@
-from exerciseObjects import Exercise
-from flask import Flask, request, jsonify, Response
+from objects.exerciseObjects import Exercise
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)

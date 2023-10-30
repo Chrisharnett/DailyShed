@@ -1,4 +1,4 @@
-from exerciseObjects import NotePattern, Collection
+from objects.exerciseObjects import NotePattern, Collection
 
 preamble = r"""#(set-global-staff-size 14)
         """
@@ -16,6 +16,7 @@ def notePatterns(minNote, maxNote, maxLength):
         toneExercises.addPattern(NotePattern(notePatternId=PATTERN_ID,
                                         notePatternType='tone',
                                         notePattern=notes,
+                                        rhythmMatcher='tone',
                                         description=f'on the {i}',
                                         direction='long'))
         PATTERN_ID += 1
@@ -31,6 +32,7 @@ def notePatterns(minNote, maxNote, maxLength):
             scale1.addPattern(NotePattern(notePatternId=PATTERN_ID,
                                         notePatternType='scale',
                                         notePattern=notes,
+                                        rhythmMatcher='general',
                                         description=f'to the {j}',
                                         direction='ascending'))
             PATTERN_ID += 1
@@ -42,6 +44,7 @@ def notePatterns(minNote, maxNote, maxLength):
             NotePattern(notePatternId=PATTERN_ID,
                         notePatternType='scale',
                         notePattern=notes,
+                        rhythmMatcher='general',
                         description=f'from the {pattern[0]}',
                         direction='descending')
         )
@@ -54,6 +57,7 @@ def notePatterns(minNote, maxNote, maxLength):
             NotePattern(notePatternId=PATTERN_ID,
                         notePatternType='scale',
                         notePattern=notes,
+                        rhythmMatcher='general',
                         description=f'to the {scale1Ascending[i][-1]}',
                         direction='Ascending Descending')
         )
@@ -66,6 +70,7 @@ def notePatterns(minNote, maxNote, maxLength):
             NotePattern(notePatternId=PATTERN_ID,
                         notePatternType='scale',
                         notePattern=notes,
+                        rhythmMatcher='general',
                         description=f'from the {scale1Descending[i][0]}',
                         direction='Descending Ascending')
         )
