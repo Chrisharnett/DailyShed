@@ -18,7 +18,7 @@ def notePatterns(minNote, maxNote, maxLength):
                                         notePattern=notes,
                                         rhythmMatcher='tone',
                                         description=f'on the {i}',
-                                        direction='long'))
+                                        direction='static'))
         PATTERN_ID += 1
 
     scale1Ascending = []
@@ -38,43 +38,43 @@ def notePatterns(minNote, maxNote, maxLength):
             PATTERN_ID += 1
 
     # All descending scalar patterns
-    scale1Descending = [x[::-1] for x in scale1Ascending]
-    for pattern in scale1Descending:
-        scale1.addPattern(
-            NotePattern(notePatternId=PATTERN_ID,
-                        notePatternType='scale',
-                        notePattern=notes,
-                        rhythmMatcher='general',
-                        description=f'from the {pattern[0]}',
-                        direction='descending')
-        )
-        PATTERN_ID += 1
-
-    # All descending and ascending scalar patterns
-    for i in range(len(scale1Ascending)):
-        combinedPattern = scale1Ascending[i] + scale1Descending[i][1:]
-        scale1.addPattern(
-            NotePattern(notePatternId=PATTERN_ID,
-                        notePatternType='scale',
-                        notePattern=notes,
-                        rhythmMatcher='general',
-                        description=f'to the {scale1Ascending[i][-1]}',
-                        direction='Ascending Descending')
-        )
-        PATTERN_ID += 1
-
-    descendingAscendingNoteScales = []
-    for i in range(len(scale1Ascending)):
-        combinedPattern = scale1Descending[i] + scale1Ascending[i][1:]
-        scale1.addPattern(
-            NotePattern(notePatternId=PATTERN_ID,
-                        notePatternType='scale',
-                        notePattern=notes,
-                        rhythmMatcher='general',
-                        description=f'from the {scale1Descending[i][0]}',
-                        direction='Descending Ascending')
-        )
-        PATTERN_ID += 1
+    # scale1Descending = [x[::-1] for x in scale1Ascending]
+    # for pattern in scale1Descending:
+    #     scale1.addPattern(
+    #         NotePattern(notePatternId=PATTERN_ID,
+    #                     notePatternType='scale',
+    #                     notePattern=notes,
+    #                     rhythmMatcher='general',
+    #                     description=f'from the {pattern[0]}',
+    #                     direction='descending')
+    #     )
+    #     PATTERN_ID += 1
+    #
+    # # All descending and ascending scalar patterns
+    # for i in range(len(scale1Ascending)):
+    #     combinedPattern = scale1Ascending[i] + scale1Descending[i][1:]
+    #     scale1.addPattern(
+    #         NotePattern(notePatternId=PATTERN_ID,
+    #                     notePatternType='scale',
+    #                     notePattern=notes,
+    #                     rhythmMatcher='general',
+    #                     description=f'to the {scale1Ascending[i][-1]}',
+    #                     direction='Ascending Descending')
+    #     )
+    #     PATTERN_ID += 1
+    #
+    # descendingAscendingNoteScales = []
+    # for i in range(len(scale1Ascending)):
+    #     combinedPattern = scale1Descending[i] + scale1Ascending[i][1:]
+    #     scale1.addPattern(
+    #         NotePattern(notePatternId=PATTERN_ID,
+    #                     notePatternType='scale',
+    #                     notePattern=notes,
+    #                     rhythmMatcher='general',
+    #                     description=f'from the {scale1Descending[i][0]}',
+    #                     direction='Descending Ascending')
+    #     )
+    #     PATTERN_ID += 1
 
     return [toneExercises, scale1]
 
@@ -88,7 +88,7 @@ def main():
 
     for collection in notePatternCollections:
         print(collection)
-        for pattern in collection.getNotePatterns():
+        for pattern in collection.getPatterns:
             print(pattern)
 
 if __name__ == '__main__':

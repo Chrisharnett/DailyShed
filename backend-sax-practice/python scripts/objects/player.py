@@ -50,8 +50,8 @@ class Player:
         for ex in self.__exerciseHistory:
             if exercise == ex:
                 ex['assessment'] = assessment
-                ex['playCount'] += 1
+                ex['playCount'] = ex['playCount'] + 1
                 return
-        self.__exerciseHistory[str(exercise)] = {'exercise': exercise,
+        self.__exerciseHistory[exercise.exerciseFileName] = {'exercise': exercise,
                                                 'assessment': assessment,
                                                 'playCount': 1}

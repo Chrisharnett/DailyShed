@@ -4,7 +4,6 @@ import abjad
 import math
 from objects.musicObjects import Scale
 
-
 class Exercise:
     def __init__(
         self,
@@ -34,9 +33,15 @@ class Exercise:
 
     def notationPattern(self):
         notationPattern = []
-        for k in range(len(self.__pitchPattern.getNotePattern)):
-            note = [self.__pitchPattern.getNotePattern[k], self.__rhythmPattern.getRhythmPattern[k]]
-            notationPattern.extend(note)
+        # Use the same note before and after a tie by adding to the notePattern
+        for i in range(self.__rhythmPattern.getRhythmPattern):
+            if self.__rhythmPattern.getRhythmPattern[i] == ['~']:
+                self.__pitchPattern.getNotePattern.insert(self.__pitchPattern.getNotePattern[i - 1], i)
+        for k in range(len(self.__rhythmPattern.getRhythmPattern)):
+            if self.__rhythmPattern.getRhythmPattern[k].isnumeric():
+                note = [self.__pitchPattern.getNotePattern[k], self.__rhythmPattern.getRhythmPattern[k]]
+                notationPattern.extend(note)
+        return notationPattern
 
     def exerciseFileName(self):
         fileName = f"{self.__key}_{self.__mode}_{str(self.__pitchPattern.getPatternId)}_{str(self.__rhythmPattern.getRhythmPatternId)}"
@@ -197,12 +202,17 @@ class NotePattern:
     @property
     def getDescription(self):
         return self.__description
+
     @property
     def getRhythmMatcher(self):
         return self.__rhythmMatcher
 
+    @property
+    def getDirection(self):
+        return self.__direction
+
     def __str__(self):
-        return f"{self.__direction} {self.__notePatternType} {self.__description}"
+        return f"{self.__patternId}  {self.__notePattern} {self.__notePatternType} {self.__description}"
 
 class RhythmPattern:
     def __init__(self, rhythmPatternId, rhythmType, rhythmDescription, rhythmPattern, timeSignature, articulation = None):
@@ -212,6 +222,7 @@ class RhythmPattern:
         self.__rhythmPattern = rhythmPattern
         self.__timeSignature = timeSignature
         self.__articulation = articulation
+
 
     @property
     def getRhythmPatternId(self):
@@ -252,7 +263,7 @@ class RhythmPattern:
         if self.__rhythmType == 'tone':
             string = f" in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
         else:
-            string = f"{self.__rhythmType} rhythm, in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
+            string = f"{self.__rhythmDescription} rhythm, in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
         if self.__articulation is not None:
             # TODO Include articulation with nameing
             # string += f" with {self.__articulation.get('name')}."

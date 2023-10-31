@@ -20,9 +20,10 @@ def main():
     rhythms = rhythmPatterns(4, 4)
     keys = ['g', 'c', 'd']
     practiceSet = PracticeSet(player, notes, rhythms)
-    sessions = 4
+    sessions = 20
     for i in range(sessions):
-        currentSet = practiceSet.getNextSet
+
+        currentSet = practiceSet.getNextSet()
         player.setPreviousSet(currentSet)
         print(f"day {i}")
         for exercise in currentSet:
