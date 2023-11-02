@@ -6,11 +6,14 @@ from objects.player import Player
 from objects.practiceSet import PracticeSet
 from notePatternGenerator import notePatterns
 from rhythmPatternGenerator import rhythmPatterns
+import boto3
+import json
 
 app = Flask(__name__)
 
-# cors = CORS(app, resources={r"/generate-exercise": {"origins": "*"}})
+cors = CORS(app, resources={r"/generate-exercise": {"origins": "*"}})
 
+s3_client = boto3.client('s3')
 
 @app.route("/")
 def home():
@@ -45,6 +48,7 @@ def getManySets():
 @app.route("/getSet", methods=["GET", "POST"])
 def getSet():
     try:
+        bucketName = 'mysaxpracticeexercisebucket'
         data = request.get_json()
         player = Player(data['previousSet'], data['currentStatus'], data['exerciseHistory'])
         minNote = 1
@@ -54,10 +58,16 @@ def getSet():
         practiceSet = PracticeSet(player, notes, rhythms)
         currentSet = practiceSet.getNextSet()
         returnSet = []
+
         for exercise in currentSet:
-            url = exercise.createImage()
-            returnSet.append({"exercise": exercise.serialize(),
-                              "url": url})
+            try:
+                objectKey = exercise.exerciseFileName()
+                s3_client.head_object(Bucket=bucketName, Key=objectKey)
+            except Exception as e:
+                exercise.createImage()
+            e = exercise.serialize()
+            url = exercise.imageURL()
+            returnSet.append(e)
         return returnSet
     except Exception as e:
         return jsonify({"error": str(e)}), 400

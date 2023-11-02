@@ -43,18 +43,31 @@ class Exercise:
 
     def notationPattern(self):
         notationPattern = []
+        rhythms = self.__rhythmPattern.getRhythmPattern
+        notes = self.__pitchPattern.getNotePattern
         # Use the same note before and after a tie by adding to the notePattern
-        for i in range(len(self.__rhythmPattern.getRhythmPattern)):
-            if self.__rhythmPattern.getRhythmPattern[i] == ['~']:
-                self.__pitchPattern.getNotePattern.insert(self.__pitchPattern.getNotePattern[i - 1], i)
-        for k in range(len(self.__rhythmPattern.getRhythmPattern)):
-            if (self.__rhythmPattern.getRhythmPattern[k][0]).isnumeric():
-                note = [self.__pitchPattern.getNotePattern[k], self.__rhythmPattern.getRhythmPattern[k][0]]
-                notationPattern.append(note)
+        # for i in range(len(self.__rhythmPattern.getRhythmPattern)):
+        #     if self.__rhythmPattern.getRhythmPattern[i] == ['~']:
+        #         self.__pitchPattern.getNotePattern.insert(self.__pitchPattern.getNotePattern[i + 1], i)
+        noteIndex = 0
+        for r in rhythms:
+            if r[0].isnumeric():
+                notationPattern.append([notes[noteIndex], r[0]])
+                noteIndex += 1
+            elif r == ['~']:
+                noteIndex -= 1
+            else:
+                notationPattern.append(r)
+            # if (self.__rhythmPattern.getRhythmPattern[k][0]).isnumeric():
+            #     note = [self.__pitchPattern.getNotePattern[k], self.__rhythmPattern.getRhythmPattern[k][0]]
+            #     notationPattern.append(note)
         return notationPattern
 
     def exerciseFileName(self):
         return f"{self.__key}_{self.__mode}_{str(self.__pitchPattern.getPatternId)}_{str(self.__rhythmPattern.getRhythmPatternId)}"
+
+    def imageURL(self):
+        return f"https://mysaxpracticeexercisebucket.s3.amazonaws.com/{self.exerciseFileName()}"
 
     @property
     def buildScore(self):
@@ -87,12 +100,13 @@ class Exercise:
                 abjad.NamedPitchClass(self.__key), abjad.Mode(self.__mode)
             )
             abjad.attach(keySignature, attachHere)
-            timeSignature = abjad.TimeSignature(self.__rhythmPattern.getTimeSignature)
+            ts = tuple(self.__rhythmPattern.getTimeSignature)
+            timeSignature = abjad.TimeSignature(ts)
             abjad.attach(timeSignature, attachHere)
             if not abjad.get.indicators(container[-1], abjad.Repeat):
                 bar_line = abjad.BarLine("|.")
                 abjad.attach(bar_line, container[-1])
-        if len(self.__rhythmPattern.getArticulation) > 0:
+        if self.__rhythmPattern.getArticulation:
             for articulation in self.__rhythmPattern.getArticulation:
                 if articulation.get("articulation").lower() == "fermata":
                     a = abjad.Fermata()
@@ -130,14 +144,13 @@ class Exercise:
     def path(self):
         return os.path.join("static/img/" + self.__str__()) + ".cropped.png"
 
-    def createImage(self):
-        fileName = self.exerciseFileName()
-        # score = self.buildScore()
 
+    def createImage(self):
+        # score = self.buildScore()
         lilypond_file = abjad.LilyPondFile([self.__preamble, self.buildScore])
         #  It only works with absolute path here, but still places files in root instead of /temp
         absolutePath = "/Users/christopherharnett/Library/CloudStorage/OneDrive-CollegeoftheNorthAtlantic/Documents/Software Development/ASD/Fall/Capstone 3540/reactSaxPracticeApp/backend-sax-practice/python scripts/temp/"
-        localPath = os.path.join(absolutePath + fileName)
+        localPath = os.path.join(absolutePath + self.exerciseFileName())
         abjad.persist.as_png(lilypond_file, localPath, flags="-dcrop", resolution=300)
 
         # os.remove(os.path.join("static/img/" + self.exerciseFileName) + ".ly")
@@ -145,16 +158,14 @@ class Exercise:
         png = os.path.join(localPath + ".cropped.png")
 
         s3_client = boto3.client("s3")
-        s3_client.upload_file(png, s3BucketName, fileName)
+        s3_client.upload_file(png, s3BucketName, self.exerciseFileName())
 
         ly = os.path.join(localPath + ".ly")
 
         os.remove(png)
         os.remove(ly)
 
-        exerciseURL = f"https://mysaxpracticeexercisebucket.s3.amazonaws.com/{fileName}"
-
-        return exerciseURL
+        return self.imageURL()
 
 class Collection:
     def __init__(self, name):
