@@ -13,12 +13,14 @@ class Exercise:
         key="g",
         mode="major",
         preamble=r"#(set-global-staff-size 28)",
+        repeatMe = True
     ):
         self.__pitchPattern = pitchPattern
         self.__rhythmPattern = rhythmPattern
         self.__key = key
         self.__mode = mode
         self.__preamble = preamble
+        self.__repeatMe = repeatMe
     def serialize(self):
         return {"exerciseName": self.exerciseFileName(),
                 "pitchPattern": self.__pitchPattern.serialize(),
@@ -27,7 +29,8 @@ class Exercise:
                 "mode": self.__mode,
                 "imageFileName": self.exerciseFileName() + ".cropped.png",
                 "imageURL": self.imageURL(),
-                "description": str(self)
+                "description": str(self),
+                "repeatMe": self.__repeatMe
                 }
     @property
     def getPitchPattern(self):
@@ -42,7 +45,10 @@ class Exercise:
         return f"{self.__key} {self.__mode} {str(self.__pitchPattern)} {str(self.__rhythmPattern)}."
 
     def notationPattern(self):
-        notationPattern = []
+        if self.__repeatMe is not True:
+            notationPattern = []
+        else:
+            notationPattern = ["repeat"]
         rhythms = self.__rhythmPattern.getRhythmPattern
         notes = self.__pitchPattern.getNotePattern
         # Use the same note before and after a tie by adding to the notePattern
@@ -52,12 +58,12 @@ class Exercise:
         noteIndex = 0
         for r in rhythms:
             if r[0].isnumeric():
-                notationPattern.append([notes[noteIndex], r[0]])
+                notationPattern.extend([notes[noteIndex], r[0]])
                 noteIndex += 1
             elif r == ['~']:
                 noteIndex -= 1
             else:
-                notationPattern.append(r)
+                notationPattern.extend(r)
             # if (self.__rhythmPattern.getRhythmPattern[k][0]).isnumeric():
             #     note = [self.__pitchPattern.getNotePattern[k], self.__rhythmPattern.getRhythmPattern[k][0]]
             #     notationPattern.append(note)
@@ -78,8 +84,8 @@ class Exercise:
             if isinstance(note[0], int):
                 n=self.numberToNote(scaleNotes, note)
                 container.append(self.numberToNote(scaleNotes, note))
-            elif note[0] == "r":
-                container.append(note)
+            elif note[0][0] == "r":
+                container.append(note[0])
             elif note[0] == "repeat":
                 notes = ""
                 for n in note[1:]:

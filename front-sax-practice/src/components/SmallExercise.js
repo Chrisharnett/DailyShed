@@ -6,10 +6,10 @@ const SmallExercise = (props) => {
       <img
         key={props.index}
         src={exercise.imageURL}
-        alt={exercise.exerciseName}
+        alt={exercise.description}
         height={50}
       ></img>
-      <p>{exercise.exerciseName}</p>
+      <p>{exercise.description}</p>
     </>
   );
 };

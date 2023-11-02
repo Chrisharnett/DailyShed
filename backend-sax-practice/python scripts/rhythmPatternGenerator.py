@@ -108,7 +108,7 @@ def main():
     denominator = "4"
     rhythms = rhythmPatterns(numerator, denominator)
     for pattern in rhythms:
-        print(pattern)
+        print(pattern.getRhythmPattern)
 
 if __name__ == '__main__':
     main()

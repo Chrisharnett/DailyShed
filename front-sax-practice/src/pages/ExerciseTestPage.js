@@ -459,7 +459,7 @@ const ExerciseTestPage = () => {
         {currentSet.map((ex, index) => {
           return (
             <>
-              <SmallExercise exercise={ex} />
+              <SmallExercise key={index} exercise={ex} />
             </>
           );
         })}

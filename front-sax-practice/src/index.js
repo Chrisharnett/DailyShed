@@ -8,8 +8,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import StudentExercisePage from "./pages/StudentExercisePage";
+import StudentPracticePage from "./pages/StudentPracticePage";
 import ExerciseTestPage from "./pages/ExerciseTestPage";
-import TeacherPage from "./pages/TeacherPage";
 import LoginPage from "./pages/LoginPage";
 import CreateAccountPage from "./pages/CreateAccountPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -51,6 +51,7 @@ root.render(
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/studentExercisePage" element={<StudentExercisePage />} />
       <Route path="/exerciseTestPage" element={<ExerciseTestPage />} />
+      <Route path="/studentPracticePage" element={<StudentPracticePage />} />
     </Routes>
   </BrowserRouter>
 );
