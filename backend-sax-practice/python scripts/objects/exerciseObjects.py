@@ -26,8 +26,8 @@ class Exercise:
                 "key": self.__key,
                 "mode": self.__mode,
                 "imageFileName": self.exerciseFileName() + ".cropped.png",
-                "imageURL": 'https://mysaxpracticeexercisebucket.s3.amazonaws.com/img/' +
-                            self.exerciseFileName() + '.cropped.png',
+                "imageURL": self.imageURL(),
+                "description": str(self)
                 }
     @property
     def getPitchPattern(self):

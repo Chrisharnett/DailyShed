@@ -11,7 +11,7 @@ import json
 
 app = Flask(__name__)
 
-cors = CORS(app, resources={r"/generate-exercise": {"origins": "*"}})
+cors = CORS(app, resources={r"/generateSet": {"origins": "*"}})
 
 s3_client = boto3.client('s3')
 
@@ -72,8 +72,6 @@ def getSet():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-
-
 @app.route("/generateExercise", methods=["POST"])
 def generateExercise():
     try:
@@ -95,7 +93,6 @@ def generateExercise():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-
 
 if __name__ == "__main__":
     app.run()

@@ -48,11 +48,11 @@ app.get(/^(?!\/api).+/, (req, res) => {
   res.sendFile(path.join(__dirname, "../build/index.html"));
 });
 
-app.post("/api/generateExercise/", async (req, res) => {
+app.post("/api/generateSet/", async (req, res) => {
   const exercise = req.body;
   // valid data: console.log(req.body);
 
-  const exerciseMaker = "http://127.0.0.1:5000/generateExercise";
+  const exerciseMaker = "http://127.0.0.1:5000/getSet";
 
   try {
     const response = await axios.post(exerciseMaker, exercise, {
