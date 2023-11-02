@@ -8,61 +8,58 @@ class PracticeSet:
         self.__notePatternCollections = notePatternCollections
         self.__rhythmPatterns = rhythmPatterns
 
-    def minPlayCount(self, type):
+    # TODO Make the min playcount account for type
+    def minPlayCount(self, matcher):
         if len(self.__player.exerciseHistory) == 0:
             return None
-        return min(self.__player.exerciseHistory, key=lambda x: x.getPlayCount).getPlayCount
+        return min([exercise for exercise in self.__player.exerciseHistory if
+                   exercise['exercise'].getPitchPattern['rhythmMatcher'] == type],
+                   key=lambda x: x.getPlayCount).getPlayCount
+
     def chooseDirection(self, notePattern):
         directions = ['ascending', 'descending', 'ascending descending', 'descending ascending']
         uniqueDirections = set()
-        reviewedDirections = [x['exercise'].getPitchPattern.getDirection for x in self.__player.exerciseHistory.values() if
-                              x['exercise'].getPitchPattern == notePattern]
+        reviewedDirections = [x['exercise']['pitchPattern']['direction'] for x in self.__player.exerciseHistory if
+                              x['exercise']['pitchPattern'] == notePattern]
         index = len(reviewedDirections)-1
         if 0 < index < 4:
-            print(index)
             return directions[index]
         return directions[random.randint(0, len(directions)-1)]
 
     def descendingPattern(self, pattern):
-        d = pattern.getNotePattern.copy()
+        d = pattern['notePattern'].copy()
         d.reverse()
-        n = NotePattern(f"{pattern.getPatternId}d",
-                           pattern.getNotePatternType,
+        return NotePattern(f"{pattern['notePatternId']}ad",
+                           pattern['notePatternType'],
                            d,
-                           pattern.getRhythmMatcher,
-                           f'from the {pattern.getNotePattern[-1]}',
+                           pattern['rhythmMatcher'],
+                           f"from the {pattern['notePattern'][-1]}",
                            direction='descending')
-        print(f"Descending: {NotePattern}")
-        return n
 
     def ascendingDescendingPattern(self, pattern):
-        a = pattern.getNotePattern.copy()
-        d = pattern.getNotePattern.copy()
+        a = pattern['notePattern'].copy()
+        d = pattern['notePattern'].copy()
         d.reverse()
         a.pop()
         a.extend(d)
-        n = NotePattern(f"{pattern.getPatternId}ad",
-                           pattern.getNotePatternType,
+        return NotePattern(f"{pattern['notePatternId']}ad",
+                           pattern['notePatternType'],
                            a,
-                           pattern.getRhythmMatcher,
-                           f'to the {pattern.getNotePattern[-1]}',
-                           direction='ascending descending')
-        print(f"Ascending/Descending: {NotePattern}")
-        return n
+                           pattern['rhythmMatcher'],
+                           f"to the {pattern['notePattern'][-1]}",
+                           'ascending descending')
 
     def descendingAscendingPattern(self, pattern):
-        d = pattern.getNotePattern.copy()
+        d = pattern['notePattern'].copy()
         d.reverse()
         d.pop()
-        d.extend(pattern.getNotePattern)
-        n = NotePattern(f"{pattern.getPatternId}da",
-                           pattern.getNotePatternType,
+        d.extend(pattern['notePattern'])
+        return NotePattern(f"{pattern['notePatternId']}da",
+                           pattern['notePatternType'],
                            d,
-                           pattern.getRhythmMatcher,
-                           f'from the {pattern.getNotePattern[-1]}',
+                           pattern['rhythmMatcher'],
+                           f"from the {pattern['notePattern'][-1]}",
                            direction='descending ascending')
-        print(f"Descending/Ascending: {NotePattern}")
-        return n
 
     def maxRhythmNoteLength(self, rhythms):
         return (max(rhythms, key=lambda x: x.noteLength)).noteLength
@@ -100,57 +97,55 @@ class PracticeSet:
 
     def getNoteReviewPattern(self, type):
         notePatternOptions = []
-        for playerExercise in self.__player.exerciseHistory.values():
-            if playerExercise.get('exercise').getPitchPattern.getRhythmMatcher == type:
+        for playerExercise in self.__player.exerciseHistory:
+            if playerExercise['exercise']['pitchPattern']['rhythmMatcher'] == type:
                 notePatternOptions.append(playerExercise)
         minPlays = min(notePatternOptions, key=lambda x: x.get('playCount')).get('playCount')
 
-        reviewPatterns = [playerExercise['exercise'].getPitchPattern for playerExercise in
-                          self.__player.exerciseHistory.values() if playerExercise['playCount'] == minPlays and
-                          playerExercise.get('exercise').getPitchPattern.getRhythmMatcher == type and
-                          (isinstance(playerExercise.get('exercise').getPitchPattern.getPatternId, (int, str)) and
-                          str(playerExercise.get('exercise').getPitchPattern.getPatternId).isdigit())]
+        reviewPatterns = [playerExercise['exercise']['pitchPattern'] for playerExercise in
+                          self.__player.exerciseHistory if playerExercise['playCount'] == minPlays and
+                          playerExercise['exercise']['pitchPattern']['rhythmMatcher'] == type and
+                          (isinstance(playerExercise['exercise']['pitchPattern']['notePatternId'], (int, str)) and
+                          str(playerExercise['exercise']['pitchPattern']['notePatternId']).isdigit())]
         reviewPattern = reviewPatterns[random.randint(0, len(reviewPatterns)-1)]
-        if reviewPattern.getNotePatternType != 'tone':
+        if reviewPattern['notePatternType'] != 'tone':
             direction = (self.chooseDirection(reviewPattern))
             if direction == 'descending':
-                n = self.descendingPattern(reviewPattern)
-                print(f"2: {n.getNotePattern} ")
-                return n
+                return self.descendingPattern(reviewPattern)
             elif direction == 'ascending descending':
-                n =  self.ascendingDescendingPattern(reviewPattern)
-                print(f"2: {n.getNotePattern} ")
-                return n
+                return self.ascendingDescendingPattern(reviewPattern)
             elif direction == 'descending ascending':
-                n =  self.descendingAscendingPattern(reviewPattern)
-                print(f"2: {n.getNotePattern} ")
-                return n
-        else:
-            print(f"Ascending: {reviewPattern.getNotePattern}")
-
-        return reviewPattern
+                return  self.descendingAscendingPattern(reviewPattern)
+        return NotePattern(reviewPattern['notePatternId'], reviewPattern['notePatternType'],
+                           reviewPattern['notePattern'],reviewPattern['rhythmMatcher'],
+                           reviewPattern['description'], reviewPattern['dynamic'],
+                           reviewPattern['direction'])
 
 
     def getRhythmReviewPattern(self, possibleRhythms, min, length):
         rhythms = []
         for rhythm in possibleRhythms:
-            if rhythm.get('playCount') == min and rhythm.get('exercise').getRhythmPattern.noteLength == length:
-                rhythms.append(rhythm['exercise'].getRhythmPattern)
+            if rhythm['playCount'] == min and rhythm['exercise']['rhythmPattern']['noteLength'] == length:
+                rhythms.append(rhythm['exercise']['rhythmPattern'])
         if len(rhythms) == 0:
-            rhythms = [self.getNewRhythmPattern(possibleRhythms[0]['exercise'].getPitchPattern.getRhythmMatcher, length)]
-        return rhythms[random.randint(0, len(rhythms) - 1)]
+            rhythms = [self.getNewRhythmPattern(possibleRhythms[0]['exercise']['pitchPattern']['rhythmMatcher'], length)]
+            return rhythms[random.randint(0, len(rhythms) - 1)]
+        r = rhythms[random.randint(0, len(rhythms) - 1)]
+        return RhythmPattern(r['rhythmId'], r['rhythmType'],
+                             r['rhythmDescription'], r['rhythmPattern'],
+                             r['timeSignature'], r['articulation'])
 
     def getNewNotePattern(self, type):
 
         notePatternCollection = next(x for x in self.__notePatternCollections if x.getName == type)
-        currentPlayerIndex = self.__player.getCollectionIndices[type]['currentIndex']
+        currentPlayerIndex = self.__player.getCurrentStatus['currentIndex'][type]['index']
 
         pitches = notePatternCollection.getPatterns[(currentPlayerIndex + 1) % len(notePatternCollection.getPatterns)]
 
         if currentPlayerIndex >= len(notePatternCollection.getPatterns):
-            self.__player.getCollectionIndices[type]['currentIndex'] = -1
+            self.__player.setIndex(type, -1)
         else:
-            self.__player.getCollectionIndices[type]['currentIndex'] += 1
+            self.__player.setIndex(type, currentPlayerIndex +1)
 
         return pitches
 
@@ -176,10 +171,10 @@ class PracticeSet:
 
         for i in range(len(newSet)):
             # Build review exercise
-            if currentSetPattern[i].get('reviewBool') and len(previousSet) > 0:
+            if currentSetPattern[i].get('reviewBool') and previousSet:
 
-                pitches = self.getNoteReviewPattern(previousSet[i].getPitchPattern.getRhythmMatcher)
-                rhythm = self.getNewRhythmPattern(previousSet[i].getPitchPattern.getRhythmMatcher, len(pitches.getNotePattern))
+                pitches = self.getNoteReviewPattern(previousSet[i]['pitchPattern']['rhythmMatcher'])
+                rhythm = self.getNewRhythmPattern(previousSet[i]['pitchPattern']['rhythmMatcher'], len(pitches.getNotePattern))
 
                 ex = Exercise(pitches, rhythm)
                 newSet[i] = (ex)
@@ -187,15 +182,14 @@ class PracticeSet:
                 # Get the next note Pattern for the collection type
                 pitches = self.getNewNotePattern(currentSetPattern[i].get('type'))
 
-                if len(previousSet) > 0:
+                if previousSet:
                 # Get a review rhythm pattern for the collection type.
                     possibleRhythms = []
-                    for ex in self.__player.exerciseHistory.values():
-                        if ex.get('exercise').getRhythmPattern.getRhythmType == pitches.getRhythmMatcher:
+                    for ex in self.__player.exerciseHistory:
+                        if ex['exercise']['rhythmPattern']['rhythmType'] == pitches.getRhythmMatcher:
                             possibleRhythms.append(ex)
                     m = min(possibleRhythms, key=lambda x: x.get('playCount')).get('playCount')
-                    rhythmReview = self.getRhythmReviewPattern(possibleRhythms, m, len(pitches.getNotePattern))
-                    rhythm = rhythmReview
+                    rhythm = self.getRhythmReviewPattern(possibleRhythms, m, len(pitches.getNotePattern))
                 else:
                     rhythm = next(pattern for pattern in self.__rhythmPatterns.getPatterns if
                                         pattern.getRhythmType == pitches.getRhythmMatcher and

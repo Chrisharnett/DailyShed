@@ -42,18 +42,6 @@ const ExerciseTestPage = () => {
     preamble: "#(set-global-staff-size 14)",
   });
   const [exerciseURL, setExerciseURL] = useState(null);
-IN PYTHON
-//  To make a routine:
-  // 1. Get the student
-  // 2. Get the previous exerciseSet
-  // 3. Get the current goal (notePattern collection).
-  // 4. Get all rhythmPatterns.
-  // 5. Find the next notePattern from the collection of exercises.
-  // 6. If possible find a familiar rhythm for the new notePattern. If not, apply the next new rhythm to the notePattern.
-  // 7. Apply new rhythms to the review exercises.
-  // 8. For each exercise, check if it exists in bucket. If it does, get the URL. If not, create the exercise image.
-  // 9. Start the routine. Update the student as they go.
-  
 
   useEffect(() => {
     const getImage = async () => {

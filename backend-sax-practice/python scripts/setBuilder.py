@@ -15,12 +15,12 @@ def main():
                       {"type": 'ninthScale1', "reviewBool": 1, "key": 'g', 'mode': 'major'},
                       {"type": 'ninthScale1', "reviewBool": 0, "key": 'g', 'mode': 'major'}]
 
-    player = Player(currentSetPattern)
+    player = Player()
     notes = notePatterns(minNote, maxNote, maxLength)
     rhythms = rhythmPatterns(4, 4)
     keys = ['g', 'c', 'd']
     practiceSet = PracticeSet(player, notes, rhythms)
-    sessions = 20
+    sessions = 1
     for i in range(sessions):
 
         currentSet = practiceSet.getNextSet()
@@ -28,7 +28,8 @@ def main():
         print(f"day {i}")
         for exercise in currentSet:
             player.addExercise(exercise, random.randint(0, 5))
-            print(exercise)
+            url = exercise.createImage()
+            print(url)
         print()
         player.setPreviousSet(currentSet)
 

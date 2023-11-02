@@ -2,6 +2,7 @@ import os
 import boto3
 import abjad
 import math
+import json
 from objects.musicObjects import Scale
 
 class Exercise:
@@ -18,7 +19,16 @@ class Exercise:
         self.__key = key
         self.__mode = mode
         self.__preamble = preamble
-
+    def serialize(self):
+        return {"exerciseName": self.exerciseFileName(),
+                "pitchPattern": self.__pitchPattern.serialize(),
+                "rhythmPattern": self.__rhythmPattern.serialize(),
+                "key": self.__key,
+                "mode": self.__mode,
+                "imageFileName": self.exerciseFileName() + ".cropped.png",
+                "imageURL": 'https://mysaxpracticeexercisebucket.s3.amazonaws.com/img/' +
+                            self.exerciseFileName() + '.cropped.png',
+                }
     @property
     def getPitchPattern(self):
         return self.__pitchPattern
@@ -34,17 +44,17 @@ class Exercise:
     def notationPattern(self):
         notationPattern = []
         # Use the same note before and after a tie by adding to the notePattern
-        for i in range(self.__rhythmPattern.getRhythmPattern):
+        for i in range(len(self.__rhythmPattern.getRhythmPattern)):
             if self.__rhythmPattern.getRhythmPattern[i] == ['~']:
                 self.__pitchPattern.getNotePattern.insert(self.__pitchPattern.getNotePattern[i - 1], i)
         for k in range(len(self.__rhythmPattern.getRhythmPattern)):
-            if self.__rhythmPattern.getRhythmPattern[k].isnumeric():
-                note = [self.__pitchPattern.getNotePattern[k], self.__rhythmPattern.getRhythmPattern[k]]
-                notationPattern.extend(note)
+            if (self.__rhythmPattern.getRhythmPattern[k][0]).isnumeric():
+                note = [self.__pitchPattern.getNotePattern[k], self.__rhythmPattern.getRhythmPattern[k][0]]
+                notationPattern.append(note)
         return notationPattern
 
     def exerciseFileName(self):
-        fileName = f"{self.__key}_{self.__mode}_{str(self.__pitchPattern.getPatternId)}_{str(self.__rhythmPattern.getRhythmPatternId)}"
+        return f"{self.__key}_{self.__mode}_{str(self.__pitchPattern.getPatternId)}_{str(self.__rhythmPattern.getRhythmPatternId)}"
 
     @property
     def buildScore(self):
@@ -53,6 +63,7 @@ class Exercise:
         pattern = self.notationPattern()
         for note in pattern:
             if isinstance(note[0], int):
+                n=self.numberToNote(scaleNotes, note)
                 container.append(self.numberToNote(scaleNotes, note))
             elif note[0] == "r":
                 container.append(note)
@@ -69,22 +80,23 @@ class Exercise:
                 container.append(c)
         attachHere = ""
         if len(container) >= 1:
-            attachHere = container[0][0]
+            attachHere = container[0]
+            # attachHere = container[0][0]
         if attachHere != "":
             keySignature = abjad.KeySignature(
                 abjad.NamedPitchClass(self.__key), abjad.Mode(self.__mode)
             )
             abjad.attach(keySignature, attachHere)
-            timeSignature = abjad.TimeSignature(tuple(self.__rhythmPattern.getTimeSignature()))
+            timeSignature = abjad.TimeSignature(self.__rhythmPattern.getTimeSignature)
             abjad.attach(timeSignature, attachHere)
             if not abjad.get.indicators(container[-1], abjad.Repeat):
                 bar_line = abjad.BarLine("|.")
                 abjad.attach(bar_line, container[-1])
-        if len(self.__rhythmPattern.getArticulation()) > 0:
-            for articulation in self.__rhythmPattern.getArticulation():
+        if len(self.__rhythmPattern.getArticulation) > 0:
+            for articulation in self.__rhythmPattern.getArticulation:
                 if articulation.get("articulation").lower() == "fermata":
                     a = abjad.Fermata()
-                    abjad.attach(a, container[articulation.get("index")][0])
+                    abjad.attach(a, container[articulation.get("index")])
 
         voice = abjad.Voice([container], name="Exercise_Voice")
         staff = abjad.Staff([voice], name="Exercise_Staff")
@@ -113,9 +125,7 @@ class Exercise:
         pitch += octave
 
         pitchName = pitch.get_name()
-        n = pitchName + note[1] + " "
-
-        return n
+        return pitchName + note[1] + " "
 
     def path(self):
         return os.path.join("static/img/" + self.__str__()) + ".cropped.png"
@@ -187,6 +197,15 @@ class NotePattern:
         self.__dynamic = dynamic
         self.__direction = direction
 
+    def serialize(self):
+        return{"notePatternId": self.__patternId,
+               "notePatternType": self.__notePatternType,
+               "notePattern": self.__notePattern,
+               "rhythmMatcher": self.__rhythmMatcher,
+               "description": self.__description,
+               "dynamic": self.__dynamic,
+               "direction": self.__direction}
+
     @property
     def getPatternId(self):
         return self.__patternId
@@ -223,7 +242,14 @@ class RhythmPattern:
         self.__timeSignature = timeSignature
         self.__articulation = articulation
 
-
+    def serialize(self):
+        return {"rhythmId": self.__rhythmPatternId,
+                "rhythmType": self.__rhythmType,
+                "rhythmDescription": self.__rhythmDescription,
+                "rhythmPattern": self.__rhythmPattern,
+                "timeSignature": self.__timeSignature,
+                "articulation": self.__articulation,
+                "noteLength": self.noteLength}
     @property
     def getRhythmPatternId(self):
         return self.__rhythmPatternId
