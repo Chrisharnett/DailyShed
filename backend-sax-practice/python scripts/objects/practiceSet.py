@@ -34,7 +34,9 @@ class PracticeSet:
                            d,
                            pattern['rhythmMatcher'],
                            f"from the {pattern['notePattern'][-1]}",
-                           direction='descending')
+                           'descending',
+                           pattern['repeatMe'],
+                           pattern['holdLastNote'])
 
     def ascendingDescendingPattern(self, pattern):
         a = pattern['notePattern'].copy()
@@ -47,7 +49,10 @@ class PracticeSet:
                            a,
                            pattern['rhythmMatcher'],
                            f"to the {pattern['notePattern'][-1]}",
-                           'ascending descending')
+                           'ascending descending',
+                           pattern['repeatMe'],
+                           pattern['holdLastNote']
+                           )
 
     def descendingAscendingPattern(self, pattern):
         d = pattern['notePattern'].copy()
@@ -59,7 +64,10 @@ class PracticeSet:
                            d,
                            pattern['rhythmMatcher'],
                            f"from the {pattern['notePattern'][-1]}",
-                           direction='descending ascending')
+                           'descending ascending',
+                           pattern['repeatMe'],
+                           pattern['holdLastNote']
+                           )
 
     def maxRhythmNoteLength(self, rhythms):
         return (max(rhythms, key=lambda x: x.noteLength)).noteLength
@@ -119,7 +127,10 @@ class PracticeSet:
         return NotePattern(reviewPattern['notePatternId'], reviewPattern['notePatternType'],
                            reviewPattern['notePattern'],reviewPattern['rhythmMatcher'],
                            reviewPattern['description'], reviewPattern['dynamic'],
-                           reviewPattern['direction'])
+                           reviewPattern['direction'],
+                           reviewPattern['repeatMe'],
+                           reviewPattern['holdLastNote']
+)
 
 
     def getRhythmReviewPattern(self, possibleRhythms, min, length):
@@ -174,14 +185,13 @@ class PracticeSet:
             if currentSetPattern[i].get('reviewBool') and previousSet:
 
                 pitches = self.getNoteReviewPattern(previousSet[i]['pitchPattern']['rhythmMatcher'])
-                rhythm = self.getNewRhythmPattern(previousSet[i]['pitchPattern']['rhythmMatcher'], len(pitches.getNotePattern))
+                rhythm = self.getNewRhythmPattern(previousSet[i]['pitchPattern']['rhythmMatcher'], pitches.getRhythmLength())
 
                 ex = Exercise(pitches, rhythm)
                 newSet[i] = (ex)
             else:
                 # Get the next note Pattern for the collection type
                 pitches = self.getNewNotePattern(currentSetPattern[i].get('type'))
-
                 if previousSet:
                 # Get a review rhythm pattern for the collection type.
                     possibleRhythms = []
@@ -189,11 +199,12 @@ class PracticeSet:
                         if ex['exercise']['rhythmPattern']['rhythmType'] == pitches.getRhythmMatcher:
                             possibleRhythms.append(ex)
                     m = min(possibleRhythms, key=lambda x: x.get('playCount')).get('playCount')
-                    rhythm = self.getRhythmReviewPattern(possibleRhythms, m, len(pitches.getNotePattern))
+
+                    rhythm = self.getRhythmReviewPattern(possibleRhythms, m, pitches.getRhythmLength())
                 else:
                     rhythm = next(pattern for pattern in self.__rhythmPatterns.getPatterns if
                                         pattern.getRhythmType == pitches.getRhythmMatcher and
-                                        pattern.noteLength == len(pitches.getNotePattern))
+                                        pattern.noteLength == pitches.getRhythmLength())
 
                 ex = Exercise(pitches, rhythm)
                 newSet[i] = ex
