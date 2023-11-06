@@ -6,16 +6,16 @@ const Navigation = () => {
   return (
     <Navbar expand="lg" className="navbar-dark bg-dark p-2">
       <Container>
-        <Navbar.Brand href="/">The Daily Shed</Navbar.Brand>
+        <Navbar.Brand href="/exerciseTestPage">The Daily Shed</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/teacher">Teacher</Nav.Link>
+            {/* <Nav.Link href="/teacher">Teacher</Nav.Link>
             <Nav.Link href="/studentExercisePage/Paula">
               Student Exercise Page
             </Nav.Link>
             <Nav.Link href="/exerciseTestPage">Exercise Test Page</Nav.Link>
-            <Nav.Link href="/exerciseList">Exercise List</Nav.Link>
+            <Nav.Link href="/exerciseList">Exercise List</Nav.Link> */}
           </Nav>
         </Navbar.Collapse>
       </Container>

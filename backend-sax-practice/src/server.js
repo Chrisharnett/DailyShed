@@ -4,10 +4,8 @@ import { db, connectToDb } from "./db.js";
 import "dotenv/config";
 import path from "path";
 import axios from "axios";
-import https from "https";
-import fs from "fs";
 import { spawn } from "child_process";
-import jwt from "jsonwebtoken";
+import { routes } from "../routes/index.js";
 
 import { fileURLToPath } from "url";
 
@@ -49,20 +47,9 @@ app.get(/^(?!\/api).+/, (req, res) => {
   res.sendFile(path.join(__dirname, "../build/index.html"));
 });
 
-// Double Check this syntax from class video Nov. 3 ~ 20 minutes
-app.get("/api/login", async (req, res) => {
-  jwt.toString(
-    { name: "Chris", accountID: 3 },
-    process.env.JWT_SECRET,
-    { exinresIn: "2d" },
-    (err, token) => {
-      if (err) {
-        res.status(500).json(err);
-      }
-
-      res.status(200).json({ token });
-    }
-  );
+// Add the routes stores in the routes/index.js folder
+routes.forEach((route) => {
+  app[route.method](route.path, route.handler);
 });
 
 app.post("/api/generateSet/", async (req, res) => {
@@ -88,16 +75,16 @@ app.post("/api/generateSet/", async (req, res) => {
   }
 });
 
-app.post("/api/addNewProgram/", async (req, res) => {
-  const { newProgram } = req.body;
-  try {
-    let response = await db.collection("programs").insertOne(newProgram);
-    res.status(201).json({ message: "Program added.", data: response.ops[0] });
-  } catch (error) {
-    console.error("Error adding program", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+// app.post("/api/addNewProgram/", async (req, res) => {
+//   const { newProgram } = req.body;
+//   try {
+//     let response = await db.collection("programs").insertOne(newProgram);
+//     res.status(201).json({ message: "Program added.", data: response.ops[0] });
+//   } catch (error) {
+//     console.error("Error adding program", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
 
 app.get("/api/programs/:programName", async (req, res) => {
   const { programName } = req.params;

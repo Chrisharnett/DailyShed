@@ -1,23 +1,28 @@
-// const user = useUser(); will give us immediate access to the user
 import { useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useToken } from "./useToken";
 
-// This is the firebase version!
 const useUser = () => {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [token] = useToken();
+
+  const getPayloadFromToken = (token) => {
+    const encodedPayload = token.split(".")[1];
+    return JSON.parse(atob(encodedPayload));
+  };
+
+  const [user, setUser] = useState(() => {
+    if (!token) return null;
+    return getPayloadFromToken(token);
+  });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
-      setUser(user);
-      setIsLoading(false);
-    });
+    if (!token) {
+      setUser(null);
+    } else {
+      setUser(getPayloadFromToken(token));
+    }
+  }, [token]);
 
-    return unsubscribe;
-  }, []);
-
-  return { user, isLoading };
+  return user;
 };
 
 export default useUser;

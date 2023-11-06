@@ -1,17 +1,6 @@
 import { useState, useEffect } from "react";
 import Container from "react-bootstrap/esm/Container";
 
-export function CurrentExercise({ exercise }) {
-  return (
-    <Exercise
-      title={exercise.exerciseName}
-      description={exercise.description}
-      src={exercise.imageURL}
-      height={100}
-    />
-  );
-}
-
 export function ExerciseList({ exList }) {
   return exList.map((exList, i) => {
     return (

@@ -5,7 +5,7 @@ import Navigation from "../components/NavBar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import useUser from "../hooks/useUser";
+import useUser from "../auth/useUser";
 
 const StudentExercisePage = () => {
   const { studentName } = useParams();

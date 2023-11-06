@@ -3,8 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navigation from "../components/NavBar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
 import axios from "axios";
-import useUser from "../hooks/useUser";
+import useUser from "../auth/useUser";
 import CurrentExercise from "../components/CurrentExercise";
 import SmallExercise from "../components/SmallExercise";
 
@@ -350,15 +351,16 @@ const ExerciseTestPage = () => {
   if (currentSet) {
     return (
       <>
-        <Navigation />
-        <h1>Student Test Set Page</h1>
-        {currentSet.map((ex, index) => {
-          return (
-            <>
-              <SmallExercise key={index} exercise={ex} />
-            </>
-          );
-        })}
+        <Container className="w-75 text-center main">
+          <h1>Student Test Set Page</h1>
+          {currentSet.map((ex, index) => {
+            return (
+              <>
+                <SmallExercise key={index} exercise={ex} />
+              </>
+            );
+          })}
+        </Container>
       </>
     );
   }
