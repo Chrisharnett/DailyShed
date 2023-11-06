@@ -7,6 +7,7 @@ import axios from "axios";
 import https from "https";
 import fs from "fs";
 import { spawn } from "child_process";
+import jwt from "jsonwebtoken";
 
 import { fileURLToPath } from "url";
 
@@ -46,6 +47,22 @@ flaskExerciseMaker.on("close", (code) => {
 
 app.get(/^(?!\/api).+/, (req, res) => {
   res.sendFile(path.join(__dirname, "../build/index.html"));
+});
+
+// Double Check this syntax from class video Nov. 3 ~ 20 minutes
+app.get("/api/login", async (req, res) => {
+  jwt.toString(
+    { name: "Chris", accountID: 3 },
+    process.env.JWT_SECRET,
+    { exinresIn: "2d" },
+    (err, token) => {
+      if (err) {
+        res.status(500).json(err);
+      }
+
+      res.status(200).json({ token });
+    }
+  );
 });
 
 app.post("/api/generateSet/", async (req, res) => {

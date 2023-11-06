@@ -20,6 +20,18 @@ const LoginPage = () => {
     }
   };
 
+  const onLoginClicked = async () => {
+    var requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
+
+    fetch("api/login", requestOptions)
+      .then((response) => response.json)
+      .then((result) => console.log(result))
+      .catch((e) => console.log("error", e));
+  };
+
   return (
     <>
       <h1> Log-in. </h1>
@@ -47,7 +59,7 @@ const LoginPage = () => {
         Log In{" "}
       </Button>
       {/* From video in class, incomplete (obviously) */}
-      <Button disabled={!email || !password} onClick="" />
+      <Button disabled={!email || !password} onClick={onLoginClicked()} />
       <Link to="/createAccount">Don't have an account? Create one here.</Link>
     </>
   );
