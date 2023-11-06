@@ -24,7 +24,7 @@ const CreateAccountPage = () => {
 
     const { token } = response.data;
     setToken(token);
-    navigate("/displayProperties");
+    navigate("/exerciseTestPage");
     // navigate(`/please-verify?email=${encodeURIComponent(emailValue)}`);
   };
 
