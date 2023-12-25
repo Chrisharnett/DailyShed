@@ -1,4 +1,3 @@
-// TEST COMMENT
 import express from "express";
 import { db, connectToDb } from "./db.js";
 import "dotenv/config.js";
