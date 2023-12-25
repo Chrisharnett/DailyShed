@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -28,10 +28,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <Container
-        className="w-75 text-center main"
-        style={{ backgroundColor: "#DAE2DF", height: 800 }}
-      >
+      <Container className="container text-center main">
         <h1> Log-in. </h1>
         {errorMessage && <p className="fail">{errorMessage}</p>}
         <Form.Group className="mb-3">

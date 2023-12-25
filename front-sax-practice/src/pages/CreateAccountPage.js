@@ -78,7 +78,7 @@ const CreateAccountPage = () => {
           Sign Up{" "}
         </Button>
 
-        <Button variant="custom" onClick={() => navigate("/loginPage")}>
+        <Button variant="custom" onClick={() => navigate("/login")}>
           {" "}
           Already have an account? Log In!{" "}
         </Button>

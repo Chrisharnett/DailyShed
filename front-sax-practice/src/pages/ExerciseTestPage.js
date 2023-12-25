@@ -351,12 +351,12 @@ const ExerciseTestPage = () => {
   if (currentSet) {
     return (
       <>
-        <Container className="w-75 text-center main">
+        <Container className="container main text-center">
           <h1>Student Test Set Page</h1>
           {currentSet.map((ex, index) => {
             return (
               <>
-                <SmallExercise key={index} exercise={ex} />
+                <SmallExercise key={index} index={index} exercise={ex} />
               </>
             );
           })}

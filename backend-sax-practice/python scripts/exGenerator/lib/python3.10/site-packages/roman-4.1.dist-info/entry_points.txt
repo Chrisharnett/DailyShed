@@ -1,3 +1,0 @@
-[console_scripts]
-roman = roman:main
-
