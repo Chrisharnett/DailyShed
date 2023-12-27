@@ -5,6 +5,9 @@ import Footer from "./components/Footer";
 import NotFoundPage from "./pages/NotFoundPage";
 import Navigation from "./components/NavBar";
 import ExerciseTestPage from "./pages/ExerciseTestPage";
+import TheShed from "./pages/TheShed";
+import UserProfile from "./pages/UserProfile";
+import PracticeJournal from "./pages/PracticeJournal";
 import HomePage from "./pages/HomePage";
 import { useState } from "react";
 
@@ -21,8 +24,15 @@ export function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="*" element={<NotFoundPage />} />
-          <Route path="/exerciseTestPage" element={<ExerciseTestPage />} />
-          <Route element={<PrivateRoute user={user} />}></Route>
+          <Route element={<PrivateRoute user={user} />}>
+            <Route path="/exerciseTestPage" element={<ExerciseTestPage />} />
+            <Route path="/theShed" element={<TheShed user={user} />} />
+            <Route path="/userProfile" element={<UserProfile user={user} />} />
+            <Route
+              path="/practiceJournal"
+              element={<PracticeJournal user={user} />}
+            />
+          </Route>
         </Routes>
       </BrowserRouter>
     </>

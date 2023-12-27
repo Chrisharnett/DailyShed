@@ -5,23 +5,26 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useToken } from "../auth/useToken";
 import { LoginModal } from "../auth/modals/LoginModal.js";
+import useUser from "../auth/useUser.js";
 import axios from "axios";
 
-const Navigation = ({ user, loggedIn, setLoggedIn }) => {
+const Navigation = ({ loggedIn, setLoggedIn }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [, setToken] = useToken();
   const [cognitoURL, setCognitoURL] = useState("");
   const navigate = useNavigate();
 
+  const user = useUser;
+
   const urlParams = new URLSearchParams(window.location.search);
-  const oauthToken = urlParams.get("token");
+  const token = urlParams.get("token");
 
   useEffect(() => {
-    if (oauthToken) {
-      setToken(oauthToken);
+    if (token) {
+      setToken(token);
       setLoggedIn(true);
     }
-  }, [oauthToken, setToken, navigate, setLoggedIn]);
+  }, [token, setToken, navigate, setLoggedIn]);
 
   useEffect(() => {
     const loadCognitoURL = async () => {
@@ -44,11 +47,6 @@ const Navigation = ({ user, loggedIn, setLoggedIn }) => {
     }
   }, [user, setLoggedIn]);
 
-  const loginHandler = () => {
-    window.location.href = `https://thedailyshedup.auth.us-east-1.amazoncognito.com/login?response_type=code&client_id=2ue2n5tta4o5v8pcq3d7ov1gcr&redirect_uri=http://localhost:8000/api/auth/cognito/callback
-    `;
-  };
-
   const logOutHandler = () => {
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
     setLoggedIn(false);
@@ -56,33 +54,26 @@ const Navigation = ({ user, loggedIn, setLoggedIn }) => {
   };
   return (
     <>
-      <Navbar expand="lg" className="navbar-dark bg-dark p-2">
+      <Navbar expand="lg" className="navbar-dark bg-dark p-2" id="top">
         <Container>
           <Navbar.Brand href="/">The Daily Shed</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="/studentExercisePage/Paula">Shed Time</Nav.Link>
-              <Nav.Link href="/studentProfile/Paula">User Profile</Nav.Link>
-              <Nav.Link href="/practiceJournal/Paula">
-                Practice Journal
-              </Nav.Link>
-            </Nav>
-            {loggedIn && (
+            {user && (
               <Nav className="me-auto">
-                <Nav.Link className="green-text" href="/displayProperties">
-                  <h4>Properties</h4>
-                </Nav.Link>
+                <Nav.Link href="/theShed">The Shed</Nav.Link>
+                <Nav.Link href="/profile">User Profile</Nav.Link>
+                <Nav.Link href="/practiceJournal">Practice Journal</Nav.Link>
               </Nav>
             )}
-            {loggedIn && (
+            {user && (
               <Nav>
                 <Nav.Link className="" href="#" onClick={logOutHandler}>
                   <h4>Logout</h4>
                 </Nav.Link>
               </Nav>
             )}
-            {!loggedIn && (
+            {!user && (
               <Nav>
                 <Nav.Link
                   className=""
@@ -90,7 +81,6 @@ const Navigation = ({ user, loggedIn, setLoggedIn }) => {
                   onClick={() => {
                     window.location.href = cognitoURL;
                   }}
-                  // onClick={setShowLoginModal}
                 >
                   <h4>Login</h4>
                 </Nav.Link>
@@ -99,12 +89,6 @@ const Navigation = ({ user, loggedIn, setLoggedIn }) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <LoginModal
-        loggedIn={loggedIn}
-        setLoggedIn={setLoggedIn}
-        show={showLoginModal}
-        setShow={setShowLoginModal}
-      />
     </>
   );
 };

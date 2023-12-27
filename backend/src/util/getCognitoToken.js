@@ -7,7 +7,7 @@ export const getCognitoToken = async ({ code }) => {
     `${process.env.COGNITO_DOMAIN}/oauth2/token`,
     new URLSearchParams({
       grant_type: "authorization_code",
-      client_id: process.env.AWS_CLIENT_ID,
+      client_id: process.env.COGNITO_CLIENT_ID,
       code: code,
       redirect_uri: process.env.COGNITO_CALLBACK,
     }),

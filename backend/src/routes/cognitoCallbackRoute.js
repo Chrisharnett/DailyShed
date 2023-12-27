@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { getCognitoToken } from "../util/getCognitoToken.js";
+import { getCognitoUserData } from "../util/getCognitoUserData.js";
 
 export const cognitoCallbackRoute = {
   path: "/api/auth/cognito/callback",
@@ -10,44 +11,29 @@ export const cognitoCallbackRoute = {
     try {
       const cognitoToken = await getCognitoToken({ code });
       const { id_token, access_token, refresh_token } = cognitoToken.data;
+      const userData = await getCognitoUserData({ id_token });
 
-      // Optionally: Validate ID token and extract user information
+      const { sub, email, email_verified } = userData;
+      const name = userData["cognito:username"];
 
-      // Create your JWT token
-      const customToken = jwt.sign(
+      const token = jwt.sign(
         {
-          // Include necessary claims
-          // e.g., userID, email, etc. extracted from the Cognito ID token
+          id_token,
+          refresh_token,
+          access_token,
+          sub,
+          name,
+          email,
+          email_verified,
         },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
 
-      res.redirect(`http://localhost:3000/?token=${customToken}`);
+      res.redirect(`http://localhost:3000/?token=${token}`);
     } catch (error) {
       console.error(error);
       res.sendStatus(500);
     }
-    // jwt.sign(
-    //   {
-    //     userID,
-    //     is_verified,
-    //     email,
-    //     name,
-    //     max_properties,
-    //     access_token,
-    //     id_token,
-    //     refresh_token,
-    //     oauthId: oauthUserInfo.id,
-    //   },
-    //   process.env.JWT_SECRET,
-    //   (err, token) => {
-    //     if (err) return res.sendStatus(500);
-    //     // res.redirect(`http://localhost:3000/?token=${token}`);
-
-    //     res.redirect(`http://localhost:3000/?token=${token}`);
-    //   }
-    // );
-    res.redirect(`http://localhost:3000/`);
   },
 };
