@@ -5,10 +5,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useToken } from "../auth/useToken";
 import { LoginModal } from "../auth/modals/LoginModal.js";
+import axios from "axios";
 
 const Navigation = ({ user, loggedIn, setLoggedIn }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [, setToken] = useToken();
+  const [cognitoURL, setCognitoURL] = useState("");
   const navigate = useNavigate();
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -22,12 +24,30 @@ const Navigation = ({ user, loggedIn, setLoggedIn }) => {
   }, [oauthToken, setToken, navigate, setLoggedIn]);
 
   useEffect(() => {
+    const loadCognitoURL = async () => {
+      try {
+        const response = await axios.get("/api/auth/cognito/url");
+        const { url } = response.data;
+        setCognitoURL(url);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    loadCognitoURL();
+  }, []);
+
+  useEffect(() => {
     if (user) {
       setLoggedIn(true);
     } else {
       setLoggedIn(false);
     }
   }, [user, setLoggedIn]);
+
+  const loginHandler = () => {
+    window.location.href = `https://thedailyshedup.auth.us-east-1.amazoncognito.com/login?response_type=code&client_id=2ue2n5tta4o5v8pcq3d7ov1gcr&redirect_uri=http://localhost:8000/api/auth/cognito/callback
+    `;
+  };
 
   const logOutHandler = () => {
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
@@ -67,7 +87,10 @@ const Navigation = ({ user, loggedIn, setLoggedIn }) => {
                 <Nav.Link
                   className=""
                   href="#login"
-                  onClick={setShowLoginModal}
+                  onClick={() => {
+                    window.location.href = cognitoURL;
+                  }}
+                  // onClick={setShowLoginModal}
                 >
                   <h4>Login</h4>
                 </Nav.Link>

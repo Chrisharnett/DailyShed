@@ -4,8 +4,12 @@ import { testRoute } from "./testRoute.js";
 import { updateUserInfoRoute } from "./updateUserInfoRoute.js";
 import { testEmailRoute } from "./testEmailRoute.js";
 import { verifyEmailRoute } from "./verifyEmailRoute.js";
+import { cognitoCallbackRoute } from "./cognitoCallbackRoute.js";
+import { getCognitoURLRoute } from "./getCognitoURL.js";
 
 export const routes = [
+  getCognitoURLRoute,
+  cognitoCallbackRoute,
   testRoute,
   signUpRoute,
   loginRoute,
