@@ -12,7 +12,7 @@ import HomePage from "./pages/HomePage";
 import { useState } from "react";
 
 export function App() {
-  const [user, setUser] = useState(null);
+  const [user] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
   return (
@@ -25,7 +25,10 @@ export function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route element={<PrivateRoute user={user} />}>
-            <Route path="/exerciseTestPage" element={<ExerciseTestPage />} />
+            <Route
+              path="/exerciseTestPage"
+              element={<ExerciseTestPage user={user} />}
+            />
             <Route path="/theShed" element={<TheShed user={user} />} />
             <Route path="/userProfile" element={<UserProfile user={user} />} />
             <Route

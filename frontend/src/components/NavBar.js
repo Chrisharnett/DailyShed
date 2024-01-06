@@ -4,17 +4,15 @@ import Container from "react-bootstrap/Container";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useToken } from "../auth/useToken";
-import { LoginModal } from "../auth/modals/LoginModal.js";
 import useUser from "../auth/useUser.js";
 import axios from "axios";
 
-const Navigation = ({ loggedIn, setLoggedIn }) => {
+const Navigation = ({ user, loggedIn, setLoggedIn }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [, setToken] = useToken();
+  const [, setUser] = useState(null);
   const [cognitoURL, setCognitoURL] = useState("");
   const navigate = useNavigate();
-
-  const user = useUser;
 
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
@@ -48,10 +46,11 @@ const Navigation = ({ loggedIn, setLoggedIn }) => {
   }, [user, setLoggedIn]);
 
   const logOutHandler = () => {
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    localStorage.removeItem("token");
     setLoggedIn(false);
     navigate("/");
   };
+
   return (
     <>
       <Navbar expand="lg" className="navbar-dark bg-dark p-2" id="top">
@@ -59,21 +58,21 @@ const Navigation = ({ loggedIn, setLoggedIn }) => {
           <Navbar.Brand href="/">The Daily Shed</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            {user && (
+            {loggedIn && (
               <Nav className="me-auto">
                 <Nav.Link href="/theShed">The Shed</Nav.Link>
-                <Nav.Link href="/profile">User Profile</Nav.Link>
+                <Nav.Link href="/userProfile">User Profile</Nav.Link>
                 <Nav.Link href="/practiceJournal">Practice Journal</Nav.Link>
               </Nav>
             )}
-            {user && (
+            {loggedIn && (
               <Nav>
                 <Nav.Link className="" href="#" onClick={logOutHandler}>
                   <h4>Logout</h4>
                 </Nav.Link>
               </Nav>
             )}
-            {!user && (
+            {!loggedIn && (
               <Nav>
                 <Nav.Link
                   className=""

@@ -1,10 +1,12 @@
-import Navigation from "../components/NavBar";
+import Container from "react-bootstrap/Container";
 
 const TeacherPage = () => {
   return (
     <>
-      <Navigation />
-      <h1> This is the teacher page!</h1>
+      <Container>
+        <h1> This is the teacher page!</h1>
+        <p>Under Construction</p>
+      </Container>
     </>
   );
 };
