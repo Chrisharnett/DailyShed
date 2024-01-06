@@ -8,33 +8,31 @@ import ExerciseTestPage from "./pages/ExerciseTestPage";
 import TheShed from "./pages/TheShed";
 import UserProfile from "./pages/UserProfile";
 import PracticeJournal from "./pages/PracticeJournal";
+import StudentExercisePage from "./pages/StudentExercisePage";
 import HomePage from "./pages/HomePage";
 import { useState } from "react";
 
 export function App() {
   const [user] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
     <>
       <BrowserRouter>
-        <Navigation user={user} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+        <Navigation />
 
         <Footer />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="*" element={<NotFoundPage />} />
-          <Route element={<PrivateRoute user={user} />}>
+          <Route element={<PrivateRoute />}>
             <Route
-              path="/exerciseTestPage"
-              element={<ExerciseTestPage user={user} />}
+              path="studentExercisePage"
+              element={<StudentExercisePage />}
             />
-            <Route path="/theShed" element={<TheShed user={user} />} />
-            <Route path="/userProfile" element={<UserProfile user={user} />} />
-            <Route
-              path="/practiceJournal"
-              element={<PracticeJournal user={user} />}
-            />
+            <Route path="/exerciseTestPage" element={<ExerciseTestPage />} />
+            <Route path="/theShed" element={<TheShed />} />
+            <Route path="/userProfile" element={<UserProfile />} />
+            <Route path="/practiceJournal" element={<PracticeJournal />} />
           </Route>
         </Routes>
       </BrowserRouter>

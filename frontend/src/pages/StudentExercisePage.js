@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CurrentExercise } from "../components/exercise";
+import CurrentExercise from "../components/CurrentExercise";
 import Navigation from "../components/NavBar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
@@ -8,7 +8,7 @@ import axios from "axios";
 import useUser from "../auth/useUser";
 
 const StudentExercisePage = () => {
-  const { studentName } = useParams();
+  const studentName = "Paula";
   const [student, setStudent] = useState(null);
   const [currentExercise, setCurrentExercise] = useState(null);
   const [program, setProgram] = useState(null);

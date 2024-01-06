@@ -1,6 +1,8 @@
 import Container from "react-bootstrap/Container";
+import useUser from "../auth/useUser";
 
 const TeacherPage = () => {
+  const user = useUser();
   return (
     <>
       <Container>

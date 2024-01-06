@@ -1,6 +1,8 @@
 import Container from "react-bootstrap/Container";
+import useUser from "../auth/useUser";
 
-const TheShed = ({ user }) => {
+const TheShed = () => {
+  const user = useUser();
   const { name } = user;
   return (
     <>
