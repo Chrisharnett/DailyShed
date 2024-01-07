@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { getCognitoToken } from "../util/getCognitoToken.js";
 import { getCognitoUserData } from "../util/getCognitoUserData.js";
+import { getUserData } from "../commands/userCommands.js";
 
 export const cognitoCallbackRoute = {
   path: "/api/auth/cognito/callback",
@@ -11,10 +12,12 @@ export const cognitoCallbackRoute = {
     try {
       const cognitoToken = await getCognitoToken({ code });
       const { id_token, access_token, refresh_token } = cognitoToken.data;
-      const userData = await getCognitoUserData({ id_token });
+      const userCognitoData = await getCognitoUserData({ id_token });
 
-      const { sub, email, email_verified } = userData;
-      const name = userData["cognito:username"];
+      const { sub, email, email_verified } = userCognitoData;
+      const name = userCognitoData["cognito:username"];
+
+      const userData = getUserData(sub);
 
       const token = jwt.sign(
         {

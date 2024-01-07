@@ -13,19 +13,20 @@ app = Flask(__name__)
 
 cors = CORS(app, resources={r"/generateSet": {"origins": "*"}})
 
-s3_client = boto3.client('s3')
+s3_client = boto3.client("s3")
+
 
 @app.route("/")
 def home():
     return "Connected"
+
 
 @app.route("/getManySets", methods=["GET", "POST"])
 def getManySets():
     try:
         data = request.get_json()
         player = Player(
-            currentStatus=data.currentStatus,
-            exerciseHistory=data.exerciseHistory
+            currentStatus=data.currentStatus, exerciseHistory=data.exerciseHistory
         )
         numberOfSets = 20
         minNote = 1
@@ -38,19 +39,21 @@ def getManySets():
             returnSet = []
             for exercise in practiceSet:
                 url = exercise.createImage()
-                returnSet.append({"exercise": exercise,
-                                  "url": url})
+                returnSet.append({"exercise": exercise, "url": url})
             packageOfSets.append(returnSet)
         return packageOfSets
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+
 @app.route("/getSet", methods=["GET", "POST"])
 def getSet():
     try:
-        bucketName = 'mysaxpracticeexercisebucket'
+        bucketName = "mysaxpracticeexercisebucket"
         data = request.get_json()
-        player = Player(data['previousSet'], data['currentStatus'], data['exerciseHistory'])
+        player = Player(
+            data["previousSet"], data["currentStatus"], data["exerciseHistory"]
+        )
         minNote = 1
         maxNote = 9
         notes = notePatterns(minNote, maxNote, (2 * maxNote))
@@ -71,6 +74,7 @@ def getSet():
         return returnSet
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
 
 @app.route("/generateExercise", methods=["POST"])
 def generateExercise():
@@ -94,5 +98,6 @@ def generateExercise():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

@@ -15,7 +15,7 @@ const Navigation = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
 
-  let user = useUser();
+  const user = useUser();
 
   useEffect(() => {
     if (token) {
@@ -38,7 +38,7 @@ const Navigation = () => {
 
   const logOutHandler = () => {
     localStorage.removeItem("token");
-    user = null;
+    setToken(null);
     navigate("/");
   };
 

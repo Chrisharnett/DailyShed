@@ -5,6 +5,7 @@ import math
 import json
 from objects.musicObjects import Scale
 
+
 class Exercise:
     def __init__(
         self,
@@ -13,23 +14,26 @@ class Exercise:
         key="g",
         mode="major",
         preamble=r"#(set-global-staff-size 28)",
-        repeatMe = True
+        repeatMe=True,
     ):
         self.__pitchPattern = pitchPattern
         self.__rhythmPattern = rhythmPattern
         self.__key = key
         self.__mode = mode
         self.__preamble = preamble
+
     def serialize(self):
-        return {"exerciseName": self.exerciseFileName(),
-                "pitchPattern": self.__pitchPattern.serialize(),
-                "rhythmPattern": self.__rhythmPattern.serialize(),
-                "key": self.__key,
-                "mode": self.__mode,
-                "imageFileName": self.exerciseFileName() + ".cropped.png",
-                "imageURL": self.imageURL(),
-                "description": str(self)
-                }
+        return {
+            "exerciseName": self.exerciseFileName(),
+            "pitchPattern": self.__pitchPattern.serialize(),
+            "rhythmPattern": self.__rhythmPattern.serialize(),
+            "key": self.__key,
+            "mode": self.__mode,
+            "imageFileName": self.exerciseFileName() + ".cropped.png",
+            "imageURL": self.imageURL(),
+            "description": str(self),
+        }
+
     @property
     def getPitchPattern(self):
         return self.__pitchPattern
@@ -54,16 +58,16 @@ class Exercise:
             if r[0].isnumeric():
                 notationPattern.append([notes[noteIndex], r[0]])
                 noteIndex += 1
-            elif r == ['~']:
+            elif r == ["~"]:
                 noteIndex -= 1
             else:
                 notationPattern.append(r)
 
         returnPattern = [notationPattern]
         if self.__pitchPattern.getHoldLastNote is True:
-            heldNoteRhythm = '1'
+            heldNoteRhythm = "1"
             if self.__rhythmPattern.getTimeSignature == (4, 4):
-                heldNoteRhythm = '1'
+                heldNoteRhythm = "1"
             returnPattern.append([notes[-1], heldNoteRhythm])
         return returnPattern
 
@@ -77,7 +81,7 @@ class Exercise:
         container = abjad.Container("")
         for note in notes:
             if isinstance(note[0], int):
-                n=self.numberToNote(scaleNotes, note)
+                n = self.numberToNote(scaleNotes, note)
                 container.append(n)
             elif note[0][0] == "r" and note[0] != "repeat":
                 container.append(note[0])
@@ -86,7 +90,7 @@ class Exercise:
     def createNotePhrase(self, scaleNotes, note):
         container = abjad.Container("")
         if isinstance(note[0], int):
-            n=self.numberToNote(scaleNotes, note)
+            n = self.numberToNote(scaleNotes, note)
             container.append(n)
         elif note[0][0] == "r" and note[0] != "repeat":
             container.append(note[0])
@@ -162,13 +166,18 @@ class Exercise:
     def path(self):
         return os.path.join("static/img/" + self.__str__()) + ".cropped.png"
 
-
     def createImage(self):
         # score = self.buildScore()
         lilypond_file = abjad.LilyPondFile([self.__preamble, self.buildScore])
         #  It only works with absolute path here, but still places files in root instead of /temp
-        absolutePath = "/Users/christopherharnett/Library/CloudStorage/OneDrive-CollegeoftheNorthAtlantic/Documents/Software Development/ASD/Fall/Capstone 3540/reactSaxPracticeApp/backend-sax-practice/python scripts/temp/"
+        # absolutePath = "/Users/christopherharnett/Library/CloudStorage/OneDrive-CollegeoftheNorthAtlantic/Documents/Software Development/ASD/Fall/Capstone 3540/reactSaxPracticeApp/backend-sax-practice/python scripts/temp/"
+
+        current_file_directory = os.path.dirname(__file__)
+
+        absolutePath = os.path.join(current_file_directory, "..", "temp")
+
         localPath = os.path.join(absolutePath + self.exerciseFileName())
+
         abjad.persist.as_png(lilypond_file, localPath, flags="-dcrop", resolution=300)
 
         # os.remove(os.path.join("static/img/" + self.exerciseFileName) + ".ly")
@@ -184,6 +193,7 @@ class Exercise:
         os.remove(ly)
 
         return self.imageURL()
+
 
 class Collection:
     def __init__(self, name):
@@ -207,18 +217,19 @@ class Collection:
     def addPattern(self, pattern):
         self.__patterns.append(pattern)
 
+
 class NotePattern:
     def __init__(
         self,
         notePatternId,
         notePatternType,
         notePattern,
-        rhythmMatcher='general',
+        rhythmMatcher="general",
         description="",
         dynamic="",
         direction="",
         repeatMe=True,
-        holdLastNote=True
+        holdLastNote=True,
     ):
         self.__patternId = notePatternId
         self.__notePatternType = notePatternType
@@ -231,15 +242,17 @@ class NotePattern:
         self.__holdLastNote = holdLastNote
 
     def serialize(self):
-        return{"notePatternId": self.__patternId,
-               "notePatternType": self.__notePatternType,
-               "notePattern": self.__notePattern,
-               "rhythmMatcher": self.__rhythmMatcher,
-               "description": self.__description,
-               "dynamic": self.__dynamic,
-               "direction": self.__direction,
-               "repeatMe": self.__repeatMe,
-               "holdLastNote": self.__holdLastNote}
+        return {
+            "notePatternId": self.__patternId,
+            "notePatternType": self.__notePatternType,
+            "notePattern": self.__notePattern,
+            "rhythmMatcher": self.__rhythmMatcher,
+            "description": self.__description,
+            "dynamic": self.__dynamic,
+            "direction": self.__direction,
+            "repeatMe": self.__repeatMe,
+            "holdLastNote": self.__holdLastNote,
+        }
 
     @property
     def getRepeatMe(self):
@@ -281,8 +294,17 @@ class NotePattern:
     def __str__(self):
         return f"{self.__patternId}  {self.__notePattern} {self.__notePatternType} {self.__description}"
 
+
 class RhythmPattern:
-    def __init__(self, rhythmPatternId, rhythmType, rhythmDescription, rhythmPattern, timeSignature, articulation = None):
+    def __init__(
+        self,
+        rhythmPatternId,
+        rhythmType,
+        rhythmDescription,
+        rhythmPattern,
+        timeSignature,
+        articulation=None,
+    ):
         self.__rhythmPatternId = rhythmPatternId
         self.__rhythmType = rhythmType
         self.__rhythmDescription = rhythmDescription
@@ -291,13 +313,16 @@ class RhythmPattern:
         self.__articulation = articulation
 
     def serialize(self):
-        return {"rhythmId": self.__rhythmPatternId,
-                "rhythmType": self.__rhythmType,
-                "rhythmDescription": self.__rhythmDescription,
-                "rhythmPattern": self.__rhythmPattern,
-                "timeSignature": self.__timeSignature,
-                "articulation": self.__articulation,
-                "noteLength": self.noteLength}
+        return {
+            "rhythmId": self.__rhythmPatternId,
+            "rhythmType": self.__rhythmType,
+            "rhythmDescription": self.__rhythmDescription,
+            "rhythmPattern": self.__rhythmPattern,
+            "timeSignature": self.__timeSignature,
+            "articulation": self.__articulation,
+            "noteLength": self.noteLength,
+        }
+
     @property
     def getRhythmPatternId(self):
         return self.__rhythmPatternId
@@ -334,7 +359,7 @@ class RhythmPattern:
         return count
 
     def __str__(self):
-        if self.__rhythmType == 'tone':
+        if self.__rhythmType == "tone":
             string = f" in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
         else:
             string = f"{self.__rhythmDescription} rhythm, in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
@@ -343,5 +368,3 @@ class RhythmPattern:
             # string += f" with {self.__articulation.get('name')}."
             pass
         return string
-
-

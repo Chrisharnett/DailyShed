@@ -6,8 +6,12 @@ import { testEmailRoute } from "./testEmailRoute.js";
 import { verifyEmailRoute } from "./verifyEmailRoute.js";
 import { cognitoCallbackRoute } from "./cognitoCallbackRoute.js";
 import { getCognitoURLRoute } from "./getCognitoURL.js";
+import { generateSetRoute } from "./generateSetRoute.js";
+import { flaskTestRoute } from "./flaskTestRoute.js";
 
 export const routes = [
+  flaskTestRoute,
+  generateSetRoute,
   getCognitoURLRoute,
   cognitoCallbackRoute,
   testRoute,
