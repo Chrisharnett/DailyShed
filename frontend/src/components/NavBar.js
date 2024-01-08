@@ -4,22 +4,28 @@ import Container from "react-bootstrap/Container";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useToken } from "../auth/useToken";
-import useUser from "../auth/useUser.js";
 import axios from "axios";
 
 const Navigation = () => {
   const [, setToken] = useToken();
   const [cognitoURL, setCognitoURL] = useState("");
   const navigate = useNavigate();
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
 
-  const user = useUser();
+  useEffect(() => {
+    const t = localStorage.getItem("token");
+    if (t) {
+      setLoggedIn(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (token) {
       setToken(token);
+      setLoggedIn(true);
     }
   }, [token, setToken, navigate]);
 
@@ -38,8 +44,7 @@ const Navigation = () => {
 
   const logOutHandler = () => {
     localStorage.removeItem("token");
-    setToken(null);
-    navigate("/");
+    setLoggedIn(false);
   };
 
   return (
@@ -49,21 +54,21 @@ const Navigation = () => {
           <Navbar.Brand href="/">The Daily Shed</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            {user && (
+            {loggedIn && (
               <Nav className="me-auto">
                 <Nav.Link href="/theShed">The Shed</Nav.Link>
                 <Nav.Link href="/userProfile">User Profile</Nav.Link>
                 <Nav.Link href="/practiceJournal">Practice Journal</Nav.Link>
               </Nav>
             )}
-            {user && (
+            {loggedIn && (
               <Nav>
                 <Nav.Link className="" href="#" onClick={logOutHandler}>
                   <h4>Logout</h4>
                 </Nav.Link>
               </Nav>
             )}
-            {!user && (
+            {!loggedIn && (
               <Nav>
                 <Nav.Link
                   className=""

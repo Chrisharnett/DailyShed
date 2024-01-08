@@ -10,8 +10,11 @@ const useUser = () => {
   };
 
   const [user, setUser] = useState(() => {
-    if (!token) return null;
-    return getPayloadFromToken(token);
+    if (!token) {
+      return null;
+    } else {
+      return getPayloadFromToken(token);
+    }
   });
 
   useEffect(() => {

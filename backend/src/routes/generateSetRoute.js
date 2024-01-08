@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const generateSetRoute = {
   path: "/api/generateSet/",
-  method: "get",
+  method: "post",
   handler: async (req, res) => {
     const user = req.body;
     // valid data: console.log(req.body);

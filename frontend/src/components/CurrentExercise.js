@@ -3,7 +3,11 @@ const CurrentExercise = (props) => {
   return (
     <>
       <h4>{exercise.exerciseName}</h4>
-      <img src={props.src} alt={exercise.description} height={100}></img>
+      <img
+        src={exercise.imageURL}
+        alt={exercise.description}
+        className="currentExercise"
+      ></img>
       <p>{exercise.description}</p>
     </>
   );

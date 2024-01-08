@@ -24,5 +24,10 @@ html{
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
       monospace;
   }
+
+  .currentExercise{
+    max-width: 100%;
+    height: auto;
+  }
   
   

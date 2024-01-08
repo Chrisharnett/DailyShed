@@ -25,7 +25,6 @@ export const getUserData = async (sub) => {
   });
 
   const response = await docClient.send(command);
-  console.log(response);
   return response;
 };
 
