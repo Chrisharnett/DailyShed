@@ -1,7 +1,6 @@
 from objects.exerciseObjects import Exercise
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from objects.practiceSet import PracticeSet
 from objects.player import Player
 from objects.practiceSet import PracticeSet
 from notePatternGenerator import notePatterns
