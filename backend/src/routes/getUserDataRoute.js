@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { getUserData } from "../commands/userCommands.js";
 
 export const getUserDataRoute = {
-  path: "/api/auth/getUserData/:sub",
+  path: "/api/getUserData/:sub",
   method: "get",
   handler: async (req, res) => {
     const sub = req.params.sub;

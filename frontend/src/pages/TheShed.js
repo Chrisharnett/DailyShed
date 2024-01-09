@@ -13,11 +13,15 @@ const TheShed = () => {
 
   useEffect(() => {
     const getUserData = async () => {
-      const response = await axios.get(`/api/auth/getUserData/${user.sub}`);
-      if (response.data.userData) {
-        setUserData(response.data.userData);
-      } else {
-        setUserData(null);
+      try {
+        const response = await axios.get(`/api/getUserData/${user.sub}`);
+        if (response.data.userData) {
+          setUserData(response.data.userData);
+        } else {
+          setUserData(null);
+        }
+      } catch (error) {
+        console.error("Error: ", error);
       }
     };
     if (user.sub) {
@@ -29,8 +33,8 @@ const TheShed = () => {
     const getSet = async () => {
       try {
         let response = await axios.post("/api/generateSet", userData);
-        console.log("Practice set data received:", response.data);
         setCurrentSet(response.data);
+        userData.previousSet = currentSet;
       } catch (error) {
         console.error("Error: ", error);
       }

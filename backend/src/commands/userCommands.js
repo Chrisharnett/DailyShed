@@ -1,7 +1,11 @@
 import dotenv from "dotenv";
 import AWS from "aws-sdk";
-import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+} from "@aws-sdk/lib-dynamodb";
 
 dotenv.config();
 
@@ -28,8 +32,9 @@ export const getUserData = async (sub) => {
   return response;
 };
 
-export const putUserData = async (user) => {
-  const [sub, name, email, currentStatus, previousSet, exerciseHistory] = user;
+export const putUserData = async (userData) => {
+  const { sub, name, email, currentStatus, previousSet, exerciseHistory } =
+    userData;
   const command = new PutCommand({
     TableName: tableName,
     Item: {

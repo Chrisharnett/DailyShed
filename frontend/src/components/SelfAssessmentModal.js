@@ -15,7 +15,21 @@ export const SelfAssessmentModal = ({ show, setShow, exercise, userData }) => {
   const navigate = useNavigate();
 
   const handleSelfAssessment = () => {
-    //save self-assessment to user history. Probably pass up to Exercise Card
+    const updateUser = async () => {
+      try {
+        const exerciseEntry = {
+          exercise: exercise,
+          rating: rating,
+          comment: comment,
+          timestamp: new Date().toISOString(),
+        };
+        userData.exerciseHistory.push(exerciseEntry);
+        const response = await axios.post("/api/updateUserData", userData);
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    };
+    updateUser();
     handleClose();
   };
 
