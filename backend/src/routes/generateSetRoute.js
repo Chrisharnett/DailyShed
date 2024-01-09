@@ -4,16 +4,13 @@ export const generateSetRoute = {
   path: "/api/generateSet/",
   method: "post",
   handler: async (req, res) => {
-    const user = req.body;
-    // valid data: console.log(req.body);
+    const userData = req.body;
 
     const exerciseMaker = "http://127.0.0.1:5000/getSet";
 
     try {
-      const response = await axios.post(exerciseMaker, user, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await axios.post(exerciseMaker, userData, {
+        headers: { "Content-Type": "application/json" },
       });
 
       if (response.status === 200) {

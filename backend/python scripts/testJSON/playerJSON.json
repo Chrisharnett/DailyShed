@@ -33,7 +33,7 @@
         "description": "g major 0  [1] tone on the 1  in 4 / 4."
       },
       "assessment": 2,
-      "timestamp":
+      "timestamp": "YYYY-MM-DDTHH:MM:SSZ"
     },
     {
       "exercise": {
@@ -135,6 +135,7 @@
     }
   ],
   "currentStatus": {
+    "rounds": 0,
     "setPattern": [
       { "type": "tone", "reviewBool": 1, "key": "g", "mode": "major" },
       { "type": "tone", "reviewBool": 0, "key": "g", "mode": "major" },

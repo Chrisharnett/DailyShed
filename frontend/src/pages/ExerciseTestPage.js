@@ -9,6 +9,7 @@ import useUser from "../auth/useUser";
 import CurrentExercise from "../components/CurrentExercise";
 import SmallExercise from "../components/SmallExercise";
 
+// MARK TO DELETE
 const ExerciseTestPage = () => {
   const [student, setStudent] = useState({
     name: "Chris",

@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Form, Button, Container, Modal } from "react-bootstrap";
 import axios from "axios";
 
-export const SelfAssessmentModal = ({ show, setShow, exercise }) => {
+export const SelfAssessmentModal = ({ show, setShow, exercise, userData }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
