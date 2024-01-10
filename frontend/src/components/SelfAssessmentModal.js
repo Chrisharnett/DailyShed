@@ -4,15 +4,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Form, Button, Container, Modal } from "react-bootstrap";
 import axios from "axios";
 
-export const SelfAssessmentModal = ({ show, setShow, exercise, userData }) => {
+export const SelfAssessmentModal = ({
+  show,
+  setShow,
+  exercise,
+  userData,
+  setUserData,
+}) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
 
   const handleClose = () => setShow(false);
   const handleOpen = () => setShow(true);
-
-  const navigate = useNavigate();
 
   const handleSelfAssessment = () => {
     const updateUser = async () => {
@@ -23,8 +27,10 @@ export const SelfAssessmentModal = ({ show, setShow, exercise, userData }) => {
           comment: comment,
           timestamp: new Date().toISOString(),
         };
-        userData.exerciseHistory.push(exerciseEntry);
-        const response = await axios.post("/api/updateUserData", userData);
+        let newUserData = { ...userData };
+        newUserData.exerciseHistory.push(exerciseEntry);
+        setUserData(newUserData);
+        const response = await axios.post("/api/updateUserData", newUserData);
       } catch (error) {
         console.error("Error: ", error);
       }

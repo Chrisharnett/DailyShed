@@ -48,6 +48,5 @@ export const putUserData = async (userData) => {
   });
 
   const response = await docClient.send(command);
-  console.log(response);
   return response;
 };

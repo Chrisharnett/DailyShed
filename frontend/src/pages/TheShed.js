@@ -34,7 +34,6 @@ const TheShed = () => {
       try {
         let response = await axios.post("/api/generateSet", userData);
         setCurrentSet(response.data);
-        userData.previousSet = currentSet;
       } catch (error) {
         console.error("Error: ", error);
       }
@@ -60,6 +59,7 @@ const TheShed = () => {
               currentSet={currentSet}
               setCurrentSet={setCurrentSet}
               userData={userData}
+              setUserData={setUserData}
             />
           }
           <br></br>

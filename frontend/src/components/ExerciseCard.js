@@ -1,6 +1,7 @@
 import { Card, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { SelfAssessmentModal } from "./SelfAssessmentModal";
+import { SessionCompleteModal } from "./SessionComplete";
 
 const ExerciseCard = ({
   exerciseCount,
@@ -8,11 +9,14 @@ const ExerciseCard = ({
   currentSet,
   setCurrentSet,
   userData,
+  setUserData,
 }) => {
   const [showSelfAssementModal, setShowSelfAssessmentModal] = useState(false);
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
   const [currentExercise, setCurrentExercise] = useState(null);
   const [currentRound, setCurrentRound] = useState(1);
+  const [showSessionCompleteModal, setShowSessionCompleteModal] =
+    useState(false);
 
   // Fisher-Yates algorithm array shuffling algorithm.
   const shuffleSet = () => {
@@ -36,14 +40,21 @@ const ExerciseCard = ({
   const goToNextExercise = () => {
     const nextSetIndex =
       exerciseCount % userData.currentStatus.setPattern.length;
-    console.log(nextSetIndex);
     setExerciseCount(exerciseCount + 1);
     setCurrentSetIndex(nextSetIndex);
   };
 
   useEffect(() => {
     setCurrentExercise(currentSet[currentSetIndex]);
-  }, [currentSet, currentSetIndex]);
+    if (currentRound > userData.currentStatus.rounds) {
+      setShowSessionCompleteModal(true);
+    }
+  }, [
+    currentRound,
+    currentSet,
+    currentSetIndex,
+    userData.currentStatus.rounds,
+  ]);
 
   const nextExerciseHandler = () => {
     setShowSelfAssessmentModal(true);
@@ -75,13 +86,20 @@ const ExerciseCard = ({
           setShow={setShowSelfAssessmentModal}
           exercise={currentExercise}
           userData={userData}
+          setUserData={setUserData}
         />
       </>
     );
-  } else {
+  } else if (currentRound > userData.currentStatus.rounds) {
     return (
       <>
-        <h1>Session Complete!</h1>;
+        <SessionCompleteModal
+          show={showSessionCompleteModal}
+          setShow={setShowSessionCompleteModal}
+          currentSet={currentSet}
+          userData={userData}
+          setUserData={setUserData}
+        />
       </>
     );
   }
