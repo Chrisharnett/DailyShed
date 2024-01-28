@@ -21,33 +21,49 @@ def main():
     maxNote = 9
     notes = notePatterns(minNote, maxNote, (2 * maxNote))
     rhythms = rhythmPatterns(4, 4)
-    sets = 2
+    practiceSet = PracticeSet(player, notes, rhythms)
+    currentSet = practiceSet.getNextSet()
+    returnSet = []
 
-    currentRound = 1
-    while currentRound <= sets:
-        practiceSet = PracticeSet(player, notes, rhythms)
-        currentSet = practiceSet.getNextSet()
-        returnSet = []
+    for exercise in currentSet:
+        try:
+            objectKey = exercise.exerciseFileName()
+            s3_client.head_object(Bucket=bucketName, Key=objectKey)
+        except Exception as e:
+            exercise.createImage()
+        e = exercise.serialize()
+        url = exercise.imageURL()
+        returnSet.append(e)
+    print (returnSet)
 
-        i = 0
-        while i < 3:
-            for exercise in currentSet:
-                try:
-                    objectKey = exercise.exerciseFileName()
-                    s3_client.head_object(Bucket=bucketName, Key=objectKey)
-                except Exception as e:
-                    exercise.createImage()
-                e = exercise.serialize()
-                url = exercise.imageURL()
-                returnSet.append(exercise)
-                player.addExercise(exercise, datetime.datetime.now(), 3)
-                print(exercise)
-            player.setPreviousSet(currentSet)
-            i += 1
 
-        currentRound += 1
-
-    print('complete')
+    # sets = 2
+    #
+    # currentRound = 1
+    # while currentRound <= sets:
+    #     practiceSet = PracticeSet(player, notes, rhythms)
+    #     currentSet = practiceSet.getNextSet()
+    #     returnSet = []
+    #
+    #     i = 0
+    #     while i < 3:
+    #         for exercise in currentSet:
+    #             try:
+    #                 objectKey = exercise.exerciseFileName()
+    #                 s3_client.head_object(Bucket=bucketName, Key=objectKey)
+    #             except Exception as e:
+    #                 exercise.createImage()
+    #             e = exercise.serialize()
+    #             url = exercise.imageURL()
+    #             returnSet.append(exercise)
+    #             player.addExercise(exercise, datetime.datetime.now(), 3)
+    #             print(exercise)
+    #         player.setPreviousSet(currentSet)
+    #         i += 1
+    #
+    #     currentRound += 1
+    #
+    # print('complete')
 
 if __name__ == '__main__':
     main()

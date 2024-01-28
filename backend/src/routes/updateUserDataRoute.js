@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import { putUserData } from "../commands/userCommands.js";
 
 export const updateUserDataRoute = {

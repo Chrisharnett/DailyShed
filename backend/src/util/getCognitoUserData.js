@@ -1,6 +1,5 @@
 import "dotenv/config";
 import jwt from "jsonwebtoken";
-import axios from "axios";
 import jwksClient from "jwks-rsa";
 
 const client = jwksClient({

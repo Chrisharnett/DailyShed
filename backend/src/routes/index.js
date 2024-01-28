@@ -17,5 +17,4 @@ export const routes = [
   generateSetRoute,
   getCognitoURLRoute,
   cognitoCallbackRoute,
-  testRoute,
 ];

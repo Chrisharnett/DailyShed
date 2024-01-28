@@ -39,32 +39,27 @@ const ExerciseCard = ({
 
   const goToNextExercise = () => {
     const nextSetIndex =
-      exerciseCount % userData.currentStatus.setPattern.length;
+      exerciseCount % userData.program.exerciseDetails.length;
     setExerciseCount(exerciseCount + 1);
     setCurrentSetIndex(nextSetIndex);
   };
 
   useEffect(() => {
     setCurrentExercise(currentSet[currentSetIndex]);
-    if (currentRound > userData.currentStatus.rounds) {
+    if (currentRound > userData.program.rounds) {
       setShowSessionCompleteModal(true);
     }
-  }, [
-    currentRound,
-    currentSet,
-    currentSetIndex,
-    userData.currentStatus.rounds,
-  ]);
+  }, [currentRound, currentSet, currentSetIndex, userData.program.rounds]);
 
   const nextExerciseHandler = () => {
     setShowSelfAssessmentModal(true);
-    if (currentSetIndex === userData.currentStatus.setPattern.length - 1) {
+    if (currentSetIndex === userData.program.exerciseDetails.length - 1) {
       advanceRound();
     }
     goToNextExercise();
   };
 
-  if (currentExercise && currentRound <= userData.currentStatus.rounds) {
+  if (currentExercise && currentRound <= userData.program.rounds) {
     return (
       <>
         <Card style={{ width: "50rem" }} className="m-5 text-center">

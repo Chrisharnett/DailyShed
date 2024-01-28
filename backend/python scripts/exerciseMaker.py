@@ -23,9 +23,7 @@ def home():
 def getManySets():
     try:
         data = request.get_json()
-        player = Player(
-            currentStatus=data.program, exerciseHistory=data.exerciseHistory
-        )
+        player = Player(program=data.program, exerciseHistory=data.exerciseHistory)
         numberOfSets = 20
         minNote = 1
         maxNote = 9
@@ -96,4 +94,4 @@ def generateExercise():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import { getUserData } from "../commands/userCommands.js";
 
 export const getUserDataRoute = {

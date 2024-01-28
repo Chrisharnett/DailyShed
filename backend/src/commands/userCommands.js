@@ -33,15 +33,21 @@ export const getUserData = async (sub) => {
 };
 
 export const putUserData = async (userData) => {
-  const { sub, name, email, currentStatus, previousSet, exerciseHistory } =
-    userData;
+  const {
+    sub,
+    name,
+    email,
+    currentStatus: program,
+    previousSet,
+    exerciseHistory,
+  } = userData;
   const command = new PutCommand({
     TableName: tableName,
     Item: {
       sub: sub,
       email: email,
       name: name,
-      currentStatus: currentStatus,
+      program: program,
       previousSet: previousSet,
       exerciseHistory: exerciseHistory,
     },

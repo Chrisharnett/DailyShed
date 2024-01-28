@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import { getCognitoToken } from "../util/getCognitoToken.js";
 import { getCognitoUserData } from "../util/getCognitoUserData.js";
-import { getUserData } from "../commands/userCommands.js";
 
 export const cognitoCallbackRoute = {
   path: "/api/auth/cognito/callback",
