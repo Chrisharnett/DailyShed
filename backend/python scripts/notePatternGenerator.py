@@ -1,4 +1,5 @@
-from objects.exerciseObjects import NotePattern, Collection
+from objects.exerciseObjects import NotePattern
+from objects.collection import Collection
 
 preamble = r"""#(set-global-staff-size 14)
         """

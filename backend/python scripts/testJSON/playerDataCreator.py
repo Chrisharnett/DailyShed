@@ -33,7 +33,7 @@ def createPlayerData():
             p.setPreviousSet(currentSet)
         data.append({"name": player,
                      "exerciseHistory": p.exerciseHistory,
-                     "currentStatus": p.getCurrentStatus,
+                     "currentStatus": p.getProgram,
                      "previousSet": p.getPreviousSet})
 
     writeJSON(data)

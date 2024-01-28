@@ -1,42 +1,48 @@
 import random
+from objects.program import Program
 
 
 class Player:
     def __init__(
         self,
         previousSet=None,
-        currentStatus=None,
+        program=None,
         exerciseHistory=None,
     ):
-        if currentStatus is None:
-            self.__currentStatus = {
-                "setPattern": [
-                    {"type": "tone", "reviewBool": 1, "key": "g", "mode": "major"},
-                    {"type": "tone", "reviewBool": 0, "key": "g", "mode": "major"},
-                    {
-                        "type": "ninthScale1",
-                        "reviewBool": 1,
-                        "key": "g",
-                        "mode": "major",
-                    },
-                    {
-                        "type": "ninthScale1",
-                        "reviewBool": 0,
-                        "key": "g",
-                        "mode": "major",
-                    },
-                ],
-                "currentIndex": {
-                    "tone": {"index": -1, "currentKey": "g", "currentMode": "major"},
-                    "ninthScale1": {
-                        "index": -1,
-                        "currentKey": "g",
-                        "currentMode": "major",
-                    },
+        if program is None:
+            collections = [
+                {
+                    "title": "tone",
+                    "currentKey": "g",
+                    "currentMode": "major",
+                    "index": 1,
                 },
-            }
+                {
+                    "title": "ninthScale1",
+                    "currentKey": "g",
+                    "currentMode": "major",
+                    "index": 1,
+                },
+            ]
+            exerciseDetails = [
+                {"key": "g", "mode": "major", "reviewBool": True, "type": "tone"},
+                {"key": "g", "mode": "major", "reviewBool": False, "type": "tone"},
+                {
+                    "key": "g",
+                    "mode": "major",
+                    "reviewBool": True,
+                    "type": "ninthScale1",
+                },
+                {
+                    "key": "g",
+                    "mode": "major",
+                    "reviewBool": False,
+                    "type": "ninthScale1",
+                },
+            ]
+            self.__program = Program(collections, exerciseDetails, 3)
         else:
-            self.__currentStatus = currentStatus
+            self.__program = program
         if exerciseHistory is None:
             self.__exerciseHistory = []
         else:
@@ -46,19 +52,27 @@ class Player:
         self.__previousSet = previousSet
 
     @property
-    def getCurrentStatus(self):
-        return self.__currentStatus
+    def getProgram(self):
+        return self.__program
 
     def getIndex(self, collection):
-        index = self.__currentStatus["currentIndex"][collection]["index"]
-        if index:
-            return index
+        for c in self.__program["collections"]:
+            if c["title"] == collection:
+                return c["index"]
+        return None
+
 
     def setIndex(self, collection, index):
-        self.__currentStatus["currentIndex"][collection]["index"] = index
+        for c in self.__program.getCollections:
+            if c["title"] == collection:
+                c["index"] = index
+                break
 
     def incrementIndex(self, collection):
-        self.__currentStatus["currentIndex"][collection]["index"] += 1
+        for c in self.__program.getCollections:
+            if c["title"] == collection:
+                c["index"] += 1
+                break
 
     @property
     def getPreviousSet(self):
@@ -70,9 +84,9 @@ class Player:
             pSet.append(exercise.serialize())
         self.__previousSet = pSet
 
-    @property
-    def getSetPattern(self):
-        return self.__currentStatus["setPattern"]
+    # @property
+    # def getExerciseDetails(self):
+    #     return self.__program["setPattern"]
 
     def setSetPattern(self, setPattern):
         self.__currenStatus["setPattern"] = setPattern
@@ -83,7 +97,7 @@ class Player:
             return self.__exerciseHistory
 
     def getIndex(self, collection):
-        index = self.__currentStatus["currentIndex"][collection]["index"]
+        index = self.__program["currentIndex"][collection]["index"]
         if index:
             return index
 

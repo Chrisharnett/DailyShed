@@ -6,7 +6,6 @@ from objects.practiceSet import PracticeSet
 from notePatternGenerator import notePatterns
 from rhythmPatternGenerator import rhythmPatterns
 import boto3
-import json
 
 app = Flask(__name__)
 
@@ -25,7 +24,7 @@ def getManySets():
     try:
         data = request.get_json()
         player = Player(
-            currentStatus=data.currentStatus, exerciseHistory=data.exerciseHistory
+            currentStatus=data.program, exerciseHistory=data.exerciseHistory
         )
         numberOfSets = 20
         minNote = 1
@@ -50,9 +49,7 @@ def getSet():
     try:
         bucketName = "mysaxpracticeexercisebucket"
         data = request.get_json()
-        player = Player(
-            data["previousSet"], data["currentStatus"], data["exerciseHistory"]
-        )
+        player = Player(data["previousSet"], data["program"], data["exerciseHistory"])
         minNote = 1
         maxNote = 9
         notes = notePatterns(minNote, maxNote, (2 * maxNote))

@@ -195,29 +195,6 @@ class Exercise:
         return self.imageURL()
 
 
-class Collection:
-    def __init__(self, name):
-        self.__name = name
-        self.__patterns = []
-
-    def __str__(self):
-        return self.__name
-
-    def __iter__(self):
-        return iter(self.__patterns)
-
-    @property
-    def getName(self):
-        return self.__name
-
-    @property
-    def getPatterns(self):
-        return self.__patterns
-
-    def addPattern(self, pattern):
-        self.__patterns.append(pattern)
-
-
 class NotePattern:
     def __init__(
         self,

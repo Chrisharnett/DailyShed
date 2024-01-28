@@ -218,22 +218,26 @@ class PracticeSet:
             r["articulation"],
         )
 
-    def getNewNotePattern(self, type):
+    def getNewNotePattern(self, title):
         notePatternCollection = next(
-            x for x in self.__notePatternCollections if x.getName == type
+            x for x in self.__notePatternCollections if x.getName == title
         )
-        currentPlayerIndex = self.__player.getCurrentStatus["currentIndex"][type][
-            "index"
-        ]
+        collections = self.__player.getProgram.getCollections
+        currentCollection = None
+        for collection in collections:
+            if collection['title'] == title:
+                currentPlayerIndex = collection['index']
+                currentCollection = collection
+                break
 
         pitches = notePatternCollection.getPatterns[
             (currentPlayerIndex + 1) % len(notePatternCollection.getPatterns)
         ]
 
         if currentPlayerIndex >= len(notePatternCollection.getPatterns):
-            self.__player.setIndex(type, -1)
+            self.__player.setIndex(title, -1)
         else:
-            self.__player.setIndex(type, currentPlayerIndex + 1)
+            self.__player.setIndex(title, currentPlayerIndex + 1)
 
         return pitches
 
@@ -253,10 +257,10 @@ class PracticeSet:
         return selectedExerciseCounts[min(selectedExerciseCounts)]
 
     def getNextSet(self):
-        currentSetPattern = self.__player.getSetPattern
+        exerciseDetails = self.__player.getProgram.getExerciseDetails
         newSet = []
         # set the length of the new set with None values
-        for n in range(len(currentSetPattern)):
+        for n in range(len(exerciseDetails)):
             newSet.append(None)
 
             #  Review lessons have a notePattern from the history with a new or random rhythm.
@@ -265,7 +269,7 @@ class PracticeSet:
 
         for i in range(len(newSet)):
             # Build review exercise
-            if currentSetPattern[i].get("reviewBool") and previousSet:
+            if exerciseDetails[i].get("reviewBool") and previousSet:
                 pitches = self.getNoteReviewPattern(
                     previousSet[i]["pitchPattern"]["rhythmMatcher"]
                 )
@@ -278,7 +282,7 @@ class PracticeSet:
                 newSet[i] = ex
             else:
                 # Get the next note Pattern for the collection type
-                pitches = self.getNewNotePattern(currentSetPattern[i].get("type"))
+                pitches = self.getNewNotePattern(exerciseDetails[i].get("type"))
                 if previousSet:
                     # Get a review rhythm pattern for the collection type.
                     possibleRhythms = []

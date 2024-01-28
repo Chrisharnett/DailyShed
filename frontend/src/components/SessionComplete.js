@@ -18,7 +18,7 @@ export const SessionCompleteModal = ({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigate("/");
+      navigate("/practiceJournal");
       handleClose();
     }, 3000);
     return () => clearTimeout(timeout);

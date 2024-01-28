@@ -24,9 +24,7 @@ const TheShed = () => {
         console.error("Error: ", error);
       }
     };
-    if (user.sub) {
-      getUserData();
-    }
+    getUserData();
   }, [user]);
 
   useEffect(() => {
