@@ -222,7 +222,7 @@ class PracticeSet:
         notePatternCollection = next(
             x for x in self.__notePatternCollections if x.getName == title
         )
-        collections = self.__player.getProgram.getCollections
+        collections = self.__player.getProgram['collections']
         currentCollection = None
         for collection in collections:
             if collection['title'] == title:
@@ -257,7 +257,7 @@ class PracticeSet:
         return selectedExerciseCounts[min(selectedExerciseCounts)]
 
     def getNextSet(self):
-        exerciseDetails = self.__player.getProgram.getExerciseDetails
+        exerciseDetails = self.__player.getProgram['exerciseDetails']
         newSet = []
         # set the length of the new set with None values
         for n in range(len(exerciseDetails)):

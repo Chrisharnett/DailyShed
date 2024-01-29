@@ -1,3 +1,4 @@
+# import debugpy
 from objects.exerciseObjects import Exercise
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -7,9 +8,12 @@ from notePatternGenerator import notePatterns
 from rhythmPatternGenerator import rhythmPatterns
 import boto3
 
+# debugpy.listen(("0.0.0.0", 5678))
+# debugpy.wait_for_client()
+
 app = Flask(__name__)
 
-cors = CORS(app, resources={r"/generateSet": {"origins": "*"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 s3_client = boto3.client("s3")
 
@@ -46,6 +50,7 @@ def getManySets():
 def getSet():
     try:
         bucketName = "mysaxpracticeexercisebucket"
+        print(bucketName)
         data = request.get_json()
         player = Player(data["previousSet"], data["program"], data["exerciseHistory"])
         minNote = 1

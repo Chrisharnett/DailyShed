@@ -63,13 +63,13 @@ class Player:
 
 
     def setIndex(self, collection, index):
-        for c in self.__program.getCollections:
+        for c in self.getProgram['collections']:
             if c["title"] == collection:
                 c["index"] = index
                 break
 
     def incrementIndex(self, collection):
-        for c in self.__program.getCollections:
+        for c in self.getProgram['collections']:
             if c["title"] == collection:
                 c["index"] += 1
                 break
