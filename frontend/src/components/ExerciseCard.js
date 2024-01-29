@@ -85,7 +85,7 @@ const ExerciseCard = ({
         />
       </>
     );
-  } else if (currentRound > userData.currentStatus.rounds) {
+  } else if (currentRound > userData.program.rounds) {
     return (
       <>
         <SessionCompleteModal

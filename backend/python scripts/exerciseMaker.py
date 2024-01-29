@@ -45,6 +45,20 @@ def getManySets():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+@app.route("/getCollections", methods=["GET"])
+def getCollections():
+    try:
+        minNote = 1
+        maxNote = 9
+        collections = []
+        notes = notePatterns(minNote, maxNote, (2 * maxNote))
+        for n in notes:
+            collections.append(n.serialize())
+        return jsonify(collections)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
 
 @app.route("/getSet", methods=["GET", "POST"])
 def getSet():

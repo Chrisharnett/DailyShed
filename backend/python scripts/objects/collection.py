@@ -9,6 +9,19 @@ class Collection:
     def __iter__(self):
         return iter(self.__notePatterns)
 
+    def serialize(self):
+        notePatterns = self.serializeNotePatterns()
+        return{
+            "name": self.__name,
+            "notePatterns": notePatterns
+        }
+
+    def serializeNotePatterns(self):
+        serializedNotePatterns = []
+        for p in self.__notePatterns:
+            serializedNotePatterns.append(p.serialize())
+        return serializedNotePatterns
+
     @property
     def getName(self):
         return self.__name

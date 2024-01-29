@@ -2,12 +2,16 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import useUser from "../auth/useUser";
 import { useForm } from "react-hook-form";
+import Col from "react-bootstrap/Col";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
+import CollectionForm from "../components/CollectionForm";
+import ExerciseDetailsForm from "../components/ExerciseDetailsForm";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
+
   const user = useUser();
   // const { handleSubmit } = useForm();
 
@@ -27,41 +31,32 @@ const UserProfile = () => {
     getUserData();
   }, [user]);
 
+  const { name, exerciseHistory, email, previousSet, program } = userData || {};
+
   const handleSubmit = async (data) => {};
 
+  if (!userData) {
+    return <p>Loading...</p>;
+  }
   return (
     <>
       <Container>
         <h1>User Profile</h1>
         <p>Profile Info Form to update user data</p>
-        <p>Your practice Session</p>
         <Card>
           <Card.Body>
-            <Card.Title>name</Card.Title>
-            <Card.Title>Current Practice Session</Card.Title>
+            <Card.Title>{name}</Card.Title>
             <Form
               onSubmit={handleSubmit()}
               className="container w-50 justify-content-center"
             >
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Current Goal</Form.Label>
-                <Form.Control />
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Key</Form.Label>
-                <Form.Control />
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Tone Collection</Form.Label>
-                <Form.Control />
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Key</Form.Label>
-                <Form.Control />
-              </Form.Group>
+              {program.collections.map((collection, i) => {
+                return (
+                  <Col key={i}>
+                    <CollectionForm key={i} collection={collection} />
+                  </Col>
+                );
+              })}
 
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Rounds</Form.Label>
@@ -70,15 +65,13 @@ const UserProfile = () => {
 
               {/* TODO: Add the ability to change the number of Exercises */}
               {/* TODO: Allow Custom Exercises */}
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Exercise Selection</Form.Label>
-                <Form.Control />
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Tone Collection</Form.Label>
-                <Form.Control />
-              </Form.Group>
+              {program.exerciseDetails.map((details, i) => {
+                return (
+                  <Col key={i}>
+                    <ExerciseDetailsForm key={i} details={details} />
+                  </Col>
+                );
+              })}
             </Form>
           </Card.Body>
         </Card>

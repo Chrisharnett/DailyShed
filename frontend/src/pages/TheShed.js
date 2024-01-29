@@ -48,7 +48,7 @@ const TheShed = () => {
           <h2>Practice Time</h2>
           <h3>
             Exercise {exerciseCount} of{" "}
-            {currentSet.length * userData.currentStatus.rounds}
+            {currentSet.length * userData.program.rounds}
           </h3>
           {
             <ExerciseCard
