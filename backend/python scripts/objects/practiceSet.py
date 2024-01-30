@@ -60,7 +60,7 @@ class PracticeSet:
         d.reverse()
         return NotePattern(
             f"{pattern['notePatternId']}ad",
-            pattern["notePatternType"],
+            pattern["collectionName"],
             d,
             pattern["rhythmMatcher"],
             f"from the {pattern['notePattern'][-1]}",
@@ -77,7 +77,7 @@ class PracticeSet:
         a.extend(d)
         return NotePattern(
             f"{pattern['notePatternId']}ad",
-            pattern["notePatternType"],
+            pattern["collectionName"],
             a,
             pattern["rhythmMatcher"],
             f"to the {pattern['notePattern'][-1]}",
@@ -93,7 +93,7 @@ class PracticeSet:
         d.extend(pattern["notePattern"])
         return NotePattern(
             f"{pattern['notePatternId']}da",
-            pattern["notePatternType"],
+            pattern["collectionName"],
             d,
             pattern["rhythmMatcher"],
             f"from the {pattern['notePattern'][-1]}",
@@ -171,7 +171,8 @@ class PracticeSet:
             )
         ]
         reviewPattern = reviewPatterns[random.randint(0, len(reviewPatterns) - 1)]
-        if reviewPattern["notePatternType"] != "tone":
+        # Find a way to not hard code the collectionName.
+        if reviewPattern["collectionName"] != "Single Note Long Tone":
             direction = self.chooseDirection(reviewPattern)
             if direction == "descending":
                 return self.descendingPattern(reviewPattern)
@@ -181,7 +182,7 @@ class PracticeSet:
                 return self.descendingAscendingPattern(reviewPattern)
         return NotePattern(
             reviewPattern["notePatternId"],
-            reviewPattern["notePatternType"],
+            reviewPattern["collectionName"],
             reviewPattern["notePattern"],
             reviewPattern["rhythmMatcher"],
             reviewPattern["description"],
@@ -219,14 +220,15 @@ class PracticeSet:
         )
 
     def getNewNotePattern(self, title):
+        # TODO Check x.getName
         notePatternCollection = next(
             x for x in self.__notePatternCollections if x.getName == title
         )
-        collections = self.__player.getProgram['collections']
+        collections = self.__player.getProgram["collections"]
         currentCollection = None
         for collection in collections:
-            if collection['title'] == title:
-                currentPlayerIndex = collection['index']
+            if collection["title"] == title:
+                currentPlayerIndex = collection["index"]
                 currentCollection = collection
                 break
 
@@ -257,7 +259,7 @@ class PracticeSet:
         return selectedExerciseCounts[min(selectedExerciseCounts)]
 
     def getNextSet(self):
-        exerciseDetails = self.__player.getProgram['exerciseDetails']
+        exerciseDetails = self.__player.getProgram["exerciseDetails"]
         newSet = []
         # set the length of the new set with None values
         for n in range(len(exerciseDetails)):
@@ -282,7 +284,7 @@ class PracticeSet:
                 newSet[i] = ex
             else:
                 # Get the next note Pattern for the collection type
-                pitches = self.getNewNotePattern(exerciseDetails[i].get("type"))
+                pitches = self.getNewNotePattern(exerciseDetails[i].get("collectionName"))
                 if previousSet:
                     # Get a review rhythm pattern for the collection type.
                     possibleRhythms = []

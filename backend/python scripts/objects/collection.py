@@ -11,16 +11,13 @@ class Collection:
 
     def serialize(self):
         notePatterns = self.serializeNotePatterns()
-        return{
-            "name": self.__name,
-            "notePatterns": notePatterns
-        }
+        return {"name": self.__name, "notePatterns": notePatterns}
 
-    def serializeNotePatterns(self):
-        serializedNotePatterns = []
-        for p in self.__notePatterns:
-            serializedNotePatterns.append(p.serialize())
-        return serializedNotePatterns
+    # def serializeNotePatterns(self):
+    #     serializedNotePatterns = []
+    #     for p in self.__notePatterns:
+    #         serializedNotePatterns.append(p.serialize())
+    #     return serializedNotePatterns
 
     @property
     def getName(self):

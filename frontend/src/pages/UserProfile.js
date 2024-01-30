@@ -77,68 +77,80 @@ const UserProfile = () => {
   }
   return (
     <>
-      <Container className="midLayer">
+      <Container className="midLayer glass">
         <h1>{name}</h1>
-        <Card>
-          <Card.Body>
-            <Card.Title>Your practice routine</Card.Title>
-            <Form
-              onSubmit={handleSubmit}
-              className="container justify-content-center"
-            >
-              <p>Active Collections:</p>
-              {userData.program.collections.map((collection, i) => {
-                return (
-                  <Col key={i} className="mb-2">
-                    <CollectionCard i={i} collection={collection} />
-                  </Col>
-                );
-              })}
-              <hr></hr>
-              <Form.Group
-                as={Row}
-                className="mb-IT's be3"
-                controlId="roundsSelector"
-              >
-                <Form.Label column sm="1">
-                  Rounds:
-                </Form.Label>
-                <Col sm="1">
-                  <Form.Control
-                    type="number"
-                    value={userData.program.rounds}
-                    onChange={handleRoundsChange}
-                    min="1"
-                  />
-                </Col>
-              </Form.Group>
-              <hr></hr>
 
-              {/* TODO: Add the ability to change the number of Exercises */}
-              {/* TODO: Allow Custom Exercises */}
-              {userData.program.exerciseDetails.map((details, i) => {
-                return (
-                  <Col key={i}>
-                    <ExerciseDetailsForm
-                      i={i}
-                      index={i}
-                      details={details}
-                      collections={userData.program.collections}
-                      onDetailsChange={(updatedDetails) =>
-                        handleDetailsChange(i, updatedDetails)
-                      }
+        <div className="glass">
+          <Card
+            style={{
+              backdropFilter: "blur(10px) saturate(99%)",
+              WebkitBackdropFilter: "blur(21px) saturate(99%)",
+              backgroundColor: "rgba(228, 227, 227, 0.15)",
+              border: "1px solid rgba(255, 255, 255, 0.125)",
+              borderRadius: "15px",
+              // color:
+            }}
+          >
+            <Card.Body>
+              <Card.Title>Your practice routine</Card.Title>
+              <Form
+                onSubmit={handleSubmit}
+                className="container justify-content-center"
+              >
+                <p>Active Collections:</p>
+                {userData.program.collections.map((collection, i) => {
+                  return (
+                    <Col key={i} className="mb-2">
+                      <CollectionCard i={i} collection={collection} />
+                    </Col>
+                  );
+                })}
+                <hr></hr>
+                <Form.Group
+                  as={Row}
+                  className="mb-IT's be3"
+                  controlId="roundsSelector"
+                >
+                  <Form.Label column sm="1">
+                    Rounds:
+                  </Form.Label>
+                  <Col sm="1">
+                    <Form.Control
+                      type="number"
+                      value={userData.program.rounds}
+                      onChange={handleRoundsChange}
+                      min="1"
                     />
                   </Col>
-                );
-              })}
-            </Form>
-          </Card.Body>
-          <Card.Footer>
-            <Button variant="primary" type="submit">
-              Save Routine
-            </Button>
-          </Card.Footer>
-        </Card>
+                </Form.Group>
+                <hr></hr>
+
+                {/* TODO: Add the ability to change the number of Exercises */}
+                {/* TODO: Allow Custom Exercises */}
+                {userData.program.exerciseDetails.map((details, i) => {
+                  return (
+                    <Col key={i}>
+                      <ExerciseDetailsForm
+                        i={i}
+                        index={i}
+                        details={details}
+                        collections={userData.program.collections}
+                        onDetailsChange={(updatedDetails) =>
+                          handleDetailsChange(i, updatedDetails)
+                        }
+                      />
+                    </Col>
+                  );
+                })}
+              </Form>
+            </Card.Body>
+            <Card.Footer>
+              <Button variant="primary" type="submit">
+                Save Routine
+              </Button>
+            </Card.Footer>
+          </Card>
+        </div>
       </Container>
       <br></br>
       <br></br>

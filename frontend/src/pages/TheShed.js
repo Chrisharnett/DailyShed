@@ -44,7 +44,7 @@ const TheShed = () => {
   if (currentSet) {
     return (
       <>
-        <Container className="midLayer">
+        <Container className="midLayer glass">
           <div className="titles p-2">
             <h2>Practice Time</h2>
             <h3>

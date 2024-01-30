@@ -1,7 +1,7 @@
 
 html{
     height: 100vh;
-  }
+}
   
   body {
     /* height: auto; */
@@ -30,23 +30,41 @@ html{
   }
 
   .midLayer{
+    color: rgba(255, 255, 255, 1);
     box-sizing:border-box;
     margin: 5vh auto;
-    background-color: #e4e3e3;
+    
     max-height: auto;
     max-width: 90%;
     padding: 1em;
+    
+/* Glass Card Effect */
+    /* backdrop-filter: blur(10px) saturate(99%);
+    -webkit-backdrop-filter: blur(21px) saturate(99%);
+    background-color: rgb(228, 227, 227, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    border-radius: 15px; */
+  }
+
+  .glass{
+    color: rgba(255, 255, 255, 1);
+    backdrop-filter: blur(10px) saturate(99%);
+    -webkit-backdrop-filter: blur(21px) saturate(99%);
+    background-color: rgb(228, 227, 227, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.125);
     border-radius: 15px;
   }
   
   .cardContainer{
+
+    background-color: rgb(255, 255, 255, 1);
     margin-bottom: 3vh;
     max-width: 100%;
     height: auto;
     border-radius: 15px;
     padding: 3vh;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: #ffffff;
+    
     
   }
   .exerciseCard{

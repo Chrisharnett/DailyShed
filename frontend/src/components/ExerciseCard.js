@@ -63,7 +63,7 @@ const ExerciseCard = ({
     return (
       <>
         <Container className="cardContainer d-flex flex-column align-items-center">
-          <Card border="light" className="exerciseCard">
+          <Card border="light" className="exerciseCard ">
             <Card.Body className="align-items-center">
               <Card.Title className="">
                 {currentExercise.exerciseName}

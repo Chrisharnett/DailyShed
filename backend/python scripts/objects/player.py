@@ -9,40 +9,6 @@ class Player:
         program=None,
         exerciseHistory=None,
     ):
-        # if program is None:
-        #     collections = [
-        #         {
-        #             "title": "tone",
-        #             "currentKey": "g",
-        #             "currentMode": "major",
-        #             "index": 1,
-        #         },
-        #         {
-        #             "title": "ninthScale1",
-        #             "currentKey": "g",
-        #             "currentMode": "major",
-        #             "index": 1,
-        #         },
-        #     ]
-        #     exerciseDetails = [
-        #         {"key": "g", "mode": "major", "reviewBool": True, "type": "tone"},
-        #         {"key": "g", "mode": "major", "reviewBool": False, "type": "tone"},
-        #         {
-        #             "key": "g",
-        #             "mode": "major",
-        #             "reviewBool": True,
-        #             "type": "ninthScale1",
-        #         },
-        #         {
-        #             "key": "g",
-        #             "mode": "major",
-        #             "reviewBool": False,
-        #             "type": "ninthScale1",
-        #         },
-        #     ]
-        #     self.__program = Program(collections, exerciseDetails, 3)
-        # else:
-        #     self.__program = program
         self.__program = program
         if exerciseHistory is None:
             self.__exerciseHistory = []
@@ -84,12 +50,8 @@ class Player:
             pSet.append(exercise.serialize())
         self.__previousSet = pSet
 
-    # @property
-    # def getExerciseDetails(self):
-    #     return self.__program["setPattern"]
-
-    def setSetPattern(self, setPattern):
-        self.__currenStatus["setPattern"] = setPattern
+    # def setSetPattern(self, setPattern):
+    #     self.__currenStatus["setPattern"] = setPattern
 
     @property
     def exerciseHistory(self):
