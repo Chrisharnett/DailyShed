@@ -8,8 +8,27 @@ import TheShed from "./pages/TheShed";
 import UserProfile from "./pages/UserProfile";
 import PracticeJournal from "./pages/PracticeJournal";
 import HomePage from "./pages/HomePage";
+import { useEffect } from "react";
 
 export function App() {
+  useEffect(() => {
+    const backgrounds = [
+      "Backgrounds/background_1.png",
+      "Backgrounds/background_2.png",
+      "Backgrounds/background_3.png",
+    ];
+
+    const randomBackground =
+      backgrounds[Math.floor(Math.random() * backgrounds.length)];
+
+    document.body.style.backgroundImage = `url(${randomBackground})`;
+    document.body.style.backgroundSize = "cover";
+
+    return () => {
+      document.body.style.backgroundImage = null;
+    };
+  }, []);
+
   return (
     <>
       <BrowserRouter>

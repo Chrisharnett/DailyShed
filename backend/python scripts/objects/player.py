@@ -9,40 +9,41 @@ class Player:
         program=None,
         exerciseHistory=None,
     ):
-        if program is None:
-            collections = [
-                {
-                    "title": "tone",
-                    "currentKey": "g",
-                    "currentMode": "major",
-                    "index": 1,
-                },
-                {
-                    "title": "ninthScale1",
-                    "currentKey": "g",
-                    "currentMode": "major",
-                    "index": 1,
-                },
-            ]
-            exerciseDetails = [
-                {"key": "g", "mode": "major", "reviewBool": True, "type": "tone"},
-                {"key": "g", "mode": "major", "reviewBool": False, "type": "tone"},
-                {
-                    "key": "g",
-                    "mode": "major",
-                    "reviewBool": True,
-                    "type": "ninthScale1",
-                },
-                {
-                    "key": "g",
-                    "mode": "major",
-                    "reviewBool": False,
-                    "type": "ninthScale1",
-                },
-            ]
-            self.__program = Program(collections, exerciseDetails, 3)
-        else:
-            self.__program = program
+        # if program is None:
+        #     collections = [
+        #         {
+        #             "title": "tone",
+        #             "currentKey": "g",
+        #             "currentMode": "major",
+        #             "index": 1,
+        #         },
+        #         {
+        #             "title": "ninthScale1",
+        #             "currentKey": "g",
+        #             "currentMode": "major",
+        #             "index": 1,
+        #         },
+        #     ]
+        #     exerciseDetails = [
+        #         {"key": "g", "mode": "major", "reviewBool": True, "type": "tone"},
+        #         {"key": "g", "mode": "major", "reviewBool": False, "type": "tone"},
+        #         {
+        #             "key": "g",
+        #             "mode": "major",
+        #             "reviewBool": True,
+        #             "type": "ninthScale1",
+        #         },
+        #         {
+        #             "key": "g",
+        #             "mode": "major",
+        #             "reviewBool": False,
+        #             "type": "ninthScale1",
+        #         },
+        #     ]
+        #     self.__program = Program(collections, exerciseDetails, 3)
+        # else:
+        #     self.__program = program
+        self.__program = program
         if exerciseHistory is None:
             self.__exerciseHistory = []
         else:
@@ -61,15 +62,14 @@ class Player:
                 return c["index"]
         return None
 
-
     def setIndex(self, collection, index):
-        for c in self.getProgram['collections']:
+        for c in self.getProgram["collections"]:
             if c["title"] == collection:
                 c["index"] = index
                 break
 
     def incrementIndex(self, collection):
-        for c in self.getProgram['collections']:
+        for c in self.getProgram["collections"]:
             if c["title"] == collection:
                 c["index"] += 1
                 break

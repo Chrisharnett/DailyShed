@@ -1,4 +1,4 @@
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Container } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { SelfAssessmentModal } from "./SelfAssessmentModal";
 import { SessionCompleteModal } from "./SessionComplete";
@@ -62,20 +62,20 @@ const ExerciseCard = ({
   if (currentExercise && currentRound <= userData.program.rounds) {
     return (
       <>
-        <Card style={{ width: "50rem" }} className="m-5 text-center">
-          <Card.Body className="align-items-center">
-            <Card.Title className="">{currentExercise.exerciseName}</Card.Title>
-            <Card.Img variant="top" src={currentExercise.imageURL}></Card.Img>
-            <Card.Text className="">{currentExercise.description}</Card.Text>
-            <Button
-              type="submit"
-              className="mx-2"
-              onClick={nextExerciseHandler}
-            >
-              Next Exercise
-            </Button>
-          </Card.Body>
-        </Card>
+        <Container className="cardContainer d-flex flex-column align-items-center">
+          <Card border="light" className="exerciseCard">
+            <Card.Body className="align-items-center">
+              <Card.Title className="">
+                {currentExercise.exerciseName}
+              </Card.Title>
+              <Card.Img variant="top" src={currentExercise.imageURL}></Card.Img>
+              <Card.Text className="">{currentExercise.description}</Card.Text>
+            </Card.Body>
+          </Card>
+          <Button type="submit" className="m-2" onClick={nextExerciseHandler}>
+            Next Exercise
+          </Button>
+        </Container>
         <SelfAssessmentModal
           show={showSelfAssementModal}
           setShow={setShowSelfAssessmentModal}

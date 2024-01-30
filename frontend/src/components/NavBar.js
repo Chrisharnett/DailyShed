@@ -49,7 +49,7 @@ const Navigation = () => {
 
   return (
     <>
-      <Navbar expand="lg" className="navbar-dark bg-dark p-2" id="top">
+      <Navbar expand="lg" className="navbar-dark bg-black p-2 mb-2" id="top">
         <Container>
           <Navbar.Brand href="/">The Daily Shed</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

@@ -1,16 +1,17 @@
-import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
+import { Container, Form, Row, Col, Card, Button } from "react-bootstrap";
 import useUser from "../auth/useUser";
-import { useForm } from "react-hook-form";
-import Col from "react-bootstrap/Col";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Card from "react-bootstrap/Card";
-import CollectionForm from "../components/CollectionForm";
+import CollectionCard from "../components/CollectionCard";
 import ExerciseDetailsForm from "../components/ExerciseDetailsForm";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
+  // const [program, setProgram] = useState({
+  //   collections: [],
+  //   exerciseDetails: [],
+  //   rounds: 3,
+  // });
 
   const user = useUser();
   // const { handleSubmit } = useForm();
@@ -21,6 +22,7 @@ const UserProfile = () => {
         const response = await axios.get(`/api/getUserData/${user.sub}`);
         if (response.data.userData) {
           setUserData(response.data.userData);
+          // setProgram(response.data.userData.program);
         } else {
           setUserData(null);
         }
@@ -31,51 +33,116 @@ const UserProfile = () => {
     getUserData();
   }, [user]);
 
-  const { name, exerciseHistory, email, previousSet, program } = userData || {};
+  const { name } = userData || {};
 
-  const handleSubmit = async (data) => {};
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      let newUserData = { ...userData };
+      newUserData.program = userData.program;
+      setUserData(newUserData);
+      await axios.post("/api/updateUserData", newUserData);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
+  const handleRoundsChange = (event) => {
+    const newRounds = parseInt(event.target.value);
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      program: {
+        ...prevUserData.program,
+        rounds: newRounds,
+      },
+    }));
+  };
+
+  const handleDetailsChange = (index, updatedDetails) => {
+    setUserData((prevUserData) => {
+      const newExerciseDetails = [...prevUserData.program.exerciseDetails];
+      newExerciseDetails[index] = updatedDetails;
+      return {
+        ...prevUserData,
+        program: {
+          ...prevUserData.program,
+          exerciseDetails: newExerciseDetails,
+        },
+      };
+    });
+  };
 
   if (!userData) {
     return <p>Loading...</p>;
   }
   return (
     <>
-      <Container>
-        <h1>User Profile</h1>
-        <p>Profile Info Form to update user data</p>
+      <Container className="midLayer">
+        <h1>{name}</h1>
         <Card>
           <Card.Body>
-            <Card.Title>{name}</Card.Title>
+            <Card.Title>Your practice routine</Card.Title>
             <Form
-              onSubmit={handleSubmit()}
-              className="container w-50 justify-content-center"
+              onSubmit={handleSubmit}
+              className="container justify-content-center"
             >
-              {program.collections.map((collection, i) => {
+              <p>Active Collections:</p>
+              {userData.program.collections.map((collection, i) => {
                 return (
-                  <Col key={i}>
-                    <CollectionForm key={i} collection={collection} />
+                  <Col key={i} className="mb-2">
+                    <CollectionCard i={i} collection={collection} />
                   </Col>
                 );
               })}
-
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Rounds</Form.Label>
-                <Form.Control />
+              <hr></hr>
+              <Form.Group
+                as={Row}
+                className="mb-IT's be3"
+                controlId="roundsSelector"
+              >
+                <Form.Label column sm="1">
+                  Rounds:
+                </Form.Label>
+                <Col sm="1">
+                  <Form.Control
+                    type="number"
+                    value={userData.program.rounds}
+                    onChange={handleRoundsChange}
+                    min="1"
+                  />
+                </Col>
               </Form.Group>
+              <hr></hr>
 
               {/* TODO: Add the ability to change the number of Exercises */}
               {/* TODO: Allow Custom Exercises */}
-              {program.exerciseDetails.map((details, i) => {
+              {userData.program.exerciseDetails.map((details, i) => {
                 return (
                   <Col key={i}>
-                    <ExerciseDetailsForm key={i} details={details} />
+                    <ExerciseDetailsForm
+                      i={i}
+                      index={i}
+                      details={details}
+                      collections={userData.program.collections}
+                      onDetailsChange={(updatedDetails) =>
+                        handleDetailsChange(i, updatedDetails)
+                      }
+                    />
                   </Col>
                 );
               })}
             </Form>
           </Card.Body>
+          <Card.Footer>
+            <Button variant="primary" type="submit">
+              Save Routine
+            </Button>
+          </Card.Footer>
         </Card>
       </Container>
+      <br></br>
+      <br></br>
+      <br></br>
     </>
   );
 };

@@ -44,25 +44,26 @@ const TheShed = () => {
   if (currentSet) {
     return (
       <>
-        <Container>
-          <h2>Practice Time</h2>
-          <h3>
-            Exercise {exerciseCount} of{" "}
-            {currentSet.length * userData.program.rounds}
-          </h3>
-          {
-            <ExerciseCard
-              exerciseCount={exerciseCount}
-              setExerciseCount={setExerciseCount}
-              currentSet={currentSet}
-              setCurrentSet={setCurrentSet}
-              userData={userData}
-              setUserData={setUserData}
-            />
-          }
-          <br></br>
-          <br></br>
-          <br></br>
+        <Container className="midLayer">
+          <div className="titles p-2">
+            <h2>Practice Time</h2>
+            <h3>
+              Exercise {exerciseCount} of{" "}
+              {currentSet.length * userData.program.rounds}
+            </h3>
+          </div>
+          <div className="d-flex flex-column align-items-center">
+            {
+              <ExerciseCard
+                exerciseCount={exerciseCount}
+                setExerciseCount={setExerciseCount}
+                currentSet={currentSet}
+                setCurrentSet={setCurrentSet}
+                userData={userData}
+                setUserData={setUserData}
+              />
+            }
+          </div>
         </Container>
       </>
     );
