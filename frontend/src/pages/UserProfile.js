@@ -4,17 +4,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import CollectionCard from "../components/CollectionCard";
 import ExerciseDetailsForm from "../components/ExerciseDetailsForm";
+import SuccessModal from "../components/SuccessModal";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
-  // const [program, setProgram] = useState({
-  //   collections: [],
-  //   exerciseDetails: [],
-  //   rounds: 3,
-  // });
+  const [openSuccessMessage, setOpenSuccessMessage] = useState(false);
+  const [message, setMessage] = useState("");
 
   const user = useUser();
-  // const { handleSubmit } = useForm();
 
   useEffect(() => {
     const getUserData = async () => {
@@ -22,7 +19,6 @@ const UserProfile = () => {
         const response = await axios.get(`/api/getUserData/${user.sub}`);
         if (response.data.userData) {
           setUserData(response.data.userData);
-          // setProgram(response.data.userData.program);
         } else {
           setUserData(null);
         }
@@ -42,6 +38,8 @@ const UserProfile = () => {
       newUserData.program = userData.program;
       setUserData(newUserData);
       await axios.post("/api/updateUserData", newUserData);
+      setMessage("Routine Saved!");
+      setOpenSuccessMessage(true);
     } catch (error) {
       console.error("Error: ", error);
     }
@@ -81,22 +79,23 @@ const UserProfile = () => {
         <h1>{name}</h1>
 
         <div className="glass">
-          <Card
-            style={{
-              backdropFilter: "blur(10px) saturate(99%)",
-              WebkitBackdropFilter: "blur(21px) saturate(99%)",
-              backgroundColor: "rgba(228, 227, 227, 0.15)",
-              border: "1px solid rgba(255, 255, 255, 0.125)",
-              borderRadius: "15px",
-              // color:
-            }}
+          <Form
+            onSubmit={handleSubmit}
+            className="container justify-content-center"
           >
-            <Card.Body>
-              <Card.Title>Your practice routine</Card.Title>
-              <Form
-                onSubmit={handleSubmit}
-                className="container justify-content-center"
-              >
+            <Card
+              style={{
+                backdropFilter: "blur(10px) saturate(99%)",
+                WebkitBackdropFilter: "blur(21px) saturate(99%)",
+                backgroundColor: "rgba(228, 227, 227, 0.15)",
+                border: "1px solid rgba(255, 255, 255, 0.125)",
+                borderRadius: "15px",
+                // color:
+              }}
+            >
+              <Card.Body>
+                <Card.Title>Your practice routine</Card.Title>
+
                 <p>Active Collections:</p>
                 {userData.program.collections.map((collection, i) => {
                   return (
@@ -142,16 +141,21 @@ const UserProfile = () => {
                     </Col>
                   );
                 })}
-              </Form>
-            </Card.Body>
-            <Card.Footer>
-              <Button variant="primary" type="submit">
-                Save Routine
-              </Button>
-            </Card.Footer>
-          </Card>
+              </Card.Body>
+              <Card.Footer>
+                <Button variant="primary" type="submit">
+                  Save Routine
+                </Button>
+              </Card.Footer>
+            </Card>
+          </Form>
         </div>
       </Container>
+      <SuccessModal
+        show={openSuccessMessage}
+        setShow={setOpenSuccessMessage}
+        message={message}
+      />
       <br></br>
       <br></br>
       <br></br>

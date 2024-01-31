@@ -58,7 +58,7 @@ const Navigation = () => {
               <Nav className="me-auto">
                 <Nav.Link href="/theShed">The Shed</Nav.Link>
                 <Nav.Link href="/userProfile">User Profile</Nav.Link>
-                <Nav.Link href="/practiceJournal">Practice Journal</Nav.Link>
+                {/* <Nav.Link href="/practiceJournal">Practice Journal</Nav.Link> */}
               </Nav>
             )}
             {loggedIn && (

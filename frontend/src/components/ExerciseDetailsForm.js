@@ -13,7 +13,7 @@ const ExerciseDetailsForm = ({ i, details, collections, onDetailsChange }) => {
   };
 
   const handleCollectionChange = (e) => {
-    onDetailsChange({ ...details, type: e.target.value });
+    onDetailsChange({ ...details, collectionName: e.target.value });
   };
 
   const handleCheckboxChange = (e) => {
@@ -28,9 +28,12 @@ const ExerciseDetailsForm = ({ i, details, collections, onDetailsChange }) => {
     <>
       <Container>
         <Row className="align-items-center">
-          <Col xs={12} md={2} className="mb-2 mb-sm-0">
+          <Col xs={12} md={4} className="mb-2 mb-sm-0">
             <Form.Label>Exercise {i + 1}</Form.Label>
-            <Form.Select value={details.type} onChange={handleCollectionChange}>
+            <Form.Select
+              value={details.collectionName}
+              onChange={handleCollectionChange}
+            >
               {collections.map((collection, index) => (
                 <option key={index} value={collection.title}>
                   {collection.title}

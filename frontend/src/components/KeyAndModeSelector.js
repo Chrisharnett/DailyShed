@@ -11,6 +11,14 @@ const KeyAndModeSelector = ({ keyCenter, mode, onKeyChange, onModeChange }) => {
     "mixolydian",
   ]);
 
+  const handleKeyChange = (e) => {
+    onKeyChange(e.target.value);
+  };
+
+  const handleModeChange = (e) => {
+    onModeChange(e.target.value);
+  };
+
   return (
     <>
       <Container>
@@ -18,7 +26,7 @@ const KeyAndModeSelector = ({ keyCenter, mode, onKeyChange, onModeChange }) => {
           <Col xs={12} md={3}>
             <Form.Group className="mb-3" controlId="keySelector">
               <Form.Label>Key</Form.Label>
-              <Form.Select value={keyCenter} onChange={onKeyChange}>
+              <Form.Select value={keyCenter} onChange={handleKeyChange}>
                 {keys.map((keyOption, i) => {
                   return (
                     <option key={i} value={keyOption}>
@@ -30,10 +38,10 @@ const KeyAndModeSelector = ({ keyCenter, mode, onKeyChange, onModeChange }) => {
             </Form.Group>
           </Col>
 
-          <Col xs={12} md={3}>
+          <Col xs={12} md={4}>
             <Form.Group className="mb-3" controlId="modeSelector">
               <Form.Label>Mode</Form.Label>
-              <Form.Select value={mode} onChange={onModeChange}>
+              <Form.Select value={mode} onChange={handleModeChange}>
                 {modes.map((modeOption, index) => (
                   <option key={index} value={modeOption}>
                     {modeOption}
