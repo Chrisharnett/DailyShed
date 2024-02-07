@@ -29,7 +29,14 @@ const ExerciseDetailsForm = ({ i, details, collections, onDetailsChange }) => {
       <Container>
         <Row className="align-items-center">
           <Col xs={12} md={4} className="mb-2 mb-sm-0">
-            <Form.Label>Exercise {i + 1}</Form.Label>
+            <Form.Label
+              style={{
+                color: "rgb(255, 255, 255)",
+                textShadow: "3px 2px 2px rgba(0, 0, 0, 0.8)",
+              }}
+            >
+              Exercise {i + 1}
+            </Form.Label>
             <Form.Select
               value={details.collectionName}
               onChange={handleCollectionChange}

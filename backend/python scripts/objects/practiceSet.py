@@ -220,7 +220,6 @@ class PracticeSet:
         )
 
     def getNewNotePattern(self, title):
-        # TODO Check x.getName
         notePatternCollection = next(
             x for x in self.__notePatternCollections if x.getName == title
         )

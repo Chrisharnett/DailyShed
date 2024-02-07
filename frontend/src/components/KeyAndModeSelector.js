@@ -25,7 +25,14 @@ const KeyAndModeSelector = ({ keyCenter, mode, onKeyChange, onModeChange }) => {
         <Row>
           <Col xs={12} md={3}>
             <Form.Group className="mb-3" controlId="keySelector">
-              <Form.Label>Key</Form.Label>
+              <Form.Label
+                style={{
+                  color: "rgb(255, 255, 255)",
+                  textShadow: "3px 2px 2px rgba(0, 0, 0, 0.8)",
+                }}
+              >
+                Key
+              </Form.Label>
               <Form.Select value={keyCenter} onChange={handleKeyChange}>
                 {keys.map((keyOption, i) => {
                   return (
@@ -40,7 +47,14 @@ const KeyAndModeSelector = ({ keyCenter, mode, onKeyChange, onModeChange }) => {
 
           <Col xs={12} md={4}>
             <Form.Group className="mb-3" controlId="modeSelector">
-              <Form.Label>Mode</Form.Label>
+              <Form.Label
+                style={{
+                  color: "rgb(255, 255, 255)",
+                  textShadow: "3px 2px 2px rgba(0, 0, 0, 0.8)",
+                }}
+              >
+                Mode
+              </Form.Label>
               <Form.Select value={mode} onChange={handleModeChange}>
                 {modes.map((modeOption, index) => (
                   <option key={index} value={modeOption}>

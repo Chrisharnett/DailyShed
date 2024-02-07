@@ -63,13 +63,21 @@ const ExerciseCard = ({
     return (
       <>
         <Container className="cardContainer d-flex flex-column align-items-center">
-          <Card border="light" className="exerciseCard ">
+          <Card border="light" className="exerciseCard">
             <Card.Body className="align-items-center">
-              <Card.Title className="">
+              <Card.Title
+                className="exerciseTitle"
+                style={{ color: "rgb(19,0,80)" }}
+              >
                 {currentExercise.exerciseName}
               </Card.Title>
               <Card.Img variant="top" src={currentExercise.imageURL}></Card.Img>
-              <Card.Text className="">{currentExercise.description}</Card.Text>
+              <Card.Text
+                className="exerciseDescription"
+                style={{ color: "rgb(19,0,80)" }}
+              >
+                {currentExercise.description}
+              </Card.Text>
             </Card.Body>
           </Card>
           <Button type="submit" className="m-2" onClick={nextExerciseHandler}>

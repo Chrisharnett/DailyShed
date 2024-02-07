@@ -38,7 +38,7 @@ export const SessionCompleteModal = ({
       };
       updateUser();
     }
-  }, [show, currentSet, userData, setUserData]);
+  }, [show]);
 
   return (
     <>

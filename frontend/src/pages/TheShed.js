@@ -46,8 +46,8 @@ const TheShed = () => {
       <>
         <Container className="midLayer glass">
           <div className="titles p-2">
-            <h2>Practice Time</h2>
-            <h3>
+            <h2 className="boxShadowText">Practice Time</h2>
+            <h3 className="boxShadowText">
               Exercise {exerciseCount} of{" "}
               {currentSet.length * userData.program.rounds}
             </h3>

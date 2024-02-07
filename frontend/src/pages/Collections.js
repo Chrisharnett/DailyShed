@@ -9,7 +9,6 @@ const Collections = () => {
     <>
       <Container className="midLayer glass">
         <h2>Collection Viewer</h2>
-        <h3></h3>
       </Container>
     </>
   );
