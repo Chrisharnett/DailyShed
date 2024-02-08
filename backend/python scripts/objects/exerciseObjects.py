@@ -199,7 +199,7 @@ class NotePattern:
     def __init__(
         self,
         notePatternId,
-        collectionName,
+        notePatternType,
         notePattern,
         rhythmMatcher="general",
         description="",
@@ -209,7 +209,7 @@ class NotePattern:
         holdLastNote=True,
     ):
         self.__patternId = notePatternId
-        self.__collectionName = collectionName
+        self.__notePatternType = notePatternType
         self.__notePattern = notePattern
         self.__rhythmMatcher = rhythmMatcher
         self.__description = description
@@ -221,7 +221,7 @@ class NotePattern:
     def serialize(self):
         return {
             "notePatternId": self.__patternId,
-            "collectionName": self.__collectionName,
+            "collectionName": self.__notePatternType,
             "notePattern": self.__notePattern,
             "rhythmMatcher": self.__rhythmMatcher,
             "description": self.__description,
@@ -249,8 +249,8 @@ class NotePattern:
         return self.__patternId
 
     @property
-    def getCollectionName(self):
-        return self.__collectionName
+    def getNotePatternType(self):
+        return self.__notePatternType
 
     @property
     def getNotePattern(self):
@@ -269,7 +269,7 @@ class NotePattern:
         return self.__direction
 
     def __str__(self):
-        return f"{self.__patternId}  {self.__notePattern} {self.__collectionName} {self.__description}"
+        return f"{self.__patternId}  {self.__notePattern} {self.__notePatternType} {self.__description}"
 
 
 class RhythmPattern:

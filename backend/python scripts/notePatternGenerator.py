@@ -1,28 +1,19 @@
 from objects.exerciseObjects import NotePattern
-from objects.collection import Collection
 
 preamble = r"""#(set-global-staff-size 14)
         """
 
-
-# All ascending scalar patterns
-def notePatterns(minNote, maxNote, maxLength):
+def singleNoteLongToneWholeNotes(minNote, maxNote, maxLength):
     PATTERN_ID = 0
-    scale1Ascending = []
-    notes = []
-    # toneExercises = Collection("tone")
-    # scale1 = Collection("ninthScale1")
-
-    toneExercises = Collection("Single Note Long Tone")
-    scale1 = Collection("Scale to the Ninth")
+    toneExercises = []
 
     # One note options
     for i in range(minNote, maxNote):
         notes = [i]
-        toneExercises.addPattern(
+        toneExercises.append(
             NotePattern(
-                notePatternId=PATTERN_ID,
-                collectionName="Single Note Long Tone",
+                notePatternId="single_note_long_tone_" + str(PATTERN_ID),
+                notePatternType="single_note_long_tone",
                 notePattern=notes,
                 rhythmMatcher="tone",
                 description=f"on the {i}",
@@ -33,6 +24,18 @@ def notePatterns(minNote, maxNote, maxLength):
         )
         PATTERN_ID += 1
 
+    return toneExercises
+
+# All ascending scalar patterns
+def stepwiseScaleNotePatterns(minNote, maxNote, maxLength):
+    PATTERN_ID = 0
+    scale1Ascending = []
+    notes = []
+    # toneExercises = Collection("tone")
+    # scale1 = Collection("ninthScale1")
+
+    scale1 = []
+
     scale1Ascending = []
     # Ascending scalar options
     for i in range(minNote + 1, maxNote + 1):
@@ -41,31 +44,31 @@ def notePatterns(minNote, maxNote, maxLength):
             notes.append(j)
         if notes:
             scale1Ascending.append(notes)
-            scale1.addPattern(
+            scale1.append(
                 NotePattern(
-                    notePatternId=PATTERN_ID,
-                    collectionName="scale",
+                    notePatternId="stepwise_scale_" + str(PATTERN_ID),
+                    notePatternType="stepwise_scale",
                     notePattern=notes,
-                    rhythmMatcher="general",
+                    rhythmMatcher="Quarter Note",
                     description=f"to the {j}",
                     direction="ascending",
                 )
             )
             PATTERN_ID += 1
 
-    return [toneExercises, scale1]
+    return scale1
 
 
 def main():
     minNote = 1
     maxNote = 9
     maxLength = 2 * (maxNote)
-    notePatternCollections = notePatterns(minNote, maxNote, maxLength)
+    notePatternCollections = []
+    notePatternCollections.extend(stepwiseScaleNotePatterns(minNote, maxNote, maxLength))
+    notePatternCollections.extend(singleNoteLongToneWholeNotes(minNote, maxNote, maxLength))
 
     for collection in notePatternCollections:
         print(collection)
-        for pattern in collection.getPatterns:
-            print(pattern)
 
 
 if __name__ == "__main__":

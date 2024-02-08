@@ -1,7 +1,7 @@
 from objects.player import Player
 from objects.practiceSet import PracticeSet
-from notePatternGenerator import notePatterns
-from rhythmPatternGenerator import rhythmPatterns
+from notePatternGenerator import stepwiseScaleNotePatterns
+from rhythmPatternGenerator import quarterNoteRhythms
 import json
 import random
 import csv
@@ -19,8 +19,8 @@ def createPlayerData():
     players = ['Chris']
     minNote = 1
     maxNote = 9
-    notes = notePatterns(minNote, maxNote, (2 * maxNote))
-    rhythms = rhythmPatterns(4, 4)
+    notes = stepwiseScaleNotePatterns(minNote, maxNote, (2 * maxNote))
+    rhythms = quarterNoteRhythms(4, 4)
 
     data=[]
     for player in players:

@@ -1,6 +1,6 @@
 from objects.player import Player
-from notePatternGenerator import notePatterns
-from rhythmPatternGenerator import rhythmPatterns
+from notePatternGenerator import stepwiseScaleNotePatterns
+from rhythmPatternGenerator import quarterNoteRhythms
 from objects.practiceSet import PracticeSet
 import boto3
 import json
@@ -19,8 +19,8 @@ def main():
     player = Player()
     minNote = 1
     maxNote = 9
-    notes = notePatterns(minNote, maxNote, (2 * maxNote))
-    rhythms = rhythmPatterns(4, 4)
+    notes = stepwiseScaleNotePatterns(minNote, maxNote, (2 * maxNote))
+    rhythms = quarterNoteRhythms(4, 4)
     practiceSet = PracticeSet(player, notes, rhythms)
     currentSet = practiceSet.getNextSet()
     returnSet = []

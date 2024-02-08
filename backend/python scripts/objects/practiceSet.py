@@ -160,19 +160,19 @@ class PracticeSet:
             for playerExercise in self.__player.exerciseHistory
             if exerciseCounts[playerExercise["exercise"]["exerciseName"]] == minPlays
             and playerExercise["exercise"]["pitchPattern"]["rhythmMatcher"] == type
-            and (
-                isinstance(
-                    playerExercise["exercise"]["pitchPattern"]["notePatternId"],
-                    (int, str),
-                )
-                and str(
-                    playerExercise["exercise"]["pitchPattern"]["notePatternId"]
-                ).isdigit()
-            )
+            # and (
+            #     isinstance(
+            #         playerExercise["exercise"]["pitchPattern"]["notePatternId"],
+            #         (int, str),
+            #     )
+            #     and str(
+            #         playerExercise["exercise"]["pitchPattern"]["notePatternId"]
+            #     ).isdigit()
+            # )
         ]
         reviewPattern = reviewPatterns[random.randint(0, len(reviewPatterns) - 1)]
         # Find a way to not hard code the collectionName.
-        if reviewPattern["collectionName"] != "Single Note Long Tone":
+        if reviewPattern["collectionName"] != "single_note_long_tone":
             direction = self.chooseDirection(reviewPattern)
             if direction == "descending":
                 return self.descendingPattern(reviewPattern)
@@ -220,35 +220,45 @@ class PracticeSet:
         )
 
     def getNewNotePattern(self, title):
-        notePatternCollection = next(
-            x for x in self.__notePatternCollections if x.getName == title
-        )
-        collections = self.__player.getProgram["collections"]
-        currentCollection = None
-        for collection in collections:
-            if collection["title"] == title:
+        # Get the next matching notePattern - I thin this should not include next()
+        # notePatternCollection = next(
+        #     x for x in self.__notePatternCollections if x.getNotePatternType == title
+        # )
+        notePatternCollection = [
+            x for x in self.__notePatternCollections if x.getNotePatternType == title
+        ]
+        # collections = self.__player.getProgram["collections"]
+        # why currentCollection?
+        # currentCollection = None
+
+        # Gets the next notePattern index for the player.
+        for collection in self.__player.getProgram["collections"]:
+            if collection["notePatternType"] == title:
                 currentPlayerIndex = collection["index"]
-                currentCollection = collection
+                # currentCollection = collection
                 break
 
-        pitches = notePatternCollection.getPatterns[
-            (currentPlayerIndex + 1) % len(notePatternCollection.getPatterns)
-        ]
+        # Gets the notePattern array for the next notePattern in the collection
+        pitches = notePatternCollection[(currentPlayerIndex + 1) % len(notePatternCollection)]
 
-        if currentPlayerIndex >= len(notePatternCollection.getPatterns):
+        if currentPlayerIndex >= len(notePatternCollection):
+            # reset the index
             self.__player.setIndex(title, -1)
         else:
+            #increment the index
             self.__player.setIndex(title, currentPlayerIndex + 1)
 
         return pitches
 
     def getNewRhythmPattern(self, type, length):
         rhythmsThatFit = [
-            x for x in self.__rhythmPatterns.getPatterns if x.getRhythmType == type
+            x for x in self.__rhythmPatterns if x.getRhythmType == type
         ]
         max = self.maxRhythmNoteLength(rhythmsThatFit)
         if max >= length:
-            return next(x for x in rhythmsThatFit if x.noteLength == length)
+            rhy = next(x for x in rhythmsThatFit if x.noteLength == length)
+            print(rhy)
+            return rhy
         return self.multipleBarRhythm(rhythmsThatFit, length)
 
     def getMinPlays(self, exercises):
@@ -258,14 +268,18 @@ class PracticeSet:
         return selectedExerciseCounts[min(selectedExerciseCounts)]
 
     def getNextSet(self):
+        # Get the program exercise details for this user
         exerciseDetails = self.__player.getProgram["exerciseDetails"]
+
+        #create a new empty set of the appropriate length
         newSet = []
         # set the length of the new set with None values
         for n in range(len(exerciseDetails)):
             newSet.append(None)
 
-            #  Review lessons have a notePattern from the history with a new or random rhythm.
-            #  Non-review exercises have a new notePattern with a rhythm from history.
+        #  Get the users previousSet
+            #  Review exercises require a notePattern from the history with a new or random rhythm.
+            #  New exercises have a new notePattern with a rhythm from history.
         previousSet = self.__player.getPreviousSet
 
         for i in range(len(newSet)):
@@ -283,7 +297,7 @@ class PracticeSet:
                 newSet[i] = ex
             else:
                 # Get the next note Pattern for the collection type
-                pitches = self.getNewNotePattern(exerciseDetails[i].get("collectionName"))
+                pitches = self.getNewNotePattern(exerciseDetails[i].get("notePatternType"))
                 if previousSet:
                     # Get a review rhythm pattern for the collection type.
                     possibleRhythms = []
@@ -303,7 +317,7 @@ class PracticeSet:
                 else:
                     rhythm = next(
                         pattern
-                        for pattern in self.__rhythmPatterns.getPatterns
+                        for pattern in self.__rhythmPatterns
                         if pattern.getRhythmType == pitches.getRhythmMatcher
                         and pattern.noteLength == pitches.getRhythmLength()
                     )
