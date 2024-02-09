@@ -17,13 +17,13 @@ app.use(express.json());
 // TODO: Is this approach acceptable for production??
 app.use(express.static(path.join(__dirname, "../build")));
 
-const venvPath = "./python scripts/exGenerator";
+const venvPath = "./python_scripts/exGenerator";
 
 const pythonExecutable = path.join(venvPath, "bin/python");
 
 const flaskServerScriptPath = path.join(
   __dirname,
-  "../python scripts/exerciseMaker.py"
+  "../python_scripts/exerciseMaker.py"
 );
 
 const flaskExerciseMaker = spawn(pythonExecutable, [flaskServerScriptPath]);
