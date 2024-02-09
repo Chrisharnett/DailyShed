@@ -30,24 +30,27 @@ html{
   }
 
   .midLayer{
-    color: rgb(162, 162, 162);
+    position: relative;
+    color: rgb(214, 214, 214);
     box-sizing:border-box;
     margin: 5vh auto;
     
     max-height: auto;
     max-width: 90%;
     padding: 1em;
-    
-/* Glass Card Effect */
-    /* backdrop-filter: blur(10px) saturate(99%);
-    -webkit-backdrop-filter: blur(21px) saturate(99%);
-    background-color: rgb(228, 227, 227, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.125);
-    border-radius: 15px; */
+  
+  }
+
+  .entry{
+    top: 20%;
+  }
+  .dropShadow{
+    text-shadow: 2px 2px 4px #000000;
+    color:  rgb(214, 214, 214);
   }
 
   .glass{
-    color:  rgb(134, 134, 134);
+    color:  rgb(214, 214, 214);
     backdrop-filter: blur(10px) saturate(99%);
     -webkit-backdrop-filter: blur(21px) saturate(99%);
     background-color: rgb(228, 227, 227, 0.15);
@@ -56,7 +59,6 @@ html{
   }
   
   .cardContainer{
-
     background-color: rgb(255, 255, 255, 1);
     margin-bottom: 3vh;
     max-width: 100%;

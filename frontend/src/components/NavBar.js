@@ -1,47 +1,8 @@
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import { useToken } from "../auth/useToken";
-import axios from "axios";
 
-const Navigation = () => {
-  const [, setToken] = useToken();
-  const [cognitoURL, setCognitoURL] = useState("");
-  const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get("token");
-
-  useEffect(() => {
-    const t = localStorage.getItem("token");
-    if (t) {
-      setLoggedIn(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (token) {
-      setToken(token);
-      setLoggedIn(true);
-    }
-  }, [token, setToken, navigate]);
-
-  useEffect(() => {
-    const loadCognitoURL = async () => {
-      try {
-        const response = await axios.get("/api/auth/cognito/url");
-        const { url } = response.data;
-        setCognitoURL(url);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    loadCognitoURL();
-  }, []);
-
+const Navigation = ({ loggedIn, setLoggedIn, cognitoURL }) => {
   const logOutHandler = () => {
     localStorage.removeItem("token");
     setLoggedIn(false);
@@ -49,7 +10,12 @@ const Navigation = () => {
 
   return (
     <>
-      <Navbar expand="lg" className="navbar-dark bg-black p-2 mb-2" id="top">
+      <Navbar
+        expand="lg"
+        className="navbar-dark bg-black p-2 mb-2"
+        id="top"
+        fixed="top"
+      >
         <Container>
           <Navbar.Brand href="/">The Daily Shed</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

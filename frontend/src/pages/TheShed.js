@@ -31,7 +31,12 @@ const TheShed = () => {
     const getSet = async () => {
       try {
         let response = await axios.post("/api/generateSet", userData);
-        setCurrentSet(response.data);
+        const { player, returnSet } = response.data;
+        setCurrentSet(returnSet);
+        const { exerciseHistory, previousSet, program } = player;
+        userData.exerciseHistory = exerciseHistory;
+        userData.previousSet = previousSet;
+        userData.program = program;
       } catch (error) {
         console.error("Error: ", error);
       }
