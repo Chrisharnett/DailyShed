@@ -55,8 +55,6 @@ def getSampleCollection():
         notes = notePatterns(minNote, maxNote, (2 * maxNote))
         for n in notes:
             collections.append(n.serialize())
-        sampleCollection = []
-
         return jsonify(collections)
     except Exception as e:
         return jsonify({"error": str(e)}), 400

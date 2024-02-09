@@ -75,10 +75,10 @@ const UserProfile = () => {
   }
   return (
     <>
-      <div style={{ height: "10vh" }}></div>
       <Container className="midLayer glass">
-        <h1 className="boxShadowText">{name}</h1>
-        <div className="">
+        <h1>{name}</h1>
+
+        <div className="glass">
           <Form
             onSubmit={handleSubmit}
             className="container justify-content-center"
@@ -94,23 +94,9 @@ const UserProfile = () => {
               }}
             >
               <Card.Body>
-                <Card.Title
-                  style={{
-                    color: "rgb(255, 255, 255)",
-                    textShadow: "3px 2px 2px rgba(0, 0, 0, 0.8)",
-                  }}
-                >
-                  Your practice routine
-                </Card.Title>
+                <Card.Title>Your practice routine</Card.Title>
 
-                <p
-                  style={{
-                    color: "rgb(255, 255, 255)",
-                    textShadow: "3px 2px 2px rgba(0, 0, 0, 0.8)",
-                  }}
-                >
-                  Active Collections:
-                </p>
+                <p>Active Collections:</p>
                 {userData.program.collections.map((collection, i) => {
                   return (
                     <Col key={i} className="mb-2">
@@ -124,14 +110,7 @@ const UserProfile = () => {
                   className="mb-IT's be3"
                   controlId="roundsSelector"
                 >
-                  <Form.Label
-                    column
-                    sm="2"
-                    style={{
-                      color: "rgb(255, 255, 255)",
-                      textShadow: "3px 2px 2px rgba(0, 0, 0, 0.8)",
-                    }}
-                  >
+                  <Form.Label column sm="1">
                     Rounds:
                   </Form.Label>
                   <Col sm="1">
@@ -177,7 +156,9 @@ const UserProfile = () => {
         setShow={setOpenSuccessMessage}
         message={message}
       />
-      <div style={{ height: "10vh" }}></div>
+      <br></br>
+      <br></br>
+      <br></br>
     </>
   );
 };
