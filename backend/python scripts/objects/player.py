@@ -1,7 +1,6 @@
 import random
 from objects.program import Program
 
-
 class Player:
     def __init__(
         self,
@@ -16,7 +15,15 @@ class Player:
             self.__exerciseHistory = exerciseHistory
         if previousSet is None:
             self.__previousSet = []
-        self.__previousSet = previousSet
+        else:
+            self.__previousSet = previousSet
+
+    def serialize(self):
+        return {
+            "program": self.__program,
+            "exerciseHistory": self.__exerciseHistory,
+            "previousSet": self.__previousSet
+        }
 
     @property
     def getProgram(self):
@@ -30,7 +37,7 @@ class Player:
 
     def setIndex(self, collection, index):
         for c in self.getProgram["collections"]:
-            if c["title"] == collection:
+            if c["notePatternType"] == collection:
                 c["index"] = index
                 break
 

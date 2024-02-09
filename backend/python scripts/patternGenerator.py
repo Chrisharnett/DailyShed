@@ -1,5 +1,5 @@
-from notePatternGenerator import notePatterns
-from rhythmPatternGenerator import rhythmPatterns
+from notePatternGenerator import stepwiseScaleNotePatterns
+from rhythmPatternGenerator import quarterNoteRhythms
 
 preamble = r"""#(set-global-staff-size 14)
         """
@@ -24,8 +24,8 @@ def main():
     maxNote = 9
     maxLength = 2 * (maxNote)
     routinePattern = ['longTone', 'longTone', 'scale', 'scale']
-    notePatternDictionary = notePatterns(minNote, maxNote, maxLength)
-    rhythmPatternDictionary = rhythmPatterns(4, 4)
+    notePatternDictionary = stepwiseScaleNotePatterns(minNote, maxNote, maxLength)
+    rhythmPatternDictionary = quarterNoteRhythms(4, 4)
     previousSet = []
     # newSet = []
     if len(previousSet) == 0:

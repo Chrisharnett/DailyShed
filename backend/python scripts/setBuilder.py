@@ -1,5 +1,5 @@
-from notePatternGenerator import notePatterns
-from rhythmPatternGenerator import rhythmPatterns
+from notePatternGenerator import stepwiseScaleNotePatterns
+from rhythmPatternGenerator import quarterNoteRhythms
 from objects.practiceSet import PracticeSet
 from objects.player import Player
 import random
@@ -16,13 +16,12 @@ def main():
                       {"type": 'ninthScale1', "reviewBool": 0, "key": 'g', 'mode': 'major'}]
 
     player = Player()
-    notes = notePatterns(minNote, maxNote, maxLength)
-    rhythms = rhythmPatterns(4, 4)
+    notes = stepwiseScaleNotePatterns(minNote, maxNote, maxLength)
+    rhythms = quarterNoteRhythms(4, 4)
     keys = ['g', 'c', 'd']
     practiceSet = PracticeSet(player, notes, rhythms)
     sessions = 1
     for i in range(sessions):
-
         currentSet = practiceSet.getNextSet()
         player.setPreviousSet(currentSet)
         print(f"day {i}")
