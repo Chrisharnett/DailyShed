@@ -24,7 +24,7 @@ platformdirs==4.2.0
 ply==3.11
 Pygments==2.17.2
 python-dateutil==2.8.2
-python-env==1.0.0
+python-dotenv==1.0.1
 requests==2.31.0
 roman==4.1
 s3transfer==0.10.0
