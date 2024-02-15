@@ -38,8 +38,12 @@ def getManySets():
         numberOfSets = data["setsToCreate"]
         minNote = 1
         maxNote = 9
-        notes = stepwiseScaleNotePatterns(minNote, maxNote, (2 * maxNote))
-        notes.extend(singleNoteLongToneWholeNotes(minNote, maxNote, (2 * maxNote)))
+        notes = stepwiseScaleNotePatterns(
+            minNote, maxNote, (2 * maxNote), "Scale to the Ninth"
+        )
+        notes.extend(
+            singleNoteLongToneWholeNotes(minNote, maxNote, (2 * maxNote), "Long Tones")
+        )
         rhythms = quarterNoteRhythms(4, 4)
         rhythms.extend(singleNoteWholeToneRhythms(4, 4))
         packageOfSets = []
@@ -93,8 +97,14 @@ def getSet():
         maxNote = 9
 
         # Get relevant note and rhythm patterns
-        notes = stepwiseScaleNotePatterns(minNote, maxNote, (2 * maxNote))
-        notes.extend(singleNoteLongToneWholeNotes(minNote, maxNote, (2 * maxNote)))
+        notes = stepwiseScaleNotePatterns(
+            minNote, maxNote, (2 * maxNote), "Scale to the 9", "quarter_note"
+        )
+        notes.extend(
+            singleNoteLongToneWholeNotes(
+                minNote, maxNote, (2 * maxNote), "Single Note Long Tones", "long_tone"
+            )
+        )
         rhythms = quarterNoteRhythms(4, 4)
         rhythms.extend(singleNoteWholeToneRhythms(4, 4))
 

@@ -8,29 +8,30 @@ def noDuplicateRhythms(newPattern, patternList):
     # If the loop completes without finding a duplicate, add the new pattern
     return True
 
+
 def singleNoteWholeToneRhythms(numerator, denominator):
     toneRhythmId = 0
     rhythmPatterns = []
     rhythmPatterns.append(
         RhythmPattern(
-            "Single_note_long_tone_" + str(toneRhythmId),
-            "tone",
-            "one note long tone",
-            [["1"]],
-            (numerator, denominator),
-            [{"articulation": "fermata", "index": 0, "name": "fermata"}],
+            rhythmPatternId="long_tone_" + str(toneRhythmId),
+            rhythmType="long_tone",
+            rhythmDescription="single note long tone",
+            rhythmPattern=[["1"]],
+            timeSignature=(numerator, denominator),
+            articulation=[{"articulation": "fermata", "index": 0, "name": "fermata"}],
         )
     )
     toneRhythmId += 1
 
     rhythmPatterns.append(
         RhythmPattern(
-            "Single_note_long_tone_" + str(toneRhythmId),
-            "tone",
-            "one note long tone",
-            [["1"], ["~"], ["1"]],
-            (numerator, denominator),
-            [
+            rhythmPatternId="long_tone_" + str(toneRhythmId),
+            rhythmType="long_tone",
+            rhythmDescription="single note long tone",
+            rhythmPattern=[["1"], ["~"], ["1"]],
+            timeSignature=(numerator, denominator),
+            articulation=[
                 {"articulation": "fermata", "index": 0, "name": "fermata"},
                 {"articulation": "fermata", "index": 1, "name": ""},
             ],
@@ -50,11 +51,11 @@ def quarterNoteRhythms(numerator, denominator):
 
     rhythmPatterns.append(
         RhythmPattern(
-            "r" + str(rhythmId),
-            "Quarter Note",
-            "quarter note",
-            [["4"], ["4"], ["4"], ["4"]],
-            (numerator, denominator),
+            rhythmPatternId=(rhythmId),
+            rhythmType="quarter_note",
+            rhythmDescription="quarter note",
+            rhythmPattern=[["4"], ["4"], ["4"], ["4"]],
+            timeSignature=(numerator, denominator),
         )
     )
     rhythmId += 1
@@ -68,11 +69,11 @@ def quarterNoteRhythms(numerator, denominator):
         if noDuplicateRhythms(oneBarQuarterNoteRhythm, rhythmPatterns) == True:
             rhythmPatterns.append(
                 RhythmPattern(
-                    "r" + str(rhythmId),
-                    "Quarter Note",
-                    "quarter note",
-                    oneBarQuarterNoteRhythm,
-                    (numerator, denominator),
+                    rhythmPatternId=(rhythmId),
+                    rhythmType="quarter_note",
+                    rhythmDescription="quarter note",
+                    rhythmPattern=oneBarQuarterNoteRhythm,
+                    timeSignature=(numerator, denominator)
                 )
             )
             rhythmId += 1
@@ -86,22 +87,22 @@ def quarterNoteRhythms(numerator, denominator):
             if noDuplicateRhythms(oneBarQuarterNoteRhythm, rhythmPatterns) == True:
                 rhythmPatterns.append(
                     RhythmPattern(
-                        "r" + str(rhythmId),
-                        "Quarter Note",
-                        "quarter note",
-                        oneBarQuarterNoteRhythm,
-                        (numerator, denominator),
+                        rhythmPatternId="r" + str(rhythmId),
+                        rhythmType="quarter_note",
+                        rhythmDescription="quarter note",
+                        rhythmPattern=oneBarQuarterNoteRhythm,
+                        timeSignature=(numerator, denominator)
                     )
                 )
                 rhythmId += 1
 
     rhythmPatterns.append(
         RhythmPattern(
-            "r" + str(rhythmId),
-            "Quarter Note",
-            "quarter note",
-            [["r4"], ["r4"], ["4"], ["4"]],
-            (numerator, denominator),
+            rhythmPatternId="r" + str(rhythmId),
+            rhythmType="quarter_note",
+            rhythmDescription="quarter note",
+            rhythmPattern=[["r4"], ["r4"], ["4"], ["4"]],
+            timeSignature=(numerator, denominator)
         )
     )
     rhythmId += 1
@@ -121,11 +122,11 @@ def quarterNoteRhythms(numerator, denominator):
         if noDuplicateRhythms(newPattern, rhythmPatterns):
             rhythmPatterns.append(
                 RhythmPattern(
-                    "rhythm_" + str(rhythmId),
-                    "Quarter Note",
-                    "quarter note",
-                    newPattern,
-                    (numerator, denominator),
+                    rhythmPatternId="rhythm_" + str(rhythmId),
+                    rhythmType="quarter_note",
+                    rhythmDescription="quarter note",
+                    rhythmPattern=newPattern,
+                    timeSignature=(numerator, denominator)
                 )
             )
             rhythmId += 1

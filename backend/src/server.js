@@ -40,9 +40,9 @@ flaskExerciseMaker.on("close", (code) => {
   console.log(`Flask Server exited with code ${code}`);
 });
 
-app.get(/^(?!\/api).+/, (req, res) => {
-  res.sendFile(path.join(__dirname, "../build/index.html"));
-});
+// app.get(/^(?!\/api).+/, (req, res) => {
+//   res.sendFile(path.join(__dirname, "../build/index.html"));
+// });
 
 routes.forEach((route) => {
   app[route.method](route.path, route.handler);

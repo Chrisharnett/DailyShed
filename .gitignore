@@ -9,8 +9,9 @@ troubleshooting
 *.pem
 *.srl
 devkeys
-backend/pythonScripts/.idea
-backend/pythonScripts/exGenerator
+/backend/pythonScripts/.idea
+backend/python_scripts/exGenerator
+backend/python_scripts/temp
 
 # dependencies
 /node_modules

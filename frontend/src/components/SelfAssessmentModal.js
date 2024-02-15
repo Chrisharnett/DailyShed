@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Form, Button, Container, Modal } from "react-bootstrap";
 import axios from "axios";
@@ -8,12 +7,15 @@ export const SelfAssessmentModal = ({
   show,
   setShow,
   exercise,
+  currentSet,
   userData,
   setUserData,
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
+
+  const ratings = [1, 2, 3, 4, 5];
 
   const handleClose = () => setShow(false);
   const handleOpen = () => setShow(true);
@@ -29,6 +31,7 @@ export const SelfAssessmentModal = ({
         };
         let newUserData = { ...userData };
         newUserData.exerciseHistory.push(exerciseEntry);
+        newUserData.previousSet = currentSet;
         setUserData(newUserData);
         const response = await axios.post("/api/updateUserData", newUserData);
       } catch (error) {
@@ -54,10 +57,10 @@ export const SelfAssessmentModal = ({
             <Form className="container w-50 justify-content-center">
               {errorMessage && <div className="fail">{errorMessage}</div>}
               <Form.Group className="mb-3">
-                <Form.Label className="" htmlFor="rating">
+                <Form.Label className="" htmlFor={`rating-1`}>
                   Rating (1-5):
                 </Form.Label>
-                {[1, 2, 3, 4, 5].map((value) => (
+                {ratings.map((value) => (
                   <Form.Check
                     key={value}
                     inline
@@ -72,7 +75,7 @@ export const SelfAssessmentModal = ({
                 ))}
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label className="" htmlFor="rating">
+                <Form.Label className="" htmlFor="comments">
                   Comments{" "}
                 </Form.Label>
                 <Form.Control

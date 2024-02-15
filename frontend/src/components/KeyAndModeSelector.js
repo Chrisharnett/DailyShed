@@ -1,9 +1,28 @@
-import { Container, Row, Col, Form } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { Row, Col, Form } from "react-bootstrap";
+import { useState } from "react";
+import ToTitleCase from "../util/ToTitleCase";
 
-const KeyAndModeSelector = ({ keyCenter, mode, onKeyChange, onModeChange }) => {
-  const [keys, setKeys] = useState(["c", "d", "e", "f", "g", "a", "b"]);
+const KeyAndModeSelector = ({
+  keyCenter,
+  mode,
+  onKeyChange,
+  onModeChange,
+  parentIndex,
+}) => {
+  const [keys, setKeys] = useState([
+    "c",
+    "db",
+    "d",
+    "eb",
+    "e",
+    "f",
+    "f#",
+    "g",
+    "g#",
+    "a",
+    "a#",
+    "b",
+  ]);
   const [modes, setModes] = useState([
     "major",
     "minor",
@@ -21,37 +40,39 @@ const KeyAndModeSelector = ({ keyCenter, mode, onKeyChange, onModeChange }) => {
 
   return (
     <>
-      <Container>
-        <Row>
-          <Col xs={12} md={3}>
-            <Form.Group className="mb-3" controlId="keySelector">
-              <Form.Label>Key</Form.Label>
-              <Form.Select value={keyCenter} onChange={handleKeyChange}>
-                {keys.map((keyOption, i) => {
-                  return (
-                    <option key={i} value={keyOption}>
-                      {keyOption}
-                    </option>
-                  );
-                })}
-              </Form.Select>
-            </Form.Group>
-          </Col>
-
-          <Col xs={12} md={4}>
-            <Form.Group className="mb-3" controlId="modeSelector">
-              <Form.Label>Mode</Form.Label>
-              <Form.Select value={mode} onChange={handleModeChange}>
-                {modes.map((modeOption, index) => (
-                  <option key={index} value={modeOption}>
-                    {modeOption}
+      <Row>
+        <Col xs={12} sm="auto">
+          <Form.Group className="" controlId="keySelector">
+            <Form.Label className="dropShadow fs-4">Key</Form.Label>
+            <Form.Select value={keyCenter} onChange={handleKeyChange}>
+              {keys.map((keyOption, i) => {
+                const uniqueKey = `${parentIndex}_${keyOption}`;
+                return (
+                  <option key={uniqueKey} value={keyOption}>
+                    {ToTitleCase(keyOption)}
                   </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Col>
-        </Row>
-      </Container>
+                );
+              })}
+            </Form.Select>
+          </Form.Group>
+        </Col>
+
+        <Col xs={12} md="auto">
+          <Form.Group className="" controlId="modeSelector">
+            <Form.Label className="dropShadow fs-4">Mode</Form.Label>
+            <Form.Select value={mode} onChange={handleModeChange}>
+              {modes.map((modeOption, i) => (
+                <option
+                  key={`${parentIndex}_${modeOption}_${i}`}
+                  value={modeOption}
+                >
+                  {ToTitleCase(modeOption)}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        </Col>
+      </Row>
     </>
   );
 };

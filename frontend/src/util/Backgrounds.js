@@ -3,7 +3,5 @@ export const Backgrounds = [
   "/Backgrounds/background_4.webp",
   "/Backgrounds/background_6.webp",
   "/Backgrounds/background_7.webp",
-  "/Backgrounds/background_12.webp",
-  "/Backgrounds/background_13.webp",
   "/Backgrounds/background_15.png",
 ];

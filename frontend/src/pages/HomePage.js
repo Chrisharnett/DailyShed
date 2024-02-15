@@ -1,6 +1,7 @@
 import { Container } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import TopSpacer from "../util/TopSpacer";
 
 const HomePage = ({ loggedIn, cognitoURL }) => {
   const [entryLink, setEntryLink] = useState(null);
@@ -15,6 +16,7 @@ const HomePage = ({ loggedIn, cognitoURL }) => {
 
   return (
     <>
+      <TopSpacer />
       <Container
         className="d-flex justify-content-center position-relative"
         style={{ height: "100vh", width: "100vw" }}
@@ -25,6 +27,7 @@ const HomePage = ({ loggedIn, cognitoURL }) => {
           </Container>
         </Link>
       </Container>
+      <TopSpacer />
     </>
   );
 };

@@ -10,6 +10,7 @@ const ExerciseCard = ({
   setCurrentSet,
   userData,
   setUserData,
+  buttonText,
 }) => {
   const [showSelfAssementModal, setShowSelfAssessmentModal] = useState(false);
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
@@ -46,17 +47,18 @@ const ExerciseCard = ({
 
   useEffect(() => {
     setCurrentExercise(currentSet[currentSetIndex]);
-    if (currentRound > userData.program.rounds) {
-      setShowSessionCompleteModal(true);
-    }
-  }, [currentRound, currentSet, currentSetIndex, userData.program.rounds]);
+  }, [currentRound, currentSet, currentSetIndex]);
 
   const nextExerciseHandler = () => {
-    setShowSelfAssessmentModal(true);
-    if (currentSetIndex === userData.program.exerciseDetails.length - 1) {
-      advanceRound();
+    if (exerciseCount === currentSet.length * userData.program.rounds) {
+      setShowSessionCompleteModal(true);
+    } else {
+      setShowSelfAssessmentModal(true);
+      if (currentSetIndex === userData.program.exerciseDetails.length - 1) {
+        advanceRound();
+      }
+      goToNextExercise();
     }
-    goToNextExercise();
   };
 
   if (currentExercise && currentRound <= userData.program.rounds) {
@@ -65,29 +67,32 @@ const ExerciseCard = ({
         <Container className="cardContainer d-flex flex-column align-items-center">
           <Card border="light" className="exerciseCard ">
             <Card.Body className="align-items-center">
-              <Card.Title className="">
-                {currentExercise.exerciseName}
-              </Card.Title>
+              <Card.Title className="">{currentExercise.Title}</Card.Title>
               <Card.Img variant="top" src={currentExercise.imageURL}></Card.Img>
               <Card.Text className="">{currentExercise.description}</Card.Text>
             </Card.Body>
           </Card>
-          <Button type="submit" className="m-2" onClick={nextExerciseHandler}>
-            Next Exercise
-          </Button>
+          {currentRound <= userData.program.rounds && (
+            <Button type="submit" className="m-2" onClick={nextExerciseHandler}>
+              {buttonText}
+            </Button>
+          )}
         </Container>
         <SelfAssessmentModal
           show={showSelfAssementModal}
           setShow={setShowSelfAssessmentModal}
           exercise={currentExercise}
+          currentSet={currentSet}
           userData={userData}
           setUserData={setUserData}
         />
-      </>
-    );
-  } else if (currentRound > userData.program.rounds) {
-    return (
-      <>
+        <SessionCompleteModal
+          show={showSessionCompleteModal}
+          setShow={setShowSessionCompleteModal}
+          currentSet={currentSet}
+          userData={userData}
+          setUserData={setUserData}
+        />
         <SessionCompleteModal
           show={showSessionCompleteModal}
           setShow={setShowSessionCompleteModal}

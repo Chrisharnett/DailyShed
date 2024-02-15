@@ -5,6 +5,7 @@ import axios from "axios";
 import CollectionCard from "../components/CollectionCard";
 import ExerciseDetailsForm from "../components/ExerciseDetailsForm";
 import SuccessModal from "../components/SuccessModal";
+import TopSpacer from "../util/TopSpacer";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
@@ -35,7 +36,7 @@ const UserProfile = () => {
     event.preventDefault();
     try {
       let newUserData = { ...userData };
-      newUserData.program = userData.program;
+      // newUserData.program = userData.program;
       setUserData(newUserData);
       await axios.post("/api/updateUserData", newUserData);
       setMessage("Routine Saved!");
@@ -57,24 +58,29 @@ const UserProfile = () => {
   };
 
   const handleDetailsChange = (index, updatedDetails) => {
-    setUserData((prevUserData) => {
-      const newExerciseDetails = [...prevUserData.program.exerciseDetails];
-      newExerciseDetails[index] = updatedDetails;
-      return {
-        ...prevUserData,
-        program: {
-          ...prevUserData.program,
-          exerciseDetails: newExerciseDetails,
-        },
-      };
-    });
+    const prevUserData = { ...userData };
+    const newExerciseDetails = [...prevUserData.program.exerciseDetails];
+    newExerciseDetails[index] = updatedDetails;
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      program: {
+        ...prevUserData.program,
+        exerciseDetails: newExerciseDetails,
+      },
+    }));
   };
 
   if (!userData) {
-    return <p>Loading...</p>;
+    return (
+      <>
+        <div style={{ height: "5vh" }}></div>
+        <p>Loading...</p>;
+      </>
+    );
   }
   return (
     <>
+      <TopSpacer></TopSpacer>
       <Container className="midLayer glass">
         <h1 className="dropShadow"> {name} </h1>
         <Form
@@ -83,21 +89,47 @@ const UserProfile = () => {
         >
           <Container>
             <h2 className="dropShadow">Your practice routine</h2>
-            <h3 className="dropShadow">Active Collections</h3>
-            {userData.program.collections.map((collection, i) => {
-              return (
-                <Col key={i} className="mb-2">
-                  <CollectionCard i={i} collection={collection} />
-                </Col>
-              );
-            })}
+            <hr></hr>
+            <h4 className="dropShadow">Your Collections</h4>
+            <Row>
+              {userData.program.collections.map((collection, i) => {
+                return (
+                  <Col key={i} className="mb-2" xs={12} sm={4}>
+                    <CollectionCard i={i} collection={collection} />
+                  </Col>
+                );
+              })}
+            </Row>
+            <hr></hr>
+            {/* TODO: Add the ability to change the number of Exercises */}
+            {/* TODO: Allow Custom Exercises */}
+            <Form.Group as={Row} className="align-items-center dropShadow fs-3">
+              <Form.Label className="dropShadow">Exercises</Form.Label>
+              <Row>
+                {userData.program.exerciseDetails.map((details, i) => {
+                  return (
+                    <Col key={i} xs={12} sm={3}>
+                      <ExerciseDetailsForm
+                        i={i}
+                        details={details}
+                        collections={userData.program.collections}
+                        onDetailsChange={(updatedDetails) =>
+                          handleDetailsChange(i, updatedDetails)
+                        }
+                      />
+                    </Col>
+                  );
+                })}
+              </Row>
+            </Form.Group>
+
             <hr></hr>
             <Form.Group
               as={Row}
               className="align-items-center dropShadow fs-3"
               controlId="roundsSelector"
             >
-              <Form.Label column sm="2">
+              <Form.Label style={{ width: "auto" }} className="dropShadow">
                 Rounds:
               </Form.Label>
               <Col sm="1">
@@ -110,23 +142,6 @@ const UserProfile = () => {
               </Col>
             </Form.Group>
             <hr></hr>
-            {/* TODO: Add the ability to change the number of Exercises */}
-            {/* TODO: Allow Custom Exercises */}
-            {userData.program.exerciseDetails.map((details, i) => {
-              return (
-                <Col key={i}>
-                  <ExerciseDetailsForm
-                    i={i}
-                    index={i}
-                    details={details}
-                    collections={userData.program.collections}
-                    onDetailsChange={(updatedDetails) =>
-                      handleDetailsChange(i, updatedDetails)
-                    }
-                  />
-                </Col>
-              );
-            })}
             <Button variant="primary" type="submit" className="mt-2">
               Save Routine
             </Button>
@@ -138,9 +153,7 @@ const UserProfile = () => {
         setShow={setOpenSuccessMessage}
         message={message}
       />
-      <br></br>
-      <br></br>
-      <br></br>
+      <TopSpacer></TopSpacer>
     </>
   );
 };

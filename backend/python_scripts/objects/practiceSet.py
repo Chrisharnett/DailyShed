@@ -60,7 +60,7 @@ class PracticeSet:
         d.reverse()
         return NotePattern(
             f"{pattern['notePatternId']}ad",
-            pattern["collectionName"],
+            pattern["collectionTitle"],
             d,
             pattern["rhythmMatcher"],
             f"from the {pattern['notePattern'][-1]}",
@@ -77,7 +77,7 @@ class PracticeSet:
         a.extend(d)
         return NotePattern(
             f"{pattern['notePatternId']}ad",
-            pattern["collectionName"],
+            pattern["collectionTitle"],
             a,
             pattern["rhythmMatcher"],
             f"to the {pattern['notePattern'][-1]}",
@@ -93,7 +93,7 @@ class PracticeSet:
         d.extend(pattern["notePattern"])
         return NotePattern(
             f"{pattern['notePatternId']}da",
-            pattern["collectionName"],
+            pattern["collectionTitle"],
             d,
             pattern["rhythmMatcher"],
             f"from the {pattern['notePattern'][-1]}",
@@ -124,12 +124,12 @@ class PracticeSet:
             else:
                 measure = possibleRhythms[0]
             r.extend(measure.getRhythmPattern)
-            id += measure.getRhythmPatternId
+            id += str(measure.getRhythmPatternId)
             remainder -= measure.noteLength
         possibleRhythms = [x for x in rhythms if x.noteLength == remainder]
         lastMeasure = possibleRhythms[random.randint(0, len(possibleRhythms) - 1)]
         r.extend(lastMeasure.getRhythmPattern)
-        id += lastMeasure.getRhythmPatternId
+        id += str(lastMeasure.getRhythmPatternId)
         rhythmPattern = RhythmPattern(
             id,
             lastMeasure.getRhythmType,
@@ -171,8 +171,8 @@ class PracticeSet:
             # )
         ]
         reviewPattern = reviewPatterns[random.randint(0, len(reviewPatterns) - 1)]
-        # Find a way to not hard code the collectionName.
-        if reviewPattern["collectionName"] != "single_note_long_tone":
+        # Find a way to not hard code the collectionTitle.
+        if reviewPattern["notePatternType"] != "single_note_long_tone":
             direction = self.chooseDirection(reviewPattern)
             if direction == "descending":
                 return self.descendingPattern(reviewPattern)
@@ -180,9 +180,10 @@ class PracticeSet:
                 return self.ascendingDescendingPattern(reviewPattern)
             elif direction == "descending ascending":
                 return self.descendingAscendingPattern(reviewPattern)
-        return NotePattern(
+        notePattern = NotePattern(
             reviewPattern["notePatternId"],
-            reviewPattern["collectionName"],
+            reviewPattern["notePatternType"],
+            reviewPattern["collectionTitle"],
             reviewPattern["notePattern"],
             reviewPattern["rhythmMatcher"],
             reviewPattern["description"],
@@ -191,6 +192,7 @@ class PracticeSet:
             reviewPattern["repeatMe"],
             reviewPattern["holdLastNote"],
         )
+        return notePattern
 
     def getRhythmReviewPattern(self, possibleRhythms, min, length):
         rhythms = []
@@ -220,7 +222,7 @@ class PracticeSet:
         )
 
     def getNewNotePattern(self, title):
-        # Get the next matching notePattern - I thin this should not include next()
+        # Get the next matching notePattern - I think this should not include next()
         # notePatternCollection = next(
         #     x for x in self.__notePatternCollections if x.getNotePatternType == title
         # )
@@ -252,8 +254,8 @@ class PracticeSet:
 
         return pitches
 
-    def getNewRhythmPattern(self, type, length):
-        rhythmsThatFit = [x for x in self.__rhythmPatterns if x.getRhythmType == type]
+    def getNewRhythmPattern(self, matcher, length):
+        rhythmsThatFit = [x for x in self.__rhythmPatterns if x.getRhythmType == matcher]
         max = self.maxRhythmNoteLength(rhythmsThatFit)
         if max >= length:
             rhy = next(x for x in rhythmsThatFit if x.noteLength == length)
@@ -309,13 +311,14 @@ class PracticeSet:
                             == pitches.getRhythmMatcher
                         ):
                             possibleRhythms.append(ex)
-                    minPlays = self.getMinPlays(possibleRhythms)
+                    if 0 < len(possibleRhythms):
+                        minPlays = self.getMinPlays(possibleRhythms)
+                        rhythm = self.getRhythmReviewPattern(
+                            possibleRhythms, minPlays, pitches.getRhythmLength()
+                        )
+                    else:
+                        rhythm = self.getNewRhythmPattern(exerciseDetails[i]["rhythmMatcher"], pitches.getRhythmLength())
 
-                    # minPlays = min(possibleRhythms, key=lambda x: x.get('playCount')).get('playCount')
-
-                    rhythm = self.getRhythmReviewPattern(
-                        possibleRhythms, minPlays, pitches.getRhythmLength()
-                    )
                 else:
                     rhythm = next(
                         pattern

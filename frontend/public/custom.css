@@ -8,7 +8,7 @@ html{
     min-height: 100vh;
     background-attachment: fixed;
     background-color: #c6cefb;
-    background-image: url('/Backgrounds/background_3.jpg');
+    background-image: url('/Backgrounds/background_3.webp');
     background-size: cover;
     background-position: center center;
     background-repeat: "no repeat";
@@ -41,9 +41,15 @@ html{
   
   }
 
+  .container-content-width {
+    display: inline-block;
+    width: auto;
+  }
+  
   .entry{
     top: 20%;
   }
+  
   .dropShadow{
     text-shadow: 2px 2px 4px #000000;
     color:  rgb(214, 214, 214);

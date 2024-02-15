@@ -23,15 +23,18 @@ class Exercise:
         self.__preamble = preamble
 
     def serialize(self):
+        collection = self.__pitchPattern.getCollectionTitle
+        collectionTitle = f"{collection} {self.__pitchPattern.getPatternId} {self.__rhythmPattern.getRhythmPatternId}"
         return {
             "exerciseName": self.exerciseFileName(),
             "pitchPattern": self.__pitchPattern.serialize(),
             "rhythmPattern": self.__rhythmPattern.serialize(),
+            "Title": self.__pitchPattern.getCollectionTitle,
             "key": self.__key,
             "mode": self.__mode,
             "imageFileName": self.exerciseFileName() + ".cropped.png",
             "imageURL": self.imageURL(),
-            "description": str(self),
+            "description": self.__pitchPattern.getDescription,
         }
 
     @property
@@ -72,7 +75,8 @@ class Exercise:
         return returnPattern
 
     def exerciseFileName(self):
-        return f"{self.__key}_{self.__mode}_{str(self.__pitchPattern.getPatternId)}_{str(self.__rhythmPattern.getRhythmPatternId)}"
+        collection = self.__pitchPattern.getCollectionTitle.replace(" ", "_").lower()
+        return f"{self.__key}_{self.__mode}_{collection}_{str(self.__pitchPattern.getPatternId)}_{str(self.__rhythmPattern.getRhythmPatternId)}"
 
     def imageURL(self):
         return f"https://mysaxpracticeexercisebucket.s3.amazonaws.com/{self.exerciseFileName()}"
@@ -146,7 +150,14 @@ class Exercise:
             abjad.attach(timeSignature, attachHere)
             if not abjad.get.indicators(container[-1], abjad.Repeat):
                 bar_line = abjad.BarLine("|.")
-                abjad.attach(bar_line, container[-1][0])
+                last_leaf = abjad.select.leaf(container[-1], -1)
+
+                if last_leaf is not None:
+                    abjad.attach(bar_line, last_leaf)
+                else:
+                    print("No suitable leaf for bar line attachment found in the last container.")
+                # abjad.attach(bar_line, container[-1][0])
+
         if self.__rhythmPattern.getArticulation:
             for articulation in self.__rhythmPattern.getArticulation:
                 if articulation.get("articulation").lower() == "fermata":
@@ -174,7 +185,7 @@ class Exercise:
 
         current_file_directory = os.path.dirname(__file__)
 
-        absolutePath = os.path.join(current_file_directory, "..", "temp")
+        absolutePath = os.path.join(current_file_directory, "..", "temp/")
 
         localPath = os.path.join(absolutePath + self.exerciseFileName())
 
@@ -200,6 +211,7 @@ class NotePattern:
         self,
         notePatternId,
         notePatternType,
+        collectionTitle,
         notePattern,
         rhythmMatcher="general",
         description="",
@@ -210,6 +222,7 @@ class NotePattern:
     ):
         self.__patternId = notePatternId
         self.__notePatternType = notePatternType
+        self.__collectionTitle = collectionTitle
         self.__notePattern = notePattern
         self.__rhythmMatcher = rhythmMatcher
         self.__description = description
@@ -220,8 +233,9 @@ class NotePattern:
 
     def serialize(self):
         return {
+            "collectionTitle": self.__collectionTitle,
             "notePatternId": self.__patternId,
-            "collectionName": self.__notePatternType,
+            "notePatternType": self.__notePatternType,
             "notePattern": self.__notePattern,
             "rhythmMatcher": self.__rhythmMatcher,
             "description": self.__description,
@@ -229,7 +243,12 @@ class NotePattern:
             "direction": self.__direction,
             "repeatMe": self.__repeatMe,
             "holdLastNote": self.__holdLastNote,
+            "rhythmLength": str(self.getRhythmLength())
         }
+
+    @property
+    def getCollectionTitle(self):
+        return self.__collectionTitle
 
     @property
     def getRepeatMe(self):
@@ -269,7 +288,7 @@ class NotePattern:
         return self.__direction
 
     def __str__(self):
-        return f"{self.__patternId}  {self.__notePattern} {self.__notePatternType} {self.__description}"
+        return f"{self.__patternId}  {self.__notePattern}"
 
 
 class RhythmPattern:

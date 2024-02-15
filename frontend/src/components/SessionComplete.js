@@ -16,16 +16,22 @@ export const SessionCompleteModal = ({
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      navigate("/practiceJournal");
-      handleClose();
-    }, 3000);
-    return () => clearTimeout(timeout);
-  }, [show]);
+  // useEffect(() => {
+  //   if (show) {
+  //     const timeout = setTimeout(() => {
+  //       navigate("/");
+  //       handleClose();
+  //     }, 2000);
+  //     return () => clearTimeout(timeout);
+  //   }
+  // }, [show]);
 
   useEffect(() => {
     if (show) {
+      const timeout = setTimeout(() => {
+        navigate("/");
+        handleClose();
+      }, 2000);
       const updateUser = async () => {
         try {
           let newUserData = { ...userData };
@@ -35,10 +41,11 @@ export const SessionCompleteModal = ({
         } catch (error) {
           console.error("Error: ", error);
         }
+        return () => clearTimeout(timeout);
       };
       updateUser();
     }
-  }, [show, currentSet, userData, setUserData]);
+  }, [show]);
 
   return (
     <>
