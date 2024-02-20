@@ -4,24 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a0172fc-7f8f-4668-a7ac-cdc79f19d610" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/raevilman_awslambdadeployer.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setDesigner/createExercise.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setDesigner/directions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setDesigner/exerciseImageMaker.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setDesigner/exerciseObjects.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setDesigner/fetchExerciseDetails.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setDesigner/getPlayer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setDesigner/musicObjects.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setDesigner/notePatterns.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setDesigner/patternCollections.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setDesigner/rhythmPatterns.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setDesigner/setDesigner.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/util/getPlayer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/util/getPlayerAttribute.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/exerciseMaker.py" beforeDir="false" afterPath="$PROJECT_DIR$/exerciseMaker.py" afterDir="false" />
-    </list>
+    <list default="true" id="3a0172fc-7f8f-4668-a7ac-cdc79f19d610" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -118,7 +101,7 @@
       <workItem from="1707914235144" duration="65634000" />
       <workItem from="1708287064472" duration="27475000" />
       <workItem from="1708389075713" duration="2089000" />
-      <workItem from="1708435830561" duration="8764000" />
+      <workItem from="1708435830561" duration="8845000" />
     </task>
     <servers />
   </component>
