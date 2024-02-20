@@ -55,7 +55,7 @@ const TheShed = () => {
       return;
     }
     try {
-      let response = await axios.post("/api/generateSet", userData);
+      let response = await axios.post(`/api/generateSet/${user.sub}`);
       const { player, returnSet } = response.data;
       setCurrentSet(returnSet);
       const { exerciseHistory, previousSet, program } = player;
