@@ -1,27 +1,31 @@
 import os
 import abjad
 import boto3
-from exerciseObjects import Exercise
+import json
+from serverlessFiles.exerciseObjects import Exercise
 
 
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 exercise_table = dynamodb.Table('Daily_Shed_Exercises')
 bucket_name = 'mysaxpracticeexercisebucket'
 
-# 
-def lambdaHandler(event):
-    exerciseName = event['exerciseName']
-    pitches = event['pitches']
-    rhythm = event['rhythm']
-    key = event['key']
-    mode = event['mode']
-    collectionTitle = event['collectionTitle']
-    fileName = event['fileName']
-    imageURL = event['imageURL']
-    description = event['description']
-    preamble = event.get('preamble', r"#(set-global-staff-size 28)")
+# TODO: ADD EVENT, CONTEXT
+def lambda_handler(event, context):
+    # TODO: Update lambda with this black
+    # body = json.loads(event.get('body', '{}'))
+    body = json.loads(event)
+    exerciseName = body['exerciseName']
+    pitches = body['notePattern']
+    rhythm = body['rhythmPattern']
+    key = body['key']
+    mode = body['mode']
+    collectionTitle = body['collectionTitle']
+    fileName = body['fileName']
+    imageURL = body['imageURL']
+    description = body['description']
+    preamble = body.get('preamble', r"#(set-global-staff-size 28)")
 
-    exercise = Exercise()
+    exercise = Exercise(pitches, rhythm, key, mode, preamble)
     lilypond_file = abjad.LilyPondFile([preamble, exercise.buildScore])
 
     current_file_directory = os.path.dirname(__file__)
@@ -36,7 +40,7 @@ def lambdaHandler(event):
     png = os.path.join(localPath + ".cropped.png")
 
     s3_client = boto3.client("s3")
-    s3_client.upload_file(png, s3BucketName, fileName)
+    s3_client.upload_file(png, s3BucketName, (fileName+'.cropped.png'))
 
     ly = os.path.join(localPath + ".ly")
 

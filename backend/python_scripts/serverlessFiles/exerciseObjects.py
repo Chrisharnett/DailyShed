@@ -1,9 +1,7 @@
-import os
-import boto3
 import abjad
 import math
-import json
-from musicObjects import Scale
+from serverlessFiles.musicObjects import Scale
+from decimal import Decimal
 
 class Exercise:
     def __init__(
@@ -19,33 +17,6 @@ class Exercise:
         self.__key = key
         self.__mode = mode
         self.__preamble = preamble
-
-    # def serialize(self):
-    #     collection = self.__pitchPattern.getCollectionTitle
-    #     collectionTitle = f"{collection} {self.__pitchPattern.getPatternId} {self.__rhythmPattern.getRhythmPatternId}"
-    #     return {
-    #         "exerciseName": self.exerciseFileName(),
-    #         "pitchPattern": self.__pitchPattern.serialize(),
-    #         "rhythmPattern": self.__rhythmPattern.serialize(),
-    #         "Title": self.__pitchPattern.getCollectionTitle,
-    #         "key": self.__key,
-    #         "mode": self.__mode,
-    #         "imageFileName": self.exerciseFileName() + ".cropped.png",
-    #         "imageURL": self.imageURL(),
-    #         "description": self.__pitchPattern.getDescription,
-    #     }
-    #
-    # # @property
-    # # def getPitchPattern(self):
-    # #     return self.__pitchPattern
-    # #
-    # # @property
-    # # def getRhythmPattern(self):
-    # #     return self.__rhythmPattern
-    #
-    # def __str__(self):
-    #     # TODO articulations, dynamics
-    #     return f"{self.__key} {self.__mode} {str(self.__pitchPattern)} {str(self.__rhythmPattern)}."
 
     def notationPattern(self):
         if self.__pitchPattern.get('repeatMe') is not True:
@@ -72,13 +43,6 @@ class Exercise:
             returnPattern.append([notes[-1], heldNoteRhythm])
         return returnPattern
 
-    # def exerciseFileName(self):
-    #     collection = self.__pitchPattern.getCollectionTitle.replace(" ", "_").lower()
-    #     return f"{self.__key}_{self.__mode}_{collection}_{str(self.__pitchPattern.getPatternId)}_{str(self.__rhythmPattern.getRhythmPatternId)}"
-    #
-    # def imageURL(self):
-    #     return f"https://mysaxpracticeexercisebucket.s3.amazonaws.com/{self.exerciseFileName()}"
-
     def createRepeatPhrase(self, scaleNotes, notes):
         container = abjad.Container("")
         for note in notes:
@@ -91,7 +55,7 @@ class Exercise:
 
     def createNotePhrase(self, scaleNotes, note):
         container = abjad.Container("")
-        if isinstance(note[0], int):
+        if isinstance(note[0], (int, Decimal)):
             n = self.numberToNote(scaleNotes, note)
             container.append(n)
         elif note[0][0] == "r" and note[0] != "repeat":
@@ -99,7 +63,7 @@ class Exercise:
         return container
 
     def numberToNote(self, scaleNotes, note):
-        n = note[0]
+        n = int(note[0])
         pitch = ""
         octave = 0
         if n < 0:
@@ -143,7 +107,7 @@ class Exercise:
                 abjad.NamedPitchClass(self.__key), abjad.Mode(self.__mode)
             )
             abjad.attach(keySignature, attachHere)
-            ts = tuple(self.__rhythmPattern.getTimeSignature)
+            ts = tuple(int(x) for x in self.__rhythmPattern.get('timeSignature'))
             timeSignature = abjad.TimeSignature(ts)
             abjad.attach(timeSignature, attachHere)
             if not abjad.get.indicators(container[-1], abjad.Repeat):
@@ -159,7 +123,7 @@ class Exercise:
             for articulation in self.__rhythmPattern.get('articulation'):
                 if articulation.get("articulation").lower() == "fermata":
                     a = abjad.Fermata()
-                    abjad.attach(a, container[0][articulation.get("index")])
+                    abjad.attach(a, container[0][int(articulation.get("index"))])
 
         voice = abjad.Voice([container], name="Exercise_Voice")
         staff = abjad.Staff([voice], name="Exercise_Staff")
@@ -170,166 +134,3 @@ class Exercise:
         scale = Scale(self.__key + "'", self.__mode)
         scaleNotes = scale.makeScale()
         return scaleNotes
-
-#     def path(self):
-#         return os.path.join("static/img/" + self.__str__()) + ".cropped.png"
-#
-#
-#
-# class NotePattern:
-#     def __init__(
-#         self,
-#         notePatternId,
-#         notePatternType,
-#         collectionTitle,
-#         notePattern,
-#         rhythmMatcher="general",
-#         description="",
-#         dynamic="",
-#         direction="",
-#         repeatMe=True,
-#         holdLastNote=True,
-#     ):
-#         self.__patternId = notePatternId
-#         self.__notePatternType = notePatternType
-#         self.__collectionTitle = collectionTitle
-#         self.__notePattern = notePattern
-#         self.__rhythmMatcher = rhythmMatcher
-#         self.__description = description
-#         self.__dynamic = dynamic
-#         self.__direction = direction
-#         self.__repeatMe = repeatMe
-#         self.__holdLastNote = holdLastNote
-#
-#     def serialize(self):
-#         return {
-#             "collectionTitle": self.__collectionTitle,
-#             "notePatternId": self.__patternId,
-#             "notePatternType": self.__notePatternType,
-#             "notePattern": self.__notePattern,
-#             "rhythmMatcher": self.__rhythmMatcher,
-#             "description": self.__description,
-#             "dynamic": self.__dynamic,
-#             "direction": self.__direction,
-#             "repeatMe": self.__repeatMe,
-#             "holdLastNote": self.__holdLastNote,
-#             "rhythmLength": str(self.getRhythmLength())
-#         }
-#
-#     @property
-#     def getCollectionTitle(self):
-#         return self.__collectionTitle
-#
-#     @property
-#     def getRepeatMe(self):
-#         return self.__repeatMe
-#
-#     @property
-#     def getHoldLastNote(self):
-#         return self.__holdLastNote
-#
-#     def getRhythmLength(self):
-#         if self.__holdLastNote == True:
-#             return len(self.__notePattern) - 1
-#         return len(self.__notePattern)
-#
-#     @property
-#     def getPatternId(self):
-#         return self.__patternId
-#
-#     @property
-#     def getNotePatternType(self):
-#         return self.__notePatternType
-#
-#     @property
-#     def getNotePattern(self):
-#         return self.__notePattern
-#
-#     @property
-#     def getDescription(self):
-#         return self.__description
-#
-#     @property
-#     def getRhythmMatcher(self):
-#         return self.__rhythmMatcher
-#
-#     @property
-#     def getDirection(self):
-#         return self.__direction
-#
-#     def __str__(self):
-#         return f"{self.__patternId}  {self.__notePattern}"
-#
-# class RhythmPattern:
-#     def __init__(
-#         self,
-#         rhythmPatternId,
-#         rhythmType,
-#         rhythmDescription,
-#         rhythmPattern,
-#         timeSignature,
-#         articulation=None,
-#     ):
-#         self.__rhythmPatternId = rhythmPatternId
-#         self.__rhythmType = rhythmType
-#         self.__rhythmDescription = rhythmDescription
-#         self.__rhythmPattern = rhythmPattern
-#         self.__timeSignature = timeSignature
-#         self.__articulation = articulation
-#
-#     def serialize(self):
-#         return {
-#             "rhythmId": self.__rhythmPatternId,
-#             "rhythmType": self.__rhythmType,
-#             "rhythmDescription": self.__rhythmDescription,
-#             "rhythmPattern": self.__rhythmPattern,
-#             "timeSignature": self.__timeSignature,
-#             "articulation": self.__articulation,
-#             "noteLength": self.noteLength,
-#         }
-#
-#     @property
-#     def getRhythmPatternId(self):
-#         return self.__rhythmPatternId
-#
-#     @property
-#     def getRhythmPattern(self):
-#         return self.__rhythmPattern
-#
-#     @property
-#     def getRhythmDescription(self):
-#         return self.__rhythmDescription
-#
-#     @property
-#     def getTimeSignature(self):
-#         return self.__timeSignature
-#
-#     @property
-#     def getRhythmType(self):
-#         return self.__rhythmType
-#
-#     @property
-#     def getArticulation(self):
-#         return self.__articulation
-#
-#     @property
-#     def noteLength(self):
-#         count = 0
-#         for r in self.__rhythmPattern:
-#             for n in r:
-#                 if n.isdigit():
-#                     count += 1
-#         n = sum(sublist.count("~") for sublist in self.__rhythmPattern)
-#         count -= n
-#         return count
-#
-#     def __str__(self):
-#         if self.__rhythmType == "tone":
-#             string = f" in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
-#         else:
-#             string = f"{self.__rhythmDescription} rhythm, in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
-#         if self.__articulation is not None:
-#             # TODO Include articulation with nameing
-#             # string += f" with {self.__articulation.get('name')}."
-#             pass
-#         return string

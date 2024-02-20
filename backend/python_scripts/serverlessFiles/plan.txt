@@ -1,0 +1,29 @@
+Lambdas to create:
+
+-addExerciseToHistory
+-generateSet
+-createExerciseImage
+
+
+Tables
+userData:
+    Lambda will update these values whenever an exercise is added to exerciseHistory
+    historyMetadata = {
+    fileName,
+    playCount,
+    directions[],
+    notePatternType,
+    rhythmMatcher,
+    noteLength
+    }
+
+exerciseHistory
+-sortKey = fileName#timestamp = logEntry
+    LAMBDA:
+        add to exerciseCount in user metadata when added to history
+
+exerciseTable
+details of each exercise (pitchPatterns, etc)
+
+LAMBDA:
+    if exercise not in exercise table, call create function

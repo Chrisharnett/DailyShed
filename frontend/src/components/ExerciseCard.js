@@ -67,7 +67,10 @@ const ExerciseCard = ({
         <Container className="cardContainer d-flex flex-column align-items-center">
           <Card border="light" className="exerciseCard ">
             <Card.Body className="align-items-center">
-              <Card.Title className="">{currentExercise.Title}</Card.Title>
+              {/* <Card.Title className="">{currentExercise.Title}</Card.Title> */}
+              <Card.Title className="">
+                {currentExercise.exerciseName}
+              </Card.Title>
               <Card.Img variant="top" src={currentExercise.imageURL}></Card.Img>
               <Card.Text className="">{currentExercise.description}</Card.Text>
             </Card.Body>

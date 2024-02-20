@@ -17,6 +17,7 @@ const UserProfile = () => {
   useEffect(() => {
     const getUserData = async () => {
       try {
+        // TODO: RETRIEVE ONLY NAME AND PROGRAM FROM USERDATA
         const response = await axios.get(`/api/getUserData/${user.sub}`);
         if (response.data.userData) {
           setUserData(response.data.userData);

@@ -5,24 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a0172fc-7f8f-4668-a7ac-cdc79f19d610" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/serverlessFiles/collectionCreator.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/serverlessFiles/createImageLambda.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/serverlessFiles/exerciseObjects.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/serverlessFiles/musicObjects.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/serverlessFiles/notePatternCollections.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/serverlessFiles/rhythmPatternCollections.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/exerciseMaker.py" beforeDir="false" afterPath="$PROJECT_DIR$/exerciseMaker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/notePatternGenerator.py" beforeDir="false" afterPath="$PROJECT_DIR$/notePatternGenerator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/exerciseObjects.py" beforeDir="false" afterPath="$PROJECT_DIR$/objects/exerciseObjects.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/objects/practiceSet.py" beforeDir="false" afterPath="$PROJECT_DIR$/objects/practiceSet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rhythmPatternGenerator.py" beforeDir="false" afterPath="$PROJECT_DIR$/rhythmPatternGenerator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/routes/verifyEmailRoute.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/../src/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/public/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/public/custom.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/src/components/ExerciseCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/components/ExerciseCard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/src/components/SessionComplete.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/components/SessionComplete.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/src/pages/TheShed.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/pages/TheShed.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/pages/UserProfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/pages/UserProfile.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
     <envs>
@@ -46,19 +54,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/christopherharnett/Library/CloudStorage/OneDrive-CollegeoftheNorthAtlantic/Documents/Software Development/Personal Projects/DailyShed/backend/python_scripts",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/christopherharnett/Library/CloudStorage/OneDrive-CollegeoftheNorthAtlantic/Documents/Software Development/Personal Projects/DailyShed/backend/python_scripts/serverless files&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/serverless files" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/serverlessFiles" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="exerciseMaker" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="python scripts" />
@@ -93,7 +111,10 @@
       <option name="presentableId" value="Default" />
       <updated>1707735834886</updated>
       <workItem from="1707735836688" duration="5862000" />
-      <workItem from="1707914235144" duration="21451000" />
+      <workItem from="1707914235144" duration="65634000" />
+      <workItem from="1708287064472" duration="27475000" />
+      <workItem from="1708389075713" duration="2089000" />
+      <workItem from="1708435830561" duration="595000" />
     </task>
     <servers />
   </component>
@@ -105,7 +126,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="Serverless" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -119,10 +152,47 @@
           <line>289</line>
           <option name="timeStamp" value="143" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/notePatternGenerator.py</url>
+          <line>69</line>
+          <option name="timeStamp" value="155" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/serverlessFiles/collectionCreator.py</url>
+          <line>32</line>
+          <option name="timeStamp" value="220" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/serverlessFiles/exerciseObjects.py</url>
+          <line>96</line>
+          <option name="timeStamp" value="282" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/serverlessFiles/createImageLambda.py</url>
+          <line>27</line>
+          <option name="timeStamp" value="283" />
+        </line-breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="pitches" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/python_scripts$exerciseMaker.coverage" NAME="exerciseMaker Coverage Results" MODIFIED="1708009727925" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python_scripts$notePatternCollections.coverage" NAME="notePatternCollections Coverage Results" MODIFIED="1708026019055" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/serverless files" />
+    <SUITE FILE_PATH="coverage/python_scripts$exerciseMaker.coverage" NAME="exerciseMaker Coverage Results" MODIFIED="1708367888258" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python_scripts$Flask__exerciseMaker_py_.coverage" NAME="Flask (exerciseMaker.py) Coverage Results" MODIFIED="1708292002802" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/python_scripts$app.coverage" NAME="app Coverage Results" MODIFIED="1708186133302" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/Software Development/ASD/Fall/Capstone 3540/reactSaxPracticeApp/backend/python scripts/exGenerator/lib/python3.10/site-packages/flask" />
+    <SUITE FILE_PATH="coverage/python_scripts$notePatternGenerator.coverage" NAME="notePatternGenerator Coverage Results" MODIFIED="1708025320151" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python_scripts$collectionCreator.coverage" NAME="collectionCreator Coverage Results" MODIFIED="1708291574016" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/serverless files" />
   </component>
 </project>
