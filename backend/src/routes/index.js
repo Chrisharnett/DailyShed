@@ -4,6 +4,7 @@ import { generateSetRoute } from "./generateSetRoute.js";
 import { flaskTestRoute } from "./flaskTestRoute.js";
 import { getUserDataRoute } from "./getUserDataRoute.js";
 import { updateUserDataRoute } from "./updateUserDataRoute.js";
+import { logExerciseRoute } from "./logExerciseRoute.js";
 
 export const routes = [
   updateUserDataRoute,
@@ -13,4 +14,5 @@ export const routes = [
   getCognitoURLRoute,
   cognitoCallbackRoute,
   generateSetRoute,
+  logExerciseRoute,
 ];

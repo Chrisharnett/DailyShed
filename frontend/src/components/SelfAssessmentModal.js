@@ -8,8 +8,8 @@ export const SelfAssessmentModal = ({
   setShow,
   exercise,
   currentSet,
-  userData,
-  setUserData,
+  player,
+  setPlayer,
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [rating, setRating] = useState("");
@@ -23,17 +23,20 @@ export const SelfAssessmentModal = ({
   const handleSelfAssessment = () => {
     const updateUser = async () => {
       try {
+        const timestamp = new Date().toISOSTring();
         const exerciseEntry = {
-          exercise: exercise,
+          timestamp: timestamp,
+          sub: player.sub,
+          exerciseName: exercise.fileName,
           rating: rating,
           comment: comment,
-          timestamp: new Date().toISOString(),
         };
-        let newUserData = { ...userData };
-        newUserData.exerciseHistory.push(exerciseEntry);
-        newUserData.previousSet = currentSet;
-        setUserData(newUserData);
-        const response = await axios.post("/api/updateUserData", newUserData);
+        const logEntry = await axios.post("/api/logExercise", exerciseEntry);
+        // let newUserData = { ...player };
+        // newUserData.exerciseHistory.push(exerciseEntry);
+        // newUserData.previousSet = currentSet;
+        // setPlayer(newUserData);
+        // const response = await axios.post("/api/updateUserData", newUserData);
       } catch (error) {
         console.error("Error: ", error);
       }
@@ -51,29 +54,33 @@ export const SelfAssessmentModal = ({
       <Container className="container">
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title className=""> How did you perform? </Modal.Title>
+            <Modal.Title className=""> Journal Entry </Modal.Title>
           </Modal.Header>
           <Modal.Body className="">
             <Form className="container w-50 justify-content-center">
               {errorMessage && <div className="fail">{errorMessage}</div>}
-              <Form.Group className="mb-3">
-                <Form.Label className="" htmlFor={`rating-1`}>
-                  Rating (1-5):
-                </Form.Label>
-                {ratings.map((value) => (
-                  <Form.Check
-                    key={value}
-                    inline
-                    label={value}
-                    name="rating"
-                    type="radio"
-                    id={`rating-${value}`}
-                    value={value}
-                    onChange={handleRatingChange}
-                    checked={rating === value.toString()}
-                  />
-                ))}
-              </Form.Group>
+
+              <Row>
+                <Form.Group className="mb-3">
+                  <Form.Label className="" htmlFor={`rating-1`}>
+                    Rating (1-5):
+                  </Form.Label>
+                  {ratings.map((value) => (
+                    <Form.Check
+                      key={value}
+                      inline
+                      label={value}
+                      name="rating"
+                      type="radio"
+                      id={`rating-${value}`}
+                      value={value}
+                      onChange={handleRatingChange}
+                      checked={rating === value.toString()}
+                    />
+                  ))}
+                </Form.Group>
+              </Row>
+
               <Form.Group className="mb-3">
                 <Form.Label className="" htmlFor="comments">
                   Comments{" "}

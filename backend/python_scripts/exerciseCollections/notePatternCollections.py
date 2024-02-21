@@ -44,8 +44,8 @@ def stepwiseScaleNotePatterns(minNote, maxNote):
                     'notePattern':notes,
                     'description':f"Play twice. Repeat both times.",
                     'direction':"ascending",
-                    'repeatMe': False,
-                    'holdLastNote': False
+                    'repeatMe': True,
+                    'holdLastNote': True
                 }
             )
             PATTERN_ID += 1

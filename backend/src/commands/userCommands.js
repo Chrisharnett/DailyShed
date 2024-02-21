@@ -45,7 +45,6 @@ export const putUserData = async (userData) => {
       exerciseHistory: exerciseHistory,
     },
   });
-
   const response = await docClient.send(command);
   return response;
 };

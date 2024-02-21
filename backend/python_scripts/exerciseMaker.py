@@ -71,10 +71,11 @@ def generateSet():
         userSub = data.get('sub')
         player = getPlayerData(userSub)
         newPracticeSet = setDesigner(player)
-        return jsonify({
+        return {
                 "statusCode": 200,
-                "newPracticeSet": newPracticeSet,
-                "player": player.serialize()})
+                "set": newPracticeSet,
+                "player": player}
+
     except Exception as e:
         return jsonify({
             "statusCode": 400,

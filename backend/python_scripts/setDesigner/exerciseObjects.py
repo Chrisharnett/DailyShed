@@ -18,11 +18,20 @@ class Exercise:
         self.__mode = mode
         self.__preamble = preamble
 
+    @property
+    def getPitchPattern(self):
+        return self.__pitchPattern
+
+    @property
+    def getRhythmPattern(self):
+        return self.__rhythmPattern
+
+
     def notationPattern(self):
         if self.__pitchPattern.get('repeatMe') is not True:
             notationPattern = []
         else:
-            notationPattern = ["repeat"]
+            notationPattern = [["repeat"]]
         rhythms = self.__rhythmPattern.get('rhythmPattern')
         notes = self.__pitchPattern.get('notePattern')
         noteIndex = 0
@@ -46,7 +55,7 @@ class Exercise:
     def createRepeatPhrase(self, scaleNotes, notes):
         container = abjad.Container("")
         for note in notes:
-            if isinstance(note[0], int):
+            if isinstance(note[0], (int, Decimal)):
                 n = self.numberToNote(scaleNotes, note)
                 container.append(n)
             elif note[0][0] == "r" and note[0] != "repeat":
@@ -86,9 +95,9 @@ class Exercise:
         container = abjad.Container("")
         scaleNotes = self.getScaleNotes()
         pattern = self.notationPattern()
-        for group in pattern:
+        for index, group in enumerate(pattern[0]):
             if group[0] == "repeat":
-                c = self.createRepeatPhrase(scaleNotes, group[1:])
+                c = self.createRepeatPhrase(scaleNotes, pattern[1:])
                 r = abjad.Repeat()
                 abjad.attach(r, c)
                 container.append(c)

@@ -43,16 +43,6 @@ def rhythmPatternNoteLength(rhythmPattern):
     count -= n
     return count
 
-def rhythmPatternNoteLength(rhythmPattern):
-    count = 0
-    for r in rhythmPattern.get('rhythmPattern'):
-        for n in r:
-            if n.isdigit():
-                count += 1
-    n = sum(sublist.count("~") for sublist in rhythmPattern)
-    count -= n
-    return count
-
 def multipleBarRhythm(maxRhythmLength, rhythms, length):
     minimumNumberOfMeasures = math.ceil(length / maxRhythmLength)
     measureNumber = 0
@@ -79,11 +69,6 @@ def multipleBarRhythm(maxRhythmLength, rhythms, length):
     rhythmPattern['rhythmPattern'] = r
     rhythmPattern['rhythmPatternId'] = id
     return rhythmPattern
-
-def getRhythmLength(pitches):
-    if pitches.get('holdLastNote'):
-        return len(pitches.get('notePattern')) - 1
-    return len(pitches.get('notePattern'))
 
 def getMinPlays(notePatternOptions):
     selectedExerciseCounts = Counter(

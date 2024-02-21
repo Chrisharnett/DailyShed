@@ -10,7 +10,7 @@ dynamodb = boto3.resource('dynamodb', region_name=os.environ['REGION'])
 exercise_table = dynamodb.Table(os.environ['EXERCISE_TABLE'])
 bucket_name = os.environ['IMAGE_BUCKET']
 
-def exerciseCreator(exercise):
+def exerciseImageMaker(exercise):
     exerciseName = exercise['exerciseName']
     pitches = exercise['notePattern']
     rhythm = exercise['rhythmPattern']
@@ -23,11 +23,12 @@ def exerciseCreator(exercise):
     preamble = exercise.get('preamble', r"#(set-global-staff-size 28)")
 
     exercise = Exercise(pitches, rhythm, key, mode, preamble)
-    lilypond_file = abjad.LilyPondFile([preamble, exercise.buildScore])
+    score = exercise.buildScore
+    lilypond_file = abjad.LilyPondFile([preamble, score])
 
     current_file_directory = os.path.dirname(__file__)
 
-    absolutePath = os.path.join(current_file_directory, "../..", "temp/")
+    absolutePath = os.path.join(current_file_directory, "../", "temp/")
 
     localPath = os.path.join(absolutePath + fileName)
 
@@ -45,16 +46,16 @@ def exerciseCreator(exercise):
     os.remove(ly)
 
     response = exercise_table.put_item(
-        Item={
-            'exerciseName': exerciseName,
-            'notePattern': pitches,
-            'rhythmPattern': rhythm,
-            'key': key,
-            'mode': mode,
-            'collectionTitle': collectionTitle,
-            'fileName': fileName,
-            'imageURL': imageURL,
-            'description': description,
-        }
-    )
+            Item={
+                'exerciseName': exerciseName,
+                'notePattern': pitches,
+                'rhythmPattern': rhythm,
+                'key': key,
+                'mode': mode,
+                'collectionTitle': collectionTitle,
+                'fileName': fileName,
+                'imageURL': imageURL,
+                'description': description,
+            }
+        )
     return response

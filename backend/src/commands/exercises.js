@@ -18,6 +18,20 @@ AWS.config.update({
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
-const tableName = process.env.USERS_TABLE;
-const exerciseTableName = process.env.EXERCISES_TABLE;
-const collectionTableName = process.env.COLLECTIONS_TABLE;
+const exercise_log_table = process.env.EXERCISE_LOG_TABLE;
+
+export const logExercise = async (exerciseEntry) => {
+  const { timestamp, sub, exerciseName, rating, comment } = exerciseEntry;
+  const command = new PutCommand({
+    TableName: exercise_log_table,
+    Item: {
+      timestamp: timestamp,
+      sub: sub,
+      exerciseName: exerciseName,
+      rating: rating,
+      comment: comment,
+    },
+  });
+  const response = await docClient.send(command);
+  return response;
+};

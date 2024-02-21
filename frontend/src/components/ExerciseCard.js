@@ -8,8 +8,8 @@ const ExerciseCard = ({
   setExerciseCount,
   currentSet,
   setCurrentSet,
-  userData,
-  setUserData,
+  player,
+  setPlayer,
   buttonText,
 }) => {
   const [showSelfAssementModal, setShowSelfAssessmentModal] = useState(false);
@@ -39,8 +39,7 @@ const ExerciseCard = ({
   };
 
   const goToNextExercise = () => {
-    const nextSetIndex =
-      exerciseCount % userData.program.exerciseDetails.length;
+    const nextSetIndex = exerciseCount % player.program.exerciseDetails.length;
     setExerciseCount(exerciseCount + 1);
     setCurrentSetIndex(nextSetIndex);
   };
@@ -50,24 +49,26 @@ const ExerciseCard = ({
   }, [currentRound, currentSet, currentSetIndex]);
 
   const nextExerciseHandler = () => {
-    if (exerciseCount === currentSet.length * userData.program.rounds) {
+    if (exerciseCount === currentSet.length * player.program.rounds) {
       setShowSessionCompleteModal(true);
     } else {
       setShowSelfAssessmentModal(true);
-      if (currentSetIndex === userData.program.exerciseDetails.length - 1) {
+      if (currentSetIndex === player.program.exerciseDetails.length - 1) {
         advanceRound();
       }
       goToNextExercise();
     }
   };
 
-  if (currentExercise && currentRound <= userData.program.rounds) {
+  if (currentExercise && currentRound <= player.program.rounds) {
     return (
       <>
         <Container className="cardContainer d-flex flex-column align-items-center">
           <Card border="light" className="exerciseCard ">
             <Card.Body className="align-items-center">
-              {/* <Card.Title className="">{currentExercise.Title}</Card.Title> */}
+              <Card.Title className="">
+                {currentExercise.collectionTitle}
+              </Card.Title>
               <Card.Title className="">
                 {currentExercise.exerciseName}
               </Card.Title>
@@ -75,7 +76,7 @@ const ExerciseCard = ({
               <Card.Text className="">{currentExercise.description}</Card.Text>
             </Card.Body>
           </Card>
-          {currentRound <= userData.program.rounds && (
+          {currentRound <= player.program.rounds && (
             <Button type="submit" className="m-2" onClick={nextExerciseHandler}>
               {buttonText}
             </Button>
@@ -86,22 +87,15 @@ const ExerciseCard = ({
           setShow={setShowSelfAssessmentModal}
           exercise={currentExercise}
           currentSet={currentSet}
-          userData={userData}
-          setUserData={setUserData}
+          player={player}
+          setPlayer={setPlayer}
         />
         <SessionCompleteModal
           show={showSessionCompleteModal}
           setShow={setShowSessionCompleteModal}
           currentSet={currentSet}
-          userData={userData}
-          setUserData={setUserData}
-        />
-        <SessionCompleteModal
-          show={showSessionCompleteModal}
-          setShow={setShowSessionCompleteModal}
-          currentSet={currentSet}
-          userData={userData}
-          setUserData={setUserData}
+          player={player}
+          setPlayer={setPlayer}
         />
       </>
     );

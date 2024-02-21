@@ -8,6 +8,7 @@ import TopSpacer from "../util/TopSpacer";
 const TheShed = () => {
   const [currentSet, setCurrentSet] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [player, setPlayer] = useState(null);
   const [exerciseCount, setExerciseCount] = useState(1);
   const [setLength, setSetLength] = useState(0);
   const [buttonText, setButtonText] = useState("Next Exercise");
@@ -25,46 +26,43 @@ const TheShed = () => {
     }
   }, [currentSet, exerciseCount, userData]);
 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        // TODO: RETRIEVE ONLY NAME AND PROGRAM FROM USERDATA
-        const response = await axios.get(`/api/getUserData/${user.sub}`);
-        if (response.data.userData) {
-          setUserData(response.data.userData);
-          hasCalledHandleNextSet.current = false;
-        } else {
-          setUserData(null);
-        }
-      } catch (error) {
-        console.error("Error: ", error);
-      }
-    };
-    getUserData();
-  }, [user]);
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     try {
+  //       // TODO: RETRIEVE ONLY NAME AND PROGRAM FROM USERDATA
+  //       const response = await axios.get(`/api/getUserData/${user.sub}`);
+  //       if (response.data.userData) {
+  //         setUserData(response.data.userData);
+  //         hasCalledHandleNextSet.current = false;
+  //       } else {
+  //         setUserData(null);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error: ", error);
+  //     }
+  //   };
+  //   getUserData();
+  // }, [user]);
 
   useEffect(() => {
-    if (userData && !hasCalledHandleNextSet.current) {
+    if (user && !hasCalledHandleNextSet.current) {
       handleNextSet();
       hasCalledHandleNextSet.current = true;
     }
-  }, [userData]);
+  }, [user]);
 
   const handleNextSet = async () => {
-    if (!userData) {
-      return;
-    }
     try {
       let response = await axios.post(`/api/generateSet/${user.sub}`);
-      const { player, returnSet } = response.data;
-      setCurrentSet(returnSet);
-      const { exerciseHistory, previousSet, program } = player;
-      setUserData({
-        ...userData,
-        exerciseHistory: exerciseHistory,
-        previousSet: previousSet,
-        program: program,
-      });
+      const { set, player } = response.data;
+      setCurrentSet(set);
+      setPlayer(player);
+      // setUserData({
+      //   ...userData,
+      //   exerciseHistory: exerciseHistory,
+      //   previousSet: previousSet,
+      //   program: program,
+      // });
     } catch (error) {
       console.error("Error: ", error);
     }
@@ -82,7 +80,7 @@ const TheShed = () => {
       </>
     );
   }
-  if (exerciseCount <= currentSet.length * userData.program.rounds) {
+  if (exerciseCount <= currentSet.length * player.program.rounds) {
     return (
       <>
         <TopSpacer></TopSpacer>
@@ -91,7 +89,7 @@ const TheShed = () => {
             <h2 className="dropShadow">Practice Time</h2>
             <h3 className="dropShadow">
               Exercise {exerciseCount} of{" "}
-              {currentSet.length * userData.program.rounds}
+              {currentSet.length * player.program.rounds}
             </h3>
           </div>
           <div className="d-flex flex-column align-items-center">
@@ -101,8 +99,8 @@ const TheShed = () => {
                 setExerciseCount={setExerciseCount}
                 currentSet={currentSet}
                 setCurrentSet={setCurrentSet}
-                userData={userData}
-                setUserData={setUserData}
+                player={player}
+                setPlayer={setPlayer}
                 buttonText={buttonText}
               />
             }

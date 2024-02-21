@@ -1,5 +1,5 @@
 import os
-from setDesigner.exerciseImageMaker import exerciseCreator
+from setDesigner.exerciseImageMaker import exerciseImageMaker
 from dotenv import load_dotenv
 import boto3
 
@@ -9,7 +9,7 @@ dynamodb = boto3.resource('dynamodb', region_name=os.environ['REGION'])
 
 
 exercise_table = dynamodb.Table(os.environ['EXERCISE_TABLE'])
-bucket_name = dynamodb.Table(os.environ['IMAGE_BUCKET'])
+bucket_name = os.environ['IMAGE_BUCKET']
 
 def createExercise(pitches, rhythm, exerciseDetails):
     key = exerciseDetails.get('key')
@@ -25,25 +25,26 @@ def createExercise(pitches, rhythm, exerciseDetails):
     fileName = f"{collectionTitle.lower().replace(' ', '_')}_{exerciseName.lower().replace(' ', '_')}_{pitches.get('notePatternId')}_{rhythm.get('rhythmPatternId')}"
     imageURL = f"https://{bucket_name}.s3.amazonaws.com/{fileName}.cropped.png"
     description = pitches.get('description')
-
+    exercise = {
+        'exerciseName': exerciseName,
+        'notePattern': pitches,
+        'rhythmPattern': rhythm,
+        'key': key,
+        'mode': mode,
+        'collectionTitle': collectionTitle,
+        'fileName': fileName,
+        'imageURL': imageURL,
+        'description': description
+    }
     response = exercise_table.get_item(
         Key={
             'fileName': fileName
         }
     )
     if not 'Item' in response:
-        exercise = {
-            'exerciseName': exerciseName,
-            'notePattern': pitches,
-            'rhythmPattern': rhythm,
-            'key': key,
-            'mode': mode,
-            'collectionTitle': collectionTitle,
-            'fileName': fileName,
-            'imageURL': imageURL,
-            'description': description
-        }
-        image = exerciseCreator(exercise)
+        image = exerciseImageMaker(exercise)
+
+    return exercise
 
 def getDirectionPrep(direction):
     if direction == "ascending" or direction == "ascending descending":
