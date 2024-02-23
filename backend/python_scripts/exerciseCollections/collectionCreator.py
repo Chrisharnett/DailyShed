@@ -12,7 +12,7 @@ def main():
     })
     collections.append({
         'collectionType': 'notePattern',
-        'title': 'one_note_long_tone',
+        'title': 'single_note_long_tone',
         'patterns': singleNoteLongToneWholeNotes(1, 9)
     })
     collections.append({

@@ -1,11 +1,7 @@
 import dotenv from "dotenv";
 import AWS from "aws-sdk";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import {
-  DynamoDBDocumentClient,
-  GetCommand,
-  PutCommand,
-} from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 
 dotenv.config();
 
@@ -21,13 +17,13 @@ const docClient = DynamoDBDocumentClient.from(client);
 const exercise_log_table = process.env.EXERCISE_LOG_TABLE;
 
 export const logExercise = async (exerciseEntry) => {
-  const { timestamp, sub, exerciseName, rating, comment } = exerciseEntry;
+  const { timestamp, sub, exercise, rating, comment } = exerciseEntry;
   const command = new PutCommand({
     TableName: exercise_log_table,
     Item: {
       timestamp: timestamp,
       sub: sub,
-      exerciseName: exerciseName,
+      exercise: exercise,
       rating: rating,
       comment: comment,
     },

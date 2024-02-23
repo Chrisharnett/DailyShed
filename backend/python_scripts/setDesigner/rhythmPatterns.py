@@ -2,6 +2,7 @@ import random
 import math
 from collections import Counter
 from setDesigner.fetchExerciseDetails import fetchExerciseDetails
+from setDesigner.patternCollections import getCollection
 
 def getNewRhythmPattern(length, rhythmCollection):
     maxRhythmLength = max(rhythmPatternNoteLength(rhythmPattern) for collection in rhythmCollection for rhythmPattern in collection['patterns'])
@@ -30,7 +31,7 @@ def getRhythmReviewPattern(possibleRhythms, min, length, exerciseDetails):
             )
         ]
         return rhythms[random.randint(0, len(rhythms) - 1)]
-    r = fetchExerciseDetails(rhythms([random.randint(0, len(rhythms) - 1)])).get('rhythmPattern')
+    r = fetchExerciseDetails(rhythms[random.randint(0, len(rhythms) - 1)]).get('rhythmPattern')
     return r
 
 def rhythmPatternNoteLength(rhythmPattern):

@@ -23,11 +23,16 @@ export const SelfAssessmentModal = ({
   const handleSelfAssessment = () => {
     const updateUser = async () => {
       try {
-        const timestamp = new Date().toISOSTring();
+        const timestamp = new Date().toISOString();
         const exerciseEntry = {
           timestamp: timestamp,
           sub: player.sub,
-          exerciseName: exercise.fileName,
+          exercise: {
+            name: exercise.fileName,
+            notePatternRhythmLength:
+              exercise.notePattern.notePatternRhythmLength,
+            rhythmMatcher: exercise.rhythmPattern.rhythmDescription,
+          },
           rating: rating,
           comment: comment,
         };

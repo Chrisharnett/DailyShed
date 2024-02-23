@@ -95,9 +95,11 @@ class Exercise:
         container = abjad.Container("")
         scaleNotes = self.getScaleNotes()
         pattern = self.notationPattern()
-        for index, group in enumerate(pattern[0]):
-            if group[0] == "repeat":
-                c = self.createRepeatPhrase(scaleNotes, pattern[1:])
+        p = pattern
+        for index, group in enumerate(pattern):
+            if isinstance(group[0], list) and group[0][0] == "repeat":
+                p = group[1:]
+                c = self.createRepeatPhrase(scaleNotes, group[1:])
                 r = abjad.Repeat()
                 abjad.attach(r, c)
                 container.append(c)

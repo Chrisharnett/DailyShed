@@ -25,7 +25,7 @@ def getNewNotePattern(program, i):
             return notePattern
     return None
 
-def getRhythmLength(pitches):
+def getNotePatternRhythmLength(pitches):
     if pitches.get('holdLastNote'):
         return len(pitches.get('notePattern')) - 1
     return len(pitches.get('notePattern'))

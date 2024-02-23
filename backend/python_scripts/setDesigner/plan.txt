@@ -13,9 +13,27 @@ userData:
     playCount,
     directions[],
     notePatternType,
-    rhythmMatcher,
-    noteLength
+    rhythmMatcher = rhythmPattern.rhythmDescription,
+    notePatternRhythmLength
     }
+
+    I need to write a lambda in python that will
+    update the date in my USER_TABLE every time a new item is added to my EXERCISE_LOG_TABLE.
+    The lambda will take the sub and exerciseName from the new entry.
+    If that exerciseName is NOT already in the USER_TABLE where sub=sub,
+        query the EXERCISE_TABLE where newLogEntry.exerciseName = PartitionKey: fileName
+    it should add a new entry in the exerciseMetadata attribute for that
+    user = {exercise:
+                {name: newlogEntry.exerciseName,
+                notePatternRhythmLength: exercise_table_entry.pitchPattern.notePatternRhythmLength,
+                rhythmMatcher: exercise_table_entry.rhythmPattern.rhythmPatternDescription},
+         comment: newLogEntry.comment,
+         rating: newLogEntry.rating,
+         playCount: 1,
+    If the exercise is already in the users Metadata it should:
+        update the comment and rating with the newLogEntry data,.
+        add the newLogEntry
+        increment the playCount
 
 exerciseHistory
 -sortKey = fileName#timestamp = logEntry

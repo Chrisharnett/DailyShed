@@ -34,7 +34,7 @@ def createExercise(pitches, rhythm, exerciseDetails):
         'collectionTitle': collectionTitle,
         'fileName': fileName,
         'imageURL': imageURL,
-        'description': description
+        'description': description,
     }
     response = exercise_table.get_item(
         Key={
