@@ -1,17 +1,13 @@
-# import debugpy
-from objects.collection import Collection
-from objects.exerciseObjects import Exercise
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from objects.player import Player
 from objects.practiceSet import PracticeSet
 from notePatternGenerator import stepwiseScaleNotePatterns, singleNoteLongToneWholeNotes
 from rhythmPatternGenerator import quarterNoteRhythms, singleNoteWholeToneRhythms
+from setDesigner.setDesigner import setDesigner
+from setDesigner.getPlayer import getPlayerData
+from util import getPlayer
 import boto3
-from datetime import datetime
-
-# debugpy.listen(("0.0.0.0", 5678))
-# debugpy.wait_for_client()
 
 app = Flask(__name__)
 
@@ -19,70 +15,9 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 s3_client = boto3.client("s3")
 
-
 @app.route("/")
 def home():
     return "Connected"
-
-
-@app.route("/getManySets", methods=["GET", "POST"])
-def getManySets():
-    try:
-        bucketName = "mysaxpracticeexercisebucket"
-        data = request.get_json()
-        player = Player(
-            data["player"]["previousSet"],
-            data["player"]["program"],
-            data["player"]["exerciseHistory"],
-        )
-        numberOfSets = data["setsToCreate"]
-        minNote = 1
-        maxNote = 9
-        notes = stepwiseScaleNotePatterns(
-            minNote, maxNote, (2 * maxNote), "Scale to the Ninth"
-        )
-        notes.extend(
-            singleNoteLongToneWholeNotes(minNote, maxNote, (2 * maxNote), "Long Tones")
-        )
-        rhythms = quarterNoteRhythms(4, 4)
-        rhythms.extend(singleNoteWholeToneRhythms(4, 4))
-        packageOfSets = []
-        for i in range(numberOfSets):
-            practiceSet = PracticeSet(player, notes, rhythms)
-            nextSet = practiceSet.getNextSet()
-            returnSet = []
-            # for exercise in nextSet:
-            for exercise in nextSet:
-                try:
-                    objectKey = exercise.exerciseFileName()
-                    s3_client.head_object(Bucket=bucketName, Key=objectKey)
-                except Exception as e:
-                    exercise.createImage()
-                e = exercise.serialize()
-                returnSet.append(e)
-                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                player.addExercise(exercise, timestamp, 8)
-            player.setPreviousSet(nextSet)
-            packageOfSets.append(returnSet)
-        print(packageOfSets)
-        return jsonify({"sets": packageOfSets, "player": player.serialize()})
-    except Exception as err:
-        return jsonify({"error": str(err)}), 400
-
-
-@app.route("/getSampleCollection", methods=["GET"])
-def getSampleCollection():
-    try:
-        minNote = 1
-        maxNote = 9
-        notes = stepwiseScaleNotePatterns(minNote, maxNote, (2 * maxNote))
-        rhythms = quarterNoteRhythms(4, 4)
-        collection = Collection("Quarter Note Ninth Scale", notes, rhythms)
-
-        return jsonify(collection)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
 
 @app.route("/getSet", methods=["GET", "POST"])
 def getSet():
@@ -129,6 +64,23 @@ def getSet():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+@app.route("/generateSet", methods=["GET", "POST"])
+def generateSet():
+    try:
+        data = request.get_json()
+        userSub = data.get('sub')
+        player = getPlayerData(userSub)
+        newPracticeSet, player = setDesigner(player)
+        return {
+                "statusCode": 200,
+                "set": newPracticeSet,
+                "player": player}
+
+    except Exception as e:
+        return jsonify({
+            "statusCode": 400,
+            "error": str(e)
+        })
 
 if __name__ == "__main__":
     app.run(debug=True)

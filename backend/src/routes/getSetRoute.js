@@ -1,21 +1,17 @@
 import axios from "axios";
 
 export const generateSetRoute = {
-  path: "/api/generateSet/:sub",
+  path: "/api/generateSet/",
   method: "post",
   handler: async (req, res) => {
-    const sub = req.params.sub;
+    const userData = req.body;
 
-    const setGenerator = "http://127.0.0.1:5000/generateSet";
+    const exerciseMaker = "http://127.0.0.1:5000/geSet";
 
     try {
-      const response = await axios.post(
-        setGenerator,
-        { sub },
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await axios.post(exerciseMaker, userData, {
+        headers: { "Content-Type": "application/json" },
+      });
 
       if (response.status === 200) {
         res.status(200).json(response.data);

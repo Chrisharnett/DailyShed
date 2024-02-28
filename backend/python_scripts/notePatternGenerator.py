@@ -14,7 +14,7 @@ def singleNoteLongToneWholeNotes(minNote, maxNote, maxLength, collectionTitle=""
         toneExercises.append(
             NotePattern(
                 notePatternId=str(PATTERN_ID),
-                notePatternType="single_note_long_tone",
+                notePatternType="single_note_long_tone_",
                 collectionTitle=collectionTitle,
                 notePattern=notes,
                 rhythmMatcher=rhythm,
@@ -62,17 +62,15 @@ def main():
     minNote = 1
     maxNote = 9
     maxLength = 2 * (maxNote)
-    notePatternCollections = []
-    notePatternCollections.extend(
-        stepwiseScaleNotePatterns(minNote, maxNote, maxLength, "Scale to the 9", "quarter_note")
-    )
-    notePatternCollections.extend(
-        singleNoteLongToneWholeNotes(
-            minNote, maxNote, maxLength, "Single Note Long Tones", "long_tone"
-        )
-    )
+    collections = {}
 
-    for collection in notePatternCollections:
+    stepwiseNotePatterns = stepwiseScaleNotePatterns(minNote, maxNote, maxLength, "Scale to the 9", "quarter_note")
+    singleNoteScalerLongTonePatterns = singleNoteLongToneWholeNotes(minNote, maxNote, maxLength, "Single Note Long Tones", "long_tone")
+
+    collections['Scale to the Ninth'] = stepwiseNotePatterns.serialize()
+    collections['Single Note Diatonic Long Tones'] = singleNoteScalerLongTonePatterns.serialize()
+
+    for collection in collections:
         print(collection)
 
 
