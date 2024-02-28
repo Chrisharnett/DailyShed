@@ -1,15 +1,15 @@
 import random
 
-def chooseDirection(notePattern, directionsPlayed):
+def chooseDirection(directionsPlayed):
     directions = [
         "ascending",
         "descending",
         "ascending descending",
         "descending ascending",
     ]
-    index = len(directionsPlayed) - 1
-    if 0 < index < 4:
-        return directions[index]
+    newDirections = [direction for direction in directions if direction not in directionsPlayed]
+    if 0 < len(newDirections):
+        return newDirections[0]
     return directions[random.randint(0, len(directions) - 1)]
 
 def descendingPattern(pattern):

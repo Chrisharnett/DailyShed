@@ -7,14 +7,25 @@
     <list default="true" id="3a0172fc-7f8f-4668-a7ac-cdc79f19d610" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/exerciseCollections/collectionCreator.py" beforeDir="false" afterPath="$PROJECT_DIR$/exerciseCollections/collectionCreator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/serverlessFiles/plan.txt" beforeDir="false" afterPath="$PROJECT_DIR$/setDesigner/plan.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/exerciseCollections/notePatternCollections.py" beforeDir="false" afterPath="$PROJECT_DIR$/exerciseCollections/notePatternCollections.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/exerciseCollections/rhythmPatternCollections.py" beforeDir="false" afterPath="$PROJECT_DIR$/exerciseCollections/rhythmPatternCollections.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/exerciseMaker.py" beforeDir="false" afterPath="$PROJECT_DIR$/exerciseMaker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setDesigner/createExercise.py" beforeDir="false" afterPath="$PROJECT_DIR$/setDesigner/createExercise.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setDesigner/directions.py" beforeDir="false" afterPath="$PROJECT_DIR$/setDesigner/directions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setDesigner/exerciseObjects.py" beforeDir="false" afterPath="$PROJECT_DIR$/setDesigner/exerciseObjects.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setDesigner/fetchExerciseDetails.py" beforeDir="false" afterPath="$PROJECT_DIR$/setDesigner/fetchExerciseDetails.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setDesigner/notePatterns.py" beforeDir="false" afterPath="$PROJECT_DIR$/setDesigner/notePatterns.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setDesigner/rhythmPatterns.py" beforeDir="false" afterPath="$PROJECT_DIR$/setDesigner/rhythmPatterns.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setDesigner/setDesigner.py" beforeDir="false" afterPath="$PROJECT_DIR$/setDesigner/setDesigner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/commands/exercises.js" beforeDir="false" afterPath="$PROJECT_DIR$/../src/commands/exercises.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/commands/userCommands.js" beforeDir="false" afterPath="$PROJECT_DIR$/../src/commands/userCommands.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/routes/flaskTestRoute.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../src/routes/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/routes/testEmailRoute.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/routes/testRoute.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/components/ExerciseCard.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/components/ExerciseCard.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/src/components/SelfAssessmentModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/components/SelfAssessmentModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/components/SessionComplete.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/components/SessionComplete.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/src/pages/TheShed.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/src/pages/TheShed.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +127,11 @@
       <workItem from="1708435830561" duration="8845000" />
       <workItem from="1708451551070" duration="847000" />
       <workItem from="1708518486814" duration="11899000" />
-      <workItem from="1708691925902" duration="1524000" />
+      <workItem from="1708691925902" duration="3977000" />
+      <workItem from="1708724879184" duration="16957000" />
+      <workItem from="1708950636011" duration="9388000" />
+      <workItem from="1708974704780" duration="9019000" />
+      <workItem from="1709045663227" duration="25325000" />
     </task>
     <servers />
   </component>
@@ -168,11 +183,6 @@
           <option name="timeStamp" value="283" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/setDesigner/rhythmPatterns.py</url>
-          <line>74</line>
-          <option name="timeStamp" value="295" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/serverlessFiles/exerciseObjects.py</url>
           <line>85</line>
           <option name="timeStamp" value="320" />
@@ -193,9 +203,24 @@
           <option name="timeStamp" value="369" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/setDesigner/rhythmPatterns.py</url>
-          <line>16</line>
-          <option name="timeStamp" value="382" />
+          <url>file://$PROJECT_DIR$/setDesigner/exerciseObjects.py</url>
+          <line>7</line>
+          <option name="timeStamp" value="567" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/setDesigner/setDesigner.py</url>
+          <line>58</line>
+          <option name="timeStamp" value="605" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/setDesigner/notePatterns.py</url>
+          <line>24</line>
+          <option name="timeStamp" value="608" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/exerciseMaker.py</url>
+          <line>73</line>
+          <option name="timeStamp" value="610" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -214,10 +239,11 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/python_scripts$notePatternCollections.coverage" NAME="notePatternCollections Coverage Results" MODIFIED="1708026019055" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/serverless files" />
-    <SUITE FILE_PATH="coverage/python_scripts$exerciseMaker.coverage" NAME="exerciseMaker Coverage Results" MODIFIED="1708616373034" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python_scripts$exerciseMaker.coverage" NAME="exerciseMaker Coverage Results" MODIFIED="1709138870130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/python_scripts$rhythmPatternCollections.coverage" NAME="rhythmPatternCollections Coverage Results" MODIFIED="1709130476733" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exerciseCollections" />
     <SUITE FILE_PATH="coverage/python_scripts$Flask__exerciseMaker_py_.coverage" NAME="Flask (exerciseMaker.py) Coverage Results" MODIFIED="1708292002802" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/python_scripts$app.coverage" NAME="app Coverage Results" MODIFIED="1708186133302" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Documents/Software Development/ASD/Fall/Capstone 3540/reactSaxPracticeApp/backend/python scripts/exGenerator/lib/python3.10/site-packages/flask" />
     <SUITE FILE_PATH="coverage/python_scripts$notePatternGenerator.coverage" NAME="notePatternGenerator Coverage Results" MODIFIED="1708025320151" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/python_scripts$collectionCreator.coverage" NAME="collectionCreator Coverage Results" MODIFIED="1708529814842" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exerciseCollections" />
+    <SUITE FILE_PATH="coverage/python_scripts$collectionCreator.coverage" NAME="collectionCreator Coverage Results" MODIFIED="1709130597354" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/exerciseCollections" />
   </component>
 </project>

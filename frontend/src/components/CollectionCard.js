@@ -21,7 +21,7 @@ const CollectionCard = ({ i, collection }) => {
             </Card.Text>
           </Card.Body>
           <Card.Footer>
-            Exercises completed: {collection.index + 1} of X
+            Exercises completed: {collection.index + 1} of {collectionLength}
           </Card.Footer>
         </Card>
       </Container>

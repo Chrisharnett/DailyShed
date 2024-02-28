@@ -17,32 +17,14 @@ const TheShed = () => {
   const user = useUser();
 
   useEffect(() => {
-    if (currentSet && userData) {
-      if (exerciseCount === currentSet.length * userData.program.rounds) {
+    if (currentSet && player) {
+      if (exerciseCount === currentSet.length * player.program.rounds) {
         setButtonText("Complete!");
       } else {
         setButtonText("Next Exercise");
       }
     }
-  }, [currentSet, exerciseCount, userData]);
-
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     try {
-  //       // TODO: RETRIEVE ONLY NAME AND PROGRAM FROM USERDATA
-  //       const response = await axios.get(`/api/getUserData/${user.sub}`);
-  //       if (response.data.userData) {
-  //         setUserData(response.data.userData);
-  //         hasCalledHandleNextSet.current = false;
-  //       } else {
-  //         setUserData(null);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error: ", error);
-  //     }
-  //   };
-  //   getUserData();
-  // }, [user]);
+  }, [currentSet, exerciseCount, player]);
 
   useEffect(() => {
     if (user && !hasCalledHandleNextSet.current) {
@@ -57,12 +39,6 @@ const TheShed = () => {
       const { set, player } = response.data;
       setCurrentSet(set);
       setPlayer(player);
-      // setUserData({
-      //   ...userData,
-      //   exerciseHistory: exerciseHistory,
-      //   previousSet: previousSet,
-      //   program: program,
-      // });
     } catch (error) {
       console.error("Error: ", error);
     }
@@ -80,7 +56,8 @@ const TheShed = () => {
       </>
     );
   }
-  if (exerciseCount <= currentSet.length * player.program.rounds) {
+  // if (exerciseCount <= currentSet.length * player.program.rounds) {
+  else {
     return (
       <>
         <TopSpacer></TopSpacer>
@@ -109,25 +86,26 @@ const TheShed = () => {
         <TopSpacer></TopSpacer>
       </>
     );
-  } else {
-    return (
-      <>
-        <TopSpacer></TopSpacer>
-        <Container
-          className="d-flex align-items-center justify-content-center position-relative"
-          style={{ height: "100vh", width: "100vw" }}
-        >
-          <Container
-            className="midlayer glass"
-            // onClick={handleNextSet}
-            style={{ display: "inline-block", width: "auto" }}
-          >
-            <h1 className="dropShadow ">Routine Complete</h1>
-          </Container>
-        </Container>
-        <TopSpacer></TopSpacer>
-      </>
-    );
+
+    // } else {
+    //   return (
+    //     <>
+    //       <TopSpacer></TopSpacer>
+    //       <Container
+    //         className="d-flex align-items-center justify-content-center position-relative"
+    //         style={{ height: "100vh", width: "100vw" }}
+    //       >
+    //         <Container
+    //           className="midlayer glass"
+    //           // onClick={handleNextSet}
+    //           style={{ display: "inline-block", width: "auto" }}
+    //         >
+    //           <h1 className="dropShadow ">Routine Complete</h1>
+    //         </Container>
+    //       </Container>
+    //       <TopSpacer></TopSpacer>
+    //     </>
+    //   );
   }
 };
 

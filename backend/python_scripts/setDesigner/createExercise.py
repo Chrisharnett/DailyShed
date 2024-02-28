@@ -15,14 +15,16 @@ def createExercise(pitches, rhythm, exerciseDetails):
     key = exerciseDetails.get('key')
     mode = exerciseDetails.get('mode')
     exerciseName = ''
-    collectionTitle = f"{key.upper()} {mode.title()} {pitches.get('collectionTitle')} "
+    collectionTitle = f"{key.upper()} {mode.title()} {pitches.get('collectionTitle')} in {rhythm.get('timeSignature')[0]}-{rhythm.get('timeSignature')[1]}"
+    fileName = collectionTitle.lower().replace(' ', '_')
     if pitches.get('collectionTitle') != 'Long Tone':
         collectionTitle += f"in {rhythm.get('rhythmDescription').replace('_', ' ')}s"
         exerciseName += f"{pitches.get('direction').title()} pattern {getDirectionPrep(pitches.get('direction'))} the {str(max(int(number) for number in pitches.get('notePattern')))}"
+        fileName += f"_{pitches.get('direction').title()}_pattern"
     else:
-        exerciseName += f"{pitches.get('notePatternType').replace('_', ' ').title()}"
+        exerciseName += f"{key.upper()} {mode.title()} {pitches.get('notePatternType').replace('_', ' ').title()} on {str(max(int(number) for number in pitches.get('notePattern')))}"
         collectionTitle += f""
-    fileName = f"{collectionTitle.lower().replace(' ', '_')}_{exerciseName.lower().replace(' ', '_')}_{pitches.get('notePatternId')}_{rhythm.get('rhythmPatternId')}"
+    fileName += f"_{pitches.get('notePatternId')}_{rhythm.get('rhythmPatternId')}"
     imageURL = f"https://{bucket_name}.s3.amazonaws.com/{fileName}.cropped.png"
     description = pitches.get('description')
     exercise = {

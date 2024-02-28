@@ -1,4 +1,4 @@
-import { Container, Form, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Form, Row, Col, Button } from "react-bootstrap";
 import useUser from "../auth/useUser";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -17,7 +17,6 @@ const UserProfile = () => {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        // TODO: RETRIEVE ONLY NAME AND PROGRAM FROM USERDATA
         const response = await axios.get(`/api/getUserData/${user.sub}`);
         if (response.data.userData) {
           setUserData(response.data.userData);
@@ -37,7 +36,6 @@ const UserProfile = () => {
     event.preventDefault();
     try {
       let newUserData = { ...userData };
-      // newUserData.program = userData.program;
       setUserData(newUserData);
       await axios.post("/api/updateUserData", newUserData);
       setMessage("Routine Saved!");

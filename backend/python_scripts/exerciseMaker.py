@@ -70,7 +70,7 @@ def generateSet():
         data = request.get_json()
         userSub = data.get('sub')
         player = getPlayerData(userSub)
-        newPracticeSet = setDesigner(player)
+        newPracticeSet, player = setDesigner(player)
         return {
                 "statusCode": 200,
                 "set": newPracticeSet,

@@ -49,18 +49,15 @@ const ExerciseCard = ({
   }, [currentRound, currentSet, currentSetIndex]);
 
   const nextExerciseHandler = () => {
-    if (exerciseCount === currentSet.length * player.program.rounds) {
-      setShowSessionCompleteModal(true);
-    } else {
-      setShowSelfAssessmentModal(true);
-      if (currentSetIndex === player.program.exerciseDetails.length - 1) {
-        advanceRound();
-      }
-      goToNextExercise();
+    setShowSelfAssessmentModal(true);
+    if (currentSetIndex === player.program.exerciseDetails.length - 1) {
+      advanceRound();
     }
+    goToNextExercise();
   };
 
-  if (currentExercise && currentRound <= player.program.rounds) {
+  // if (currentExercise && currentRound <= player.program.rounds) {
+  if (currentExercise) {
     return (
       <>
         <Container className="cardContainer d-flex flex-column align-items-center">
@@ -89,6 +86,8 @@ const ExerciseCard = ({
           currentSet={currentSet}
           player={player}
           setPlayer={setPlayer}
+          exerciseCount={exerciseCount}
+          setShowSessionCompleteModal={setShowSessionCompleteModal}
         />
         <SessionCompleteModal
           show={showSessionCompleteModal}

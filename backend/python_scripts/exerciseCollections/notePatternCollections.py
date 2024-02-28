@@ -49,5 +49,4 @@ def stepwiseScaleNotePatterns(minNote, maxNote):
                 }
             )
             PATTERN_ID += 1
-
     return scale1

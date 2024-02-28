@@ -26,7 +26,6 @@ class Exercise:
     def getRhythmPattern(self):
         return self.__rhythmPattern
 
-
     def notationPattern(self):
         if self.__pitchPattern.get('repeatMe') is not True:
             notationPattern = []
@@ -36,7 +35,7 @@ class Exercise:
         notes = self.__pitchPattern.get('notePattern')
         noteIndex = 0
         for r in rhythms:
-            if r[0].isnumeric():
+            if isinstance(r[0], Decimal) or r[0].isnumeric():
                 notationPattern.append([notes[noteIndex], r[0]])
                 noteIndex += 1
             elif r == ["~"]:
@@ -88,7 +87,7 @@ class Exercise:
         pitch += octave
 
         pitchName = pitch.get_name()
-        return pitchName + note[1] + " "
+        return pitchName + str(note[1]) + " "
 
     @property
     def buildScore(self):

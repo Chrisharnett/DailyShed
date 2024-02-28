@@ -3,6 +3,7 @@ from rhythmPatternCollections import singleNoteWholeToneRhythms, quarterNoteRhyt
 import boto3
 
 def main():
+    id=0
     collections = []
 
     collections.append({

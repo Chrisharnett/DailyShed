@@ -10,6 +10,8 @@ export const SelfAssessmentModal = ({
   currentSet,
   player,
   setPlayer,
+  exerciseCount,
+  setShowSessionCompleteModal,
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [rating, setRating] = useState("");
@@ -31,23 +33,26 @@ export const SelfAssessmentModal = ({
             name: exercise.fileName,
             notePatternRhythmLength:
               exercise.notePattern.notePatternRhythmLength,
+            notePatternType: exercise.notePattern.notePatternType,
             rhythmMatcher: exercise.rhythmPattern.rhythmDescription,
+            direction: exercise.notePattern.direction,
           },
           rating: rating,
           comment: comment,
         };
         const logEntry = await axios.post("/api/logExercise", exerciseEntry);
-        // let newUserData = { ...player };
-        // newUserData.exerciseHistory.push(exerciseEntry);
-        // newUserData.previousSet = currentSet;
-        // setPlayer(newUserData);
-        // const response = await axios.post("/api/updateUserData", newUserData);
+        if (exerciseCount - 1 === currentSet.length * player.program.rounds) {
+          setShowSessionCompleteModal(true);
+        }
+        handleClose();
       } catch (error) {
         console.error("Error: ", error);
       }
     };
     updateUser();
-    handleClose();
+    // if (exerciseCount - 1 === currentSet.length * player.program.rounds) {
+    //   setShowSessionCompleteModal(true);
+    // }
   };
 
   const handleRatingChange = (e) => {
