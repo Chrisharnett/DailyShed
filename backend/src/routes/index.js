@@ -5,8 +5,10 @@ import { getUserDataRoute } from "./getUserDataRoute.js";
 import { updateUserDataRoute } from "./updateUserDataRoute.js";
 import { logExerciseRoute } from "./logExerciseRoute.js";
 import { updatePreviousSetRoute } from "./updatePreviousSetRoute.js";
+import { getUserJournalRoute } from "./getUserJournalRoute.js";
 
 export const routes = [
+  getUserJournalRoute,
   updateUserDataRoute,
   getUserDataRoute,
   generateSetRoute,

@@ -6,6 +6,7 @@ import {
   GetCommand,
   PutCommand,
   UpdateCommand,
+  QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 dotenv.config();
@@ -20,6 +21,22 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 
 const user_table = process.env.USERS_TABLE;
+const exercise_log_table = process.env.EXERCISE_LOG_TABLE;
+
+export const getUserJournal = async (sub) => {
+  const command = new QueryCommand({
+    TableName: exercise_log_table,
+    KeyConditionExpression: "#sub = :subValue",
+    ExpressionAttributeNames: {
+      "#sub": "sub",
+    },
+    ExpressionAttributeValues: {
+      ":subValue": sub,
+    },
+  });
+  const response = await docClient.send(command);
+  return response.Items;
+};
 
 export const getUserData = async (sub) => {
   const command = new GetCommand({

@@ -11,6 +11,7 @@ const ExerciseCard = ({
   player,
   setPlayer,
   buttonText,
+  sessionID,
 }) => {
   const [showSelfAssementModal, setShowSelfAssessmentModal] = useState(false);
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
@@ -80,6 +81,7 @@ const ExerciseCard = ({
           )}
         </Container>
         <SelfAssessmentModal
+          sessionID={sessionID}
           show={showSelfAssementModal}
           setShow={setShowSelfAssessmentModal}
           exercise={currentExercise}
