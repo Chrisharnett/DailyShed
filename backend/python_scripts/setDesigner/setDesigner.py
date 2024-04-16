@@ -86,12 +86,12 @@ def setDesigner(player):
     newSet = []
     for exercise in exerciseDetails:
         if exercise.get('reviewBool') and previousSet:
-            e = createReviewNoteExercise(exercise, exerciseHistory)
-            newSet.append(e)
+            newExercise = createReviewNoteExercise(exercise, exerciseHistory)
+            newSet.append(newExercise)
         else:
-            e, program = createNewNoteExercise(exercise, exerciseHistory, previousSet, program)
-            if e is None:
-                 e = createReviewNoteExercise(exercise, exerciseHistory)
-            newSet.append(e)
+            newExercise, program = createNewNoteExercise(exercise, exerciseHistory, previousSet, program)
+            if newExercise is None:
+                 newExercise = createReviewNoteExercise(exercise, exerciseHistory)
+            newSet.append(newExercise)
             player['program'] = program
     return newSet, player

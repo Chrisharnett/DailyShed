@@ -17,10 +17,13 @@ const docClient = DynamoDBDocumentClient.from(client);
 const exercise_log_table = process.env.EXERCISE_LOG_TABLE;
 
 export const logExercise = async (exerciseEntry) => {
-  const { timestamp, sub, exercise, rating, comment } = exerciseEntry;
+  const { timestamp, sub, exercise, rating, comment, sessionID } =
+    exerciseEntry;
   const command = new PutCommand({
     TableName: exercise_log_table,
     Item: {
+      exerciseName: exercise.name,
+      sessionID: sessionID,
       timestamp: timestamp,
       sub: sub,
       exercise: exercise,

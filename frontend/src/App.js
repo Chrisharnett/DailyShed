@@ -11,6 +11,7 @@ import HomePage from "./pages/HomePage";
 import { useEffect, useState } from "react";
 import { Backgrounds } from "./util/Backgrounds.js";
 import { useToken } from "./auth/useToken";
+import useUser from "./auth/useUser";
 import axios from "axios";
 
 export function App() {
@@ -20,6 +21,8 @@ export function App() {
 
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
+
+  const { user, playerDetails, updatePlayerDetails } = useUser();
 
   useEffect(() => {
     const t = localStorage.getItem("token");
@@ -75,9 +78,26 @@ export function App() {
           />
           <Route path="*" element={<NotFoundPage />} />
           <Route element={<PrivateRoute />}>
-            <Route path="/theShed" element={<TheShed />} />
-            <Route path="/userProfile" element={<UserProfile />} />
-            <Route path="/practiceJournal" element={<PracticeJournal />} />
+            <Route
+              path="/theShed"
+              element={<TheShed user={user} playerDetails={playerDetails} />}
+            />
+            <Route
+              path="/userProfile"
+              element={
+                <UserProfile
+                  user={user}
+                  playerDetails={playerDetails}
+                  updatePlayerDetails={updatePlayerDetails}
+                />
+              }
+            />
+            <Route
+              path="/practiceJournal"
+              element={
+                <PracticeJournal user={user} playerDetails={playerDetails} />
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -6,6 +6,7 @@ import axios from "axios";
 export const SelfAssessmentModal = ({
   show,
   setShow,
+  sessionID,
   exercise,
   currentSet,
   player,
@@ -27,6 +28,7 @@ export const SelfAssessmentModal = ({
       try {
         const timestamp = new Date().toISOString();
         const exerciseEntry = {
+          sessionID: sessionID,
           timestamp: timestamp,
           sub: player.sub,
           exercise: {
