@@ -1,38 +1,53 @@
-from notePatternCollections import singleNoteLongToneWholeNotes, stepwiseScaleNotePatterns
-from rhythmPatternCollections import singleNoteWholeToneRhythms, quarterNoteRhythms
-import boto3
+from exerciseCollections.notePatternCollections import singleNoteLongToneWholeNotes, stepwiseScaleNotePatterns
+from exerciseCollections.rhythmPatternCollections import singleNoteWholeToneRhythms, quarterNoteRhythms
 
-def main():
-    id=0
+def collectionCreator():
     collections = []
+
+    newPattern, collectionLength = stepwiseScaleNotePatterns(1, 9)
 
     collections.append({
         'collectionType': 'notePattern',
         'title': 'scale_to_the_ninth',
-        'patterns': stepwiseScaleNotePatterns(1, 9)
+        'patterns': newPattern,
+        'collectionLength': collectionLength
     })
+
+    newPattern, collectionLength = singleNoteLongToneWholeNotes(1,9)
     collections.append({
         'collectionType': 'notePattern',
         'title': 'single_note_long_tone',
-        'patterns': singleNoteLongToneWholeNotes(1, 9)
+        'patterns': newPattern,
+        'collectionLength': collectionLength
     })
+
+    newPattern, collectionLength = singleNoteWholeToneRhythms(4, 4)
     collections.append({
         'collectionType': 'rhythm',
-        'title': 'single_note_long_tone',
-        'patterns': singleNoteWholeToneRhythms(4, 4)
+        'title': 'single_note_long_tone_rhythms',
+        'patterns': newPattern,
+        'collectionLength': collectionLength
     })
+
+    newPattern, collectionLength = quarterNoteRhythms(4, 4)
     collections.append({
         'collectionType': 'rhythm',
         'title': 'quarter_note',
-        'patterns': quarterNoteRhythms(4, 4)
+        'patterns': newPattern,
+        'collectionLength': collectionLength
     })
 
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('Daily_Shed_Collections')
+    return collections
 
-    for collection in collections:
-        response = table.put_item(Item=collection)
-        print(response)
-
-if __name__ == "__main__":
-    main()
+# def main():
+#     with app.app_context():
+#         collections = collectionCreator()
+#         insertCollectionsInDatabase(collections)
+#     # dynamodb = boto3.resource('dynamodb')
+#     # table = dynamodb.Table('Daily_Shed_Collections')
+#     #
+#     # for collection in collections:
+#     #     response = table.put_item(Item=collection)
+#
+# if __name__ == "__main__":
+#     main()

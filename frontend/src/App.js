@@ -80,7 +80,13 @@ export function App() {
           <Route element={<PrivateRoute />}>
             <Route
               path="/theShed"
-              element={<TheShed user={user} playerDetails={playerDetails} />}
+              element={
+                <TheShed
+                  user={user}
+                  playerDetails={playerDetails}
+                  updatePlayerDetails={updatePlayerDetails}
+                />
+              }
             />
             <Route
               path="/userProfile"

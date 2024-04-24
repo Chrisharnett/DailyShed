@@ -10,6 +10,7 @@ def singleNoteLongToneWholeNotes(minNote, maxNote):
     # One note options
     for i in range(minNote, maxNote):
         notes = [i]
+        directions = ["static"]
         toneExercises.append(
             {
             'notePatternId': str(PATTERN_ID),
@@ -17,14 +18,16 @@ def singleNoteLongToneWholeNotes(minNote, maxNote):
             'notePattern': notes,
             'description': f"Scale note {i}. Play for one full breath. Strive full a full, steady, in tune sound. Repeat until you play 2 good notes.",
             'direction': "static",
+            'directions': directions,
             'repeatMe': False,
             'holdLastNote': False
             }
             )
         PATTERN_ID += 1
 
-    return toneExercises
+    collectionLength = len(toneExercises) * len(directions)
 
+    return toneExercises, collectionLength
 
 # All ascending scalar patterns
 def stepwiseScaleNotePatterns(minNote, maxNote):
@@ -34,6 +37,7 @@ def stepwiseScaleNotePatterns(minNote, maxNote):
     # Ascending scalar options
     for i in range(minNote + 1, maxNote + 1):
         notes = []
+        directions = ['ascending', 'descending', 'ascending/descending', 'descending/ascending']
         for j in range(1, i + 1):
             notes.append(j)
         if notes:
@@ -43,10 +47,12 @@ def stepwiseScaleNotePatterns(minNote, maxNote):
                     'notePatternType':"scale",
                     'notePattern':notes,
                     'description':f"Play twice. Repeat both times.",
-                    'direction':"ascending",
+                    'direction': 'ascending',
+                    'directions':directions,
                     'repeatMe': True,
                     'holdLastNote': True
                 }
             )
             PATTERN_ID += 1
-    return scale1
+    collectionLength = len(scale1) * len(directions)
+    return scale1, collectionLength

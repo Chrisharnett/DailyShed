@@ -6,9 +6,8 @@ export const getUserJournalRoute = {
   handler: async (req, res) => {
     const sub = req.params.sub;
     try {
-      const response = await getUserJournal(sub);
-      const userData = response.Item;
-      res.status(200).json({ userData });
+      const data = await getUserJournal(sub);
+      res.status(200).json(data);
     } catch (error) {
       console.error(error);
       res.sendStatus(500);

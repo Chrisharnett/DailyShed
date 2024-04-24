@@ -12,14 +12,6 @@ const useUser = () => {
     return JSON.parse(atob(encodedPayload));
   };
 
-  // const [user, setUser] = useState(() => {
-  //   if (!token) {
-  //     return null;
-  //   } else {
-  //     return getPayloadFromToken(token);
-  //   }
-  // });
-
   useEffect(() => {
     if (!token) {
       setUser(null);
@@ -49,7 +41,7 @@ const useUser = () => {
 
   const updatePlayerDetails = async (newDetails) => {
     try {
-      await axios.post("/api/updatePlayerDetails", newDetails);
+      await axios.post("/api/updateUserData", newDetails);
       setPlayerDetails(newDetails);
     } catch (error) {
       console.error("Error updating player details:", error);

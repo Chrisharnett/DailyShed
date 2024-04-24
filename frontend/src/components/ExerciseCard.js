@@ -8,10 +8,11 @@ const ExerciseCard = ({
   setExerciseCount,
   currentSet,
   setCurrentSet,
-  player,
-  setPlayer,
+  playerDetails,
+  updatePlayerDetails,
   buttonText,
   sessionID,
+  setCreated,
 }) => {
   const [showSelfAssementModal, setShowSelfAssessmentModal] = useState(false);
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
@@ -40,7 +41,11 @@ const ExerciseCard = ({
   };
 
   const goToNextExercise = () => {
-    const nextSetIndex = exerciseCount % player.program.exerciseDetails.length;
+    if (currentSetIndex === playerDetails.program.exerciseDetails.length - 1) {
+      advanceRound();
+    }
+    const nextSetIndex =
+      exerciseCount % playerDetails.program.exerciseDetails.length;
     setExerciseCount(exerciseCount + 1);
     setCurrentSetIndex(nextSetIndex);
   };
@@ -51,13 +56,8 @@ const ExerciseCard = ({
 
   const nextExerciseHandler = () => {
     setShowSelfAssessmentModal(true);
-    if (currentSetIndex === player.program.exerciseDetails.length - 1) {
-      advanceRound();
-    }
-    goToNextExercise();
   };
 
-  // if (currentExercise && currentRound <= player.program.rounds) {
   if (currentExercise) {
     return (
       <>
@@ -74,7 +74,7 @@ const ExerciseCard = ({
               <Card.Text className="">{currentExercise.description}</Card.Text>
             </Card.Body>
           </Card>
-          {currentRound <= player.program.rounds && (
+          {currentRound <= playerDetails.program.rounds && (
             <Button type="submit" className="m-2" onClick={nextExerciseHandler}>
               {buttonText}
             </Button>
@@ -86,17 +86,19 @@ const ExerciseCard = ({
           setShow={setShowSelfAssessmentModal}
           exercise={currentExercise}
           currentSet={currentSet}
-          player={player}
-          setPlayer={setPlayer}
+          playerDetails={playerDetails}
+          updatePlayerDetails={updatePlayerDetails}
           exerciseCount={exerciseCount}
           setShowSessionCompleteModal={setShowSessionCompleteModal}
+          goToNextExercise={goToNextExercise}
         />
         <SessionCompleteModal
           show={showSessionCompleteModal}
           setShow={setShowSessionCompleteModal}
           currentSet={currentSet}
-          player={player}
-          setPlayer={setPlayer}
+          playerDetails={playerDetails}
+          updatePlayerDetails={updatePlayerDetails}
+          setCreated={setCreated}
         />
       </>
     );

@@ -26,6 +26,7 @@ const exercise_log_table = process.env.EXERCISE_LOG_TABLE;
 export const getUserJournal = async (sub) => {
   const command = new QueryCommand({
     TableName: exercise_log_table,
+    IndexName: "sub-index",
     KeyConditionExpression: "#sub = :subValue",
     ExpressionAttributeNames: {
       "#sub": "sub",
@@ -51,7 +52,15 @@ export const getUserData = async (sub) => {
 };
 
 export const putUserData = async (userData) => {
-  const { sub, name, email, program, previousSet, exerciseHistory } = userData;
+  const {
+    sub,
+    name,
+    email,
+    program,
+    previousSet,
+    exerciseHistory,
+    exerciseMetadata,
+  } = userData;
   const command = new PutCommand({
     TableName: user_table,
     Item: {
@@ -61,26 +70,27 @@ export const putUserData = async (userData) => {
       program: program,
       previousSet: previousSet,
       exerciseHistory: exerciseHistory,
+      exerciseMetadata: exerciseMetadata,
     },
   });
   const response = await docClient.send(command);
   return response;
 };
 
-export const updatePreviousSet = async (player, previousSet) => {
-  const command = new UpdateCommand({
-    TableName: user_table,
-    Key: { sub: player.sub },
-    UpdateExpression: "set previousSet = :previousSet, program = :program",
-    ExpressionAttributeValues: {
-      ":previousSet": previousSet,
-      ":program": player.program,
-    },
-    ReturnValues: "ALL_NEW",
-  });
+// export const updatePreviousSet = async (playerDetails, previousSet) => {
+//   const command = new UpdateCommand({
+//     TableName: user_table,
+//     Key: { sub: playerDetails.sub },
+//     UpdateExpression: "set previousSet = :previousSet, program = :program",
+//     ExpressionAttributeValues: {
+//       ":previousSet": previousSet,
+//       ":program": playerDetails.program,
+//     },
+//     ReturnValues: "ALL_NEW",
+//   });
 
-  const response = await docClient.send(command);
-  const updatedPlayer = response.Attributes;
+//   const response = await docClient.send(command);
+//   const updatedPlayer = response.Attributes;
 
-  return updatedPlayer;
-};
+//   return updatedPlayer;
+// };

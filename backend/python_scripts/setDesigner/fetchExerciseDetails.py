@@ -11,7 +11,7 @@ exercise_log_table = dynamodb.Table(os.environ['EXERCISE_LOG_TABLE'])
 def fetchExerciseDetails(exercise):
     response = exercise_table.get_item(
         Key={
-            'fileName': exercise.get('exerciseName')
+            'fileName': exercise.get('name')
         }
     )
     if response['Item']:
@@ -20,7 +20,7 @@ def fetchExerciseDetails(exercise):
 
 def fetchExercisesFromLog(exercises):
     table = os.environ['EXERCISE_TABLE']
-    keys_to_get = [{'fileName': exercise.get('exerciseName')} for exercise in exercises]
+    keys_to_get = [{'fileName': exercise.get('name')} for exercise in exercises]
 
     request_items = {
         table: {

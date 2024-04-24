@@ -1,4 +1,3 @@
-from collections import Counter
 from setDesigner.rhythmPatterns import getMinPlays
 from setDesigner.patternCollections import getCollection
 from setDesigner.fetchExerciseDetails import fetchExerciseDetails

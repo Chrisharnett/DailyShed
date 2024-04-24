@@ -8,8 +8,9 @@ export const SessionCompleteModal = ({
   show,
   setShow,
   currentSet,
-  player,
-  setPlayer,
+  playerDetails,
+  updatePlayerDetails,
+  setCreated,
 }) => {
   const handleClose = () => setShow(false);
   const handleOpen = () => setShow(true);
@@ -19,23 +20,16 @@ export const SessionCompleteModal = ({
   useEffect(() => {
     if (show) {
       const timeout = setTimeout(() => {
+        setCreated.current = false;
         navigate("/");
         handleClose();
       }, 2000);
-      const updateUser = async () => {
-        try {
-          const data = { player, previousSet: currentSet };
-          const updatedPlayer = await axios.post(
-            "/api/updatePreviousSet",
-            data
-          );
-          setPlayer(updatedPlayer.data.response);
-        } catch (error) {
-          console.error("Error: ", error);
-        }
-        return () => clearTimeout(timeout);
+      const newPlayerDetails = {
+        ...playerDetails,
+        previousSet: currentSet,
       };
-      updateUser();
+      updatePlayerDetails(newPlayerDetails);
+      return () => clearTimeout(timeout);
     }
   }, [show]);
 

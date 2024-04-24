@@ -1,0 +1,50 @@
+collection = {
+    'collectionType': 'notePattern',
+    'title': 'scale_to_the_ninth',
+    'patterns': [{
+        'notePatternId': '0',
+        'notePatternType': 'scale',
+        'notePattern': [1, 2],
+        'description': 'Play twice. Repeat both times.',
+         'direction': 'ascending',
+         'repeatMe': True,
+         'holdLastNote': True
+         }, {
+         'notePatternId': '1',
+         'notePatternType': 'scale',
+         'notePattern': [1, 2, 3],
+         'description': 'Play twice. Repeat both times.',
+         'direction': 'ascending',
+         'repeatMe': True,
+         'holdLastNote': True
+          }, {
+          'notePatternId': '2',
+          'notePatternType': 'scale',
+          'notePattern': [1, 2, 3, 4],
+          'description': 'Play twice. Repeat both times.',
+          'direction': 'ascending',
+          'repeatMe': True,
+          'holdLastNote': True
+          }, {
+          'notePatternId': '3', 'notePatternType': 'scale', 'notePattern': [1, 2, 3, 4, 5], 'description': 'Play twice. Repeat both times.', 'direction': 'ascending', 'repeatMe': True, 'holdLastNote': True
+          }, {
+          'notePatternId': '4', 'notePatternType': 'scale', 'notePattern': [1, 2, 3, 4, 5, 6], 'description': 'Play twice. Repeat both times.', 'direction': 'ascending', 'repeatMe': True, 'holdLastNote': True
+          }, {
+          'notePatternId': '5', 'notePatternType': 'scale', 'notePattern': [1, 2, 3, 4, 5, 6, 7], 'description': 'Play twice. Repeat both times.', 'direction': 'ascending', 'repeatMe': True, 'holdLastNote': True
+          }, {
+          'notePatternId': '6',
+          'notePatternType': 'scale',
+          'notePattern': [1, 2, 3, 4, 5, 6, 7, 8],
+          'description': 'Play twice. Repeat both times.',
+          'direction': 'ascending',
+          'repeatMe': True,
+          'holdLastNote': True
+          }, {
+          'notePatternId': '7',
+          'notePatternType': 'scale',
+          'notePattern': [1, 2, 3, 4, 5, 6, 7, 8, 9],
+          'description': 'Play twice. Repeat both times.',
+          'direction': 'ascending',
+          'repeatMe': True,
+          'holdLastNote': True
+          }]}

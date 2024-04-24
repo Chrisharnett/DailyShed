@@ -11,13 +11,13 @@ def updateExerciseData(exercises, options):
         exercise['directions'] = options[index].get('directions')
 
     return exercises
+
 def getExercisesFromHistory(matcher, exerciseHistory):
     options = []
     for exercise in exerciseHistory:
         if (exercise.get("rhythmMatcher") == matcher):
             options.append(exercise)
     return options
-
 
 # TODO: after completing ascending patterns, then move on to other directions in order.
 # TODO: currently, users must review patterns to add directions.

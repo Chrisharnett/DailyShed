@@ -1,11 +1,15 @@
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
+import { useNavigate } from "react-router-dom";
 
 const Navigation = ({ loggedIn, setLoggedIn, cognitoURL }) => {
+  const navigate = useNavigate();
+
   const logOutHandler = () => {
     localStorage.removeItem("token");
     setLoggedIn(false);
+    navigate("/");
   };
 
   return (
