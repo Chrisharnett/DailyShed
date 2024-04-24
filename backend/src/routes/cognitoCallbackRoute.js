@@ -13,7 +13,7 @@ export const cognitoCallbackRoute = {
       const { id_token, access_token, refresh_token } = cognitoToken.data;
       const userCognitoData = await getCognitoUserData({ id_token });
 
-      const { sub, email, email_verified } = userCognitoData;
+      const { sub, email_verified } = userCognitoData;
 
       const token = jwt.sign(
         {
@@ -21,7 +21,6 @@ export const cognitoCallbackRoute = {
           refresh_token,
           access_token,
           sub,
-          email,
           email_verified,
         },
         process.env.JWT_SECRET,

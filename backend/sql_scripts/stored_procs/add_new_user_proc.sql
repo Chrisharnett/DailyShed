@@ -66,6 +66,7 @@ DELIMITER ;
 
 
 CALL add_new_user_proc(421, 'testemail','testname');
+CALL clearUsers();
 SELECT * FROM users;
 SELECT * FROM UserPrograms;
 SELECT * FROM UserPracticeRoutines;

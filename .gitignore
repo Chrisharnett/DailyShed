@@ -145,3 +145,6 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+backend/sql_scripts/stored_procs/clearUsersProc.sql
+.gitignore
+.gitignore
