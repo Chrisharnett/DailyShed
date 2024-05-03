@@ -23,6 +23,7 @@ def insertCollectionsInDatabase(collections):
                             notePatternType = pattern['notePatternType']
                             repeatMe = pattern['repeatMe']
                             collectionNotePatternID = pattern['notePatternId']
+                            noteLength = pattern['noteLength']
                             cursor.callproc('insert_notePattern_proc',
                                 [
                                     collectionTitle,
@@ -35,17 +36,17 @@ def insertCollectionsInDatabase(collections):
                                     notePattern,
                                     notePatternType,
                                     repeatMe,
-                                    collectionNotePatternID
+                                    collectionNotePatternID,
+                                    noteLength
                                 ])
                     case 'rhythm':
-                        print(len(collection['patterns']))
-                        for pattern in collection['patterns']:
-                            print(pattern['rhythmPatternID'])
+                        for i, pattern in enumerate(collection['patterns']):
                             rhythmDescription = pattern['rhythmDescription']
                             articulation = json.dumps(pattern['articulation'])
                             timeSignature = json.dumps(pattern['timeSignature'])
                             rhythmPattern = json.dumps(pattern['rhythmPattern'])
                             collectionRhythmPatternID = pattern['rhythmPatternID']
+                            rhythmLength = pattern['rhythmLength']
 
                             cursor.callproc('insert_rhythmPattern_proc',
                                 [
@@ -56,8 +57,10 @@ def insertCollectionsInDatabase(collections):
                                     articulation,
                                     timeSignature,
                                     rhythmPattern,
-                                    collectionRhythmPatternID
+                                    collectionRhythmPatternID,
+                                    rhythmLength
                                 ])
+    
                 conn.commit()
         return jsonify({"status": "success", "message": "Collection added successfully"}), 200
 
