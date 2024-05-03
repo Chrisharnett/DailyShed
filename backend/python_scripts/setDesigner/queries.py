@@ -88,6 +88,22 @@ def getUserHistory(sub):
 def getPreviousSet(sub):
     return None, 200
 
+def startUserPracticeSession(sub):
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.callproc('start_practice_session', [sub])
+            result = cursor.fetchone()
+            return result['userPracticeSessionID'] if result else None
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
+
+    finally:
+        conn.close()
+
 def getPracticeSession(sub):
     conn = getDBConnection()
     try:
@@ -129,11 +145,11 @@ def fetchExercise(notePatternID, rhythmPatternID, tonic, mode, directionIndex):
     finally:
         conn.close()
 
-def addNewExercise(notePatternID, rhythmPatternID, tonic, mode, direction, directionIndex, programID):
+def addNewExercise(notePatternID, rhythmPatternID, tonic, mode, direction, directionIndex, userProgramID, userPracticeSessionID):
+    #TODO: Get the return from the proc.
     conn = getDBConnection()
     try:
         with conn.cursor() as cursor:
-
             cursor.callproc('add_new_exercise_proc', [
                 notePatternID,
                 rhythmPatternID,
@@ -141,7 +157,8 @@ def addNewExercise(notePatternID, rhythmPatternID, tonic, mode, direction, direc
                 mode,
                 direction,
                 directionIndex,
-                programID])
+                userProgramID,
+                userPracticeSessionID])
         conn.commit()
         return True
 

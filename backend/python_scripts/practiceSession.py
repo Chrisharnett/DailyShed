@@ -3,6 +3,7 @@ This class should take sessionData and the appropriate collections needed to bui
 It will process those inputs and create the specific exercises for a new practice session.
 """
 from practiceInterval import PracticeInterval
+from setDesigner.queries import startUserPracticeSession
 import random
 
 class PracticeSession:
@@ -12,10 +13,19 @@ class PracticeSession:
         self.__practiceSession = []
         self.__collectionHistory = []
         self.__exerciseDetails = []
+        self.__userPracticeSessionID = None
 
     @property
     def getPracticeSession(self):
         return self.__exerciseDetails
+
+    @property
+    def getUserPracticeSessionID(self):
+        return self.__userPracticeSessionID
+
+    def setUserPracticeSessionID(self):
+        if not self.getUserPracticeSessionID:
+            self.__userPracticeSessionID = startUserPracticeSession(self.__sessionData[0].get('sub'))
 
     def addExerciseToSession(self, exercise):
         self.__exerciseDetails.appent(exercise)
@@ -52,6 +62,8 @@ class PracticeSession:
         return None
 
     def createSession(self):
+        # TODO: apply the userPracticeSessionID to the exercises!
+        self.setUserPracticeSessionID()
         for i, interval in enumerate(self.__sessionData):
             newInterval = PracticeInterval(interval)
             primaryCollectionID = interval['primaryCollectionID']
@@ -64,29 +76,10 @@ class PracticeSession:
                 if rhythmCollectionID:
                     rhythmPatternID = self.getRandomRhythmPattern(notePattern, rhythmCollectionID)
                     newInterval.setRhythmPatternDetails(rhythmPatternID)
-                    newInterval.createExercise()
+
             else:
                 exercise = self.getReviewExercise(self, primaryCollectionID)
 
+            newInterval.createExercise(self.getUserPracticeSessionID)
             self.__practiceSession.append(newInterval)
-            """
-            Check if exercise exists. If so, return it. If not, create a new exerciseImage and insert the exercise in the DB
-            """
-
-
-                # self.__practiceSession.append(newExercise)
-
-            # else:
-                # newExercise, updatedProgram = createNewNoteExercise(exercise, history, previousSet, program)
-                # newExercise = getNewExercise(interval)
-                #
-                # if newExercise is None:
-                #     newExercise = createReviewNoteExercise(interval, history)
-                # newSet.append(newExercise)
-                # # player['program'] = updatedProgram
-        # return newSet, player
-
-
-
-# TODO: Choose direction and adjust noteLength before getting selecting rhythmPattern
 

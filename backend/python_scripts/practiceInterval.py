@@ -30,9 +30,11 @@ class PracticeInterval:
     def getDirectionIndex(self):
         return self.__directionIndex
 
+    @property
     def getCurrentDirection(self):
         if self.getDirectionIndex:
-            return self.getDirections[self.getDirectionIndex]
+            direction = self.getDirections[int(self.getDirectionIndex)]
+            return direction
         return None
 
     def setNoteLength(self, length):
@@ -117,6 +119,10 @@ class PracticeInterval:
         return self.__rhythmPatternDetails.get('rhythmPattern')
 
     @property
+    def getRhythmPatternID(self):
+        return self.__rhythmPatternDetails.get('rhythmPatternID')
+
+    @property
     def getCollectionTitle(self):
         return self.__interval.get('primaryCollectionTitle')
 
@@ -125,8 +131,8 @@ class PracticeInterval:
         return self.__notePatternDetails.get('notePattern')
 
     @property
-    def getProgramID(self):
-        return self.__interval('programID')
+    def getUserProgramID(self):
+        return self.__interval.get('userProgramID')
 
     def setRhythmPatternDetails(self, rhythmPatternDetails):
         self.__rhythmPatternDetails = rhythmPatternDetails
@@ -134,7 +140,7 @@ class PracticeInterval:
     def getExerciseDetails(self):
         pass
 
-    def createExercise(self):
+    def createExercise(self, userPracticeSessionID):
         """
         These attributes are able to ID an exercise. It may need to change over time.
          notePatternID, rhythmPatternID, tonic, mode, directionIndex
@@ -146,11 +152,12 @@ class PracticeInterval:
             self.getMode,
             self.getDirectionIndex)
         if not exerciseDetails:
-            self.exerciseImageMaker()
+            self.exerciseImageMaker(userPracticeSessionID)
         else:
+            # insert exercise into practice session.
             self.__exerciseDetails = exerciseDetails
 
-    def insertExercise(self):
+    def insertExercise(self, userPracticeSessionID):
         addNewExercise(
             self.getNotePatternID,
             self.getRhythmPatternID,
@@ -158,16 +165,17 @@ class PracticeInterval:
             self.getMode,
             self.getCurrentDirection,
             self.getDirectionIndex,
-            self.getProgramID,)
+            self.getUserProgramID,
+            userPracticeSessionID)
 
-    def exerciseImageMaker(self):
+    def exerciseImageMaker(self, userPracticeSessionID):
         pitches = self.getNotePattern
         rhythm = self.getRhythmPattern
         key = self.getTonic
         mode = self.getMode
         preamble = 'preamble', r"#(set-global-staff-size 28)"
         exercise = Exercise(pitches, rhythm, key, mode, preamble)
-        self.insertExercise()
+        self.insertExercise(userPracticeSessionID)
         exercise.createImage()
 
 
