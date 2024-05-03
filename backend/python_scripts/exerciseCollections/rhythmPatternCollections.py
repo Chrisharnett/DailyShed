@@ -1,3 +1,14 @@
+
+def rhythmPatternNoteLength(rhythmPattern):
+    count = 0
+    for r in rhythmPattern:
+        for n in r:
+            if isinstance(n, int) or n.isdigit():
+                count += 1
+    n = sum(sublist.count("~") for sublist in rhythmPattern)
+    count -= n
+    return count
+
 def noDuplicateRhythms(newPattern, patternList):
     for pattern in patternList:
         if pattern.get('rhythmPattern') == newPattern:
@@ -9,21 +20,25 @@ def noDuplicateRhythms(newPattern, patternList):
 def singleNoteWholeToneRhythms(numerator, denominator):
     toneRhythmId = 0
     rhythmPatterns = []
+    pattern = [["1"]]
     rhythmPatterns.append({
         'rhythmPatternID': str(toneRhythmId),
-        'rhythmDescription': "single_note_long_tone",
-        'rhythmPattern': [["1"]],
+        'rhythmDescription': "single_note_long_tone_rhythms",
+        'rhythmPattern': pattern,
+        'rhythmLength' : rhythmPatternNoteLength(pattern),
         'timeSignature': (numerator, denominator),
         'articulation': [{"articulation": "fermata", "index": 0, "name": "fermata"}]
     }
     )
     toneRhythmId += 1
 
+    pattern = [["1"], ["~"], ["1"]]
     rhythmPatterns.append(
         {
             'rhythmPatternID': str(toneRhythmId),
-            'rhythmDescription': "single_note_long_tone",
-            'rhythmPattern': [["1"], ["~"], ["1"]],
+            'rhythmDescription': "single_note_long_tone_rhythms",
+            'rhythmPattern': pattern,
+            'rhythmLength': rhythmPatternNoteLength(pattern),
             'timeSignature': (numerator, denominator),
             'articulation': [
                 {"articulation": "fermata", "index": 0, "name": "fermata"},
@@ -35,7 +50,6 @@ def singleNoteWholeToneRhythms(numerator, denominator):
     toneRhythmId += 1
 
     return rhythmPatterns, len(rhythmPatterns)
-
 
 def fillBar(element, numerator):
     bar = []
@@ -49,11 +63,13 @@ def quarterNoteRhythms(numerator, denominator):
     rhythmId = 0
     rhythmPatterns = []
     rest = f"r{denominator}"
+    pattern = fillBar(denominator, numerator)
 
     rhythmPatterns.append({
         'rhythmPatternID': str(rhythmId),
         'rhythmDescription': "quarter_note",
-        'rhythmPattern': fillBar(denominator, numerator),
+        'rhythmPattern': pattern,
+        'rhythmLength': rhythmPatternNoteLength(pattern),
         'timeSignature': (numerator, denominator),
         'articulation': None
     }
@@ -71,6 +87,7 @@ def quarterNoteRhythms(numerator, denominator):
                     'rhythmPatternID': str(rhythmId),
                     'rhythmDescription': "quarter_note",
                     'rhythmPattern': oneBarQuarterNoteRhythm,
+                    'rhythmLength': rhythmPatternNoteLength(oneBarQuarterNoteRhythm),
                     'timeSignature': (numerator, denominator),
                     'articulation': None
                 }
@@ -89,6 +106,7 @@ def quarterNoteRhythms(numerator, denominator):
                         'rhythmPatternID': str(rhythmId),
                         'rhythmDescription': "quarter_note",
                         'rhythmPattern': oneBarQuarterNoteRhythm,
+                        'rhythmLength': rhythmPatternNoteLength(oneBarQuarterNoteRhythm),
                         'timeSignature': (numerator, denominator),
                         'articulation': None
                     }
@@ -111,8 +129,9 @@ def quarterNoteRhythms(numerator, denominator):
             rhythmPatterns.append(
                 {
                     'rhythmPatternID': str(rhythmId),
-                    'description': "quarter_note",
+                    'rhythmDescription': "quarter_note",
                     'rhythmPattern': newPattern,
+                    'rhythmLength': rhythmPatternNoteLength(newPattern),
                     'timeSignature': (numerator, denominator),
                     'articulation': None
                 }

@@ -3,6 +3,7 @@ from setDesigner.rhythmPatterns import getNewRhythmPattern, getRhythmReviewPatte
 from setDesigner.createExercise import createExercise
 from setDesigner.patternCollections import getCollection
 from setDesigner.fetchExerciseDetails import fetchExercisesFromLog
+from setDesigner.queries import getPracticeSession, getUserHistory, getPreviousSet
 
 def updateExerciseData(exercises, options):
     for index, exercise in enumerate(exercises):
@@ -58,6 +59,8 @@ def createNewNoteExercise(exerciseDetails, exerciseHistory, previousSet, program
     exercise = createExercise(pitches, rhythm, exerciseDetails)
     return exercise, program
 
+
+
 def createReviewNoteExercise(exerciseDetails, exerciseHistory):
     notePatternType = exerciseDetails.get('notePatternType')
     notePatternOptions = []
@@ -77,21 +80,35 @@ def createReviewNoteExercise(exerciseDetails, exerciseHistory):
     )
     return createExercise(pitches, rhythm, exerciseDetails)
 
-def setDesigner(player):
-    program = player.get('program')
-    exerciseDetails = player.get('program').get('exerciseDetails')
-    previousSet = player.get('previousSet')
-    exerciseHistory = player.get('exerciseMetadata')
+def getNewExercise(interval):
+    # Get next set of pitches from collection.
+    # If no new set of pitches, get review pitches. If all rated 5, go to next key.
+    # If history, get random matching rhythm from history.
+    # If no history, get next matching rhythm in collection.
+    exercise = None
+    return exercise
 
-    newSet = []
-    for exercise in exerciseDetails:
-        if exercise.get('reviewBool') and previousSet:
-            newExercise = createReviewNoteExercise(exercise, exerciseHistory)
-            newSet.append(newExercise)
-        else:
-            newExercise, program = createNewNoteExercise(exercise, exerciseHistory, previousSet, program)
-            if newExercise is None:
-                 newExercise = createReviewNoteExercise(exercise, exerciseHistory)
-            newSet.append(newExercise)
-            player['program'] = program
-    return newSet, player
+def setDesigner(sub):
+    z
+
+    # program = userRoutineDetails['program']
+    # exerciseDetails = userRoutineDetails.get('program').get('exerciseDetails')
+    # previousSet = userRoutineDetails.get('previousSet')
+    # exerciseHistory = userRoutineDetails.get('exerciseMetadata')
+    # exerciseHistory = userRoutineDetails.get('exerciseHistory')
+    #
+    # newSet = []
+    # for interval in practiceSession:
+    #     if interval['reviewExercise'] and previousSet:
+    #         newExercise = createReviewNoteExercise(interval, history)
+    #         newSet.append(newExercise)
+    #     else:
+    #         # newExercise, updatedProgram = createNewNoteExercise(exercise, history, previousSet, program)
+    #         newExercise = getNewExercise(interval)
+    #
+    #         if newExercise is None:
+    #              newExercise = createReviewNoteExercise(interval, history)
+    #         newSet.append(newExercise)
+    #         # player['program'] = updatedProgram
+    return newSet
+    # return newSet, player

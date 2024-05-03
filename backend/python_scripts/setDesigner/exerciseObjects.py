@@ -2,6 +2,8 @@ import abjad
 import math
 from setDesigner.musicObjects import Scale
 from decimal import Decimal
+import os
+from setDesigner.queries import addNewExercise
 
 class Exercise:
     def __init__(
@@ -10,13 +12,14 @@ class Exercise:
         rhythmPattern,
         key,
         mode,
-        preamble,
+        preamble
     ):
         self.__pitchPattern = pitchPattern
         self.__rhythmPattern = rhythmPattern
         self.__key = key
         self.__mode = mode
         self.__preamble = preamble
+        self.__exerciseID = None
 
     @property
     def getPitchPattern(self):
@@ -25,6 +28,30 @@ class Exercise:
     @property
     def getRhythmPattern(self):
         return self.__rhythmPattern
+
+    def getExerciseID(self):
+        return self.__exerciseID
+
+    def setExerciseID(self, exerciseID):
+        self.__exerciseID = exerciseID
+
+    @property
+    def getKey(self):
+        return self.__key
+
+    def setKey(self, key):
+        self.__key = key
+
+    @property
+    def getMode(self):
+        return self.__mode
+
+    def setMode(self, mode):
+        self.__mode = mode
+
+    @property
+    def getPreamble(self):
+        return self.__preamble
 
     def notationPattern(self):
         if self.__pitchPattern.get('repeatMe') is not True:
@@ -144,3 +171,41 @@ class Exercise:
         scale = Scale(self.__key + "'", self.__mode)
         scaleNotes = scale.makeScale()
         return scaleNotes
+
+    def createImage(self):
+        score = self.buildScore
+        lilypond_file = abjad.LilyPondFile([self.getPreamble, score])
+
+        current_file_directory = os.path.dirname(__file__)
+
+        absolutePath = os.path.join(current_file_directory, "../", "temp/")
+
+        localPath = os.path.join(absolutePath + fileName)
+
+        abjad.persist.as_png(lilypond_file, localPath, flags="-dcrop", resolution=300)
+
+        s3BucketName = bucket_name
+        png = os.path.join(localPath + ".cropped.png")
+
+        s3_client = boto3.client("s3")
+        s3_client.upload_file(png, s3BucketName, (fileName + '.cropped.png'))
+
+        ly = os.path.join(localPath + ".ly")
+
+        os.remove(png)
+        os.remove(ly)
+
+        response = exercise_table.put_item(
+            Item={
+                'exerciseName': exerciseName,
+                'notePattern': pitches,
+                'rhythmPattern': rhythm,
+                'key': key,
+                'mode': mode,
+                'collectionTitle': collectionTitle,
+                'fileName': fileName,
+                'imageURL': imageURL,
+                'description': description,
+            }
+        )
+        return response

@@ -11,6 +11,7 @@ dynamodb = boto3.resource('dynamodb', region_name=os.environ['REGION'])
 exercise_table = dynamodb.Table(os.environ['EXERCISE_TABLE'])
 bucket_name = os.environ['IMAGE_BUCKET']
 
+# pitches, rhythms, key, mode (pitches.collectionTitle, rhythm.timeSignature
 def createExercise(pitches, rhythm, exerciseDetails):
     key = exerciseDetails.get('key')
     mode = exerciseDetails.get('mode')

@@ -9,7 +9,13 @@ def getNotePatternCollection(collections, matcher):
         pattern for collection in collections for pattern in collection['patterns'] if pattern.get('notePatternType') == matcher
     ]
 
-def getNextNotePattern(program, notePatternType):
+# def getNextNotePattern(interval, collection):
+#     newIndex = interval['currentIndex']+1
+#     # return notePattern from collection where notePattern is next in index % collection:Length
+#     return interval
+def getNextNotePattern(interval, collection):
+    notePatternType = interval['notePatternType']
+    program = None
     collections = getCollection('notePattern')
     notePatternCollection = getNotePatternCollection(collections, notePatternType)
     # Gets the next notePattern index for the player.

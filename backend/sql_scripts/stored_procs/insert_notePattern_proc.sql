@@ -14,7 +14,8 @@ CREATE PROCEDURE insert_notePattern_proc (
     IN notePattern_p				TEXT,
     IN notePatternType_p			VARCHAR(45),
     IN repeatMe_p					BOOLEAN,
-    IN collectionNotePatternID_p	VARCHAR(45)
+    IN collectionNotePatternID_p	VARCHAR(45),
+    IN noteLength_p					INT
 )
 BEGIN 
 	DECLARE collectionID_p				INT;
@@ -55,7 +56,8 @@ BEGIN
             notePatternType, 
 			notePattern,
             repeatMe,
-			collectionNotePatternID
+			collectionNotePatternID,
+            noteLength
 			) VALUES (
 			description_p, 
 			direction_p, 
@@ -64,7 +66,8 @@ BEGIN
             notePatternType_p, 
 			notePattern_p,
             repeatMe_p,
-			collectionNotePatternID_p
+			collectionNotePatternID_p,
+            noteLength_p
 			);
 		SET notePatternID_p = LAST_INSERT_ID();
 			

@@ -18,11 +18,12 @@ export function App() {
   const [, setToken] = useToken();
   const [cognitoURL, setCognitoURL] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
+  // const [playerDetails, setPlayerDetails] = useState(null);
 
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
 
-  const { user, playerDetails, updatePlayerDetails } = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
     const t = localStorage.getItem("token");
@@ -32,11 +33,11 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (token) {
+    if (token && !loggedIn) {
       setToken(token);
       setLoggedIn(true);
     }
-  }, [token, setToken]);
+  }, [token, setToken, loggedIn]);
 
   useEffect(() => {
     const loadCognitoURL = async () => {
@@ -50,6 +51,16 @@ export function App() {
     };
     loadCognitoURL();
   }, []);
+
+  // useEffect(() => {
+  //   const fetchPlayerDetails = async () => {
+  //     const response = await axios.get(`/api/getUserData/${user.sub}`);
+  //     setPlayerDetails(response.data.userData);
+  //   };
+  //   if (user) {
+  //     fetchPlayerDetails();
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     const randomBackground =
@@ -83,8 +94,8 @@ export function App() {
               element={
                 <TheShed
                   user={user}
-                  playerDetails={playerDetails}
-                  updatePlayerDetails={updatePlayerDetails}
+                  // playerDetails={playerDetails}
+                  // updatePlayerDetails={setPlayerDetails}
                 />
               }
             />
@@ -93,15 +104,18 @@ export function App() {
               element={
                 <UserProfile
                   user={user}
-                  playerDetails={playerDetails}
-                  updatePlayerDetails={updatePlayerDetails}
+                  // playerDetails={playerDetails}
+                  // updatePlayerDetails={setPlayerDetails}
                 />
               }
             />
             <Route
               path="/practiceJournal"
               element={
-                <PracticeJournal user={user} playerDetails={playerDetails} />
+                <PracticeJournal
+                  user={user}
+                  // playerDetails={playerDetails}
+                />
               }
             />
           </Route>

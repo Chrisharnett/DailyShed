@@ -1,5 +1,3 @@
-import random
-
 def chooseDirection(directionsPlayed):
     directions = [
         "ascending",

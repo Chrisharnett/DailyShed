@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setGenerator } from "../commands/flaskRoutes.js";
 
 export const generateSetRoute = {
   path: "/api/generateSet/:sub",
@@ -6,15 +7,12 @@ export const generateSetRoute = {
   handler: async (req, res) => {
     const sub = req.params.sub;
 
-    const playerDetails = req.body;
-
-    const setGenerator = "http://127.0.0.1:5000/generateSet";
+    // const playerDetails = req.body;
 
     try {
       const response = await axios.post(
         setGenerator,
-        // { sub },
-        playerDetails,
+        { sub },
         {
           headers: { "Content-Type": "application/json" },
         }

@@ -3,51 +3,43 @@ from exerciseCollections.rhythmPatternCollections import singleNoteWholeToneRhyt
 
 def collectionCreator():
     collections = []
+    programs = []
 
     newPattern, collectionLength = stepwiseScaleNotePatterns(1, 9)
-
+    notePatternTitle = "scale_to_the_ninth"
     collections.append({
         'collectionType': 'notePattern',
-        'title': 'scale_to_the_ninth',
+        'title': notePatternTitle,
         'patterns': newPattern,
         'collectionLength': collectionLength
     })
-
-    newPattern, collectionLength = singleNoteLongToneWholeNotes(1,9)
-    collections.append({
-        'collectionType': 'notePattern',
-        'title': 'single_note_long_tone',
-        'patterns': newPattern,
-        'collectionLength': collectionLength
-    })
-
-    newPattern, collectionLength = singleNoteWholeToneRhythms(4, 4)
-    collections.append({
-        'collectionType': 'rhythm',
-        'title': 'single_note_long_tone_rhythms',
-        'patterns': newPattern,
-        'collectionLength': collectionLength
-    })
-
+    rhythmPatternTitle= 'quarter_note'
     newPattern, collectionLength = quarterNoteRhythms(4, 4)
     collections.append({
         'collectionType': 'rhythm',
-        'title': 'quarter_note',
+        'title': rhythmPatternTitle,
         'patterns': newPattern,
         'collectionLength': collectionLength
     })
 
-    return collections
+    programs.append({'primaryCollectionTitle': notePatternTitle, 'rhythmPatternTitle' : rhythmPatternTitle})
 
-# def main():
-#     with app.app_context():
-#         collections = collectionCreator()
-#         insertCollectionsInDatabase(collections)
-#     # dynamodb = boto3.resource('dynamodb')
-#     # table = dynamodb.Table('Daily_Shed_Collections')
-#     #
-#     # for collection in collections:
-#     #     response = table.put_item(Item=collection)
-#
-# if __name__ == "__main__":
-#     main()
+    notePatternTitle = 'single_note_long_tone'
+    newPattern, collectionLength = singleNoteLongToneWholeNotes(1,9)
+    collections.append({
+        'collectionType': 'notePattern',
+        'title': notePatternTitle,
+        'patterns': newPattern,
+        'collectionLength': collectionLength
+    })
+    rhythmPatternTitle = 'single_note_long_tone_rhythms'
+    newPattern, collectionLength = singleNoteWholeToneRhythms(4, 4)
+    collections.append({
+        'collectionType': 'rhythm',
+        'title': rhythmPatternTitle,
+        'patterns': newPattern,
+        'collectionLength': collectionLength
+    })
+    programs.append({'primaryCollectionTitle': notePatternTitle, 'rhythmPatternTitle': rhythmPatternTitle})
+
+    return collections, programs
