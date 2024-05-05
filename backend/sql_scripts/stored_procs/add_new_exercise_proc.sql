@@ -5,11 +5,11 @@ DELIMITER //
 CREATE PROCEDURE add_new_exercise_proc(
     IN notePatternID_p   		INT,
     IN rhythmPatternID_p		INT,
-    IN tonic_p					INT,
-    IN mode_p					INT,
-    IN direction_p				VARCHAR(25),
+    IN tonic_p					VARCHAR(25),
+    IN mode_p					VARCHAR(45),
+    IN direction_p				VARCHAR(45),
     IN directionIndex_p			INT,
-    IN userProgramID_p				INT,
+    IN userProgramID_p			INT,
     IN userPracticeSessionID_p	INT
 )
 
@@ -25,9 +25,18 @@ BEGIN
     DECLARE timeSignature_p		VARCHAR(45)		DEFAULT NULL;
     DECLARE programID_p			INT				DEFAULT NULL;
     
-    DECLARE sql_error BOOLEAN DEFAULT FALSE;
+    -- DECLARE sql_error BOOLEAN DEFAULT FALSE;
+    DECLARE sql_error_code INT DEFAULT 0;
+	DECLARE sql_error_message VARCHAR(255) DEFAULT '';
     
-    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET sql_error = TRUE;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+		BEGIN
+			GET DIAGNOSTICS CONDITION 1
+			@sql_error_message = MESSAGE_TEXT,
+			@sql_error_code = MYSQL_ERRNO;
+			ROLLBACK;
+			SELECT @sql_error_code AS Error_Code, @sql_error_message AS Error_Message;
+		END;
 
     START TRANSACTION;
 		SELECT description INTO description_p
@@ -41,23 +50,26 @@ BEGIN
         ON cp.collectionID = c.collectionID
         WHERE cp.notePatternID = notePatternID_p;
         
-        SELECT REPLACE(REPLACE(REPLACE(timeSignature, '[', ''), ']', ''), ',', ' /')
+        SELECT REPLACE(REPLACE(REPLACE(REPLACE(timeSignature, '[', ''), ']', ''), ',', '_'), ' ', '')
         INTO timeSignature_p
         FROM RhythmPatterns
         WHERE rhythmPatternID = rhythmPatternID_p;
         
-		SELECT 
-			CONCAT(
-				CONCAT(UPPER(LEFT(tonic_p, 1)), LOWER(SUBSTRING(tonic_p, 2))), ' ',
-                CONCAT(UPPER(LEFT(mode_p, 1)), LOWER(SUBSTRING(mode_p, 2))), ' ',
-                collectionTitle_p, ' ', 'in ',
-                timeSignature_p, ' ',
-                CONCAT(UPPER(LEFT(direction_p, 1)), LOWER(SUBSTRING(direction_p, 2))), '.'
-            ) 
+		SELECT CONCAT(
+        COALESCE(CONCAT(UPPER(LEFT(tonic_p, 1)), LOWER(SUBSTRING(tonic_p, 2))), ''), ' ',
+        COALESCE(CONCAT(UPPER(LEFT(mode_p, 1)), LOWER(SUBSTRING(mode_p, 2))), ''), ' ',
+        COALESCE(collectionTitle_p, ''), ' in ',
+        COALESCE(timeSignature_p, ''), ' '
+		)
 		INTO exerciseName_p;
         
+         IF direction_p <> 'static' THEN
+			SET exerciseName_p =  CONCAT(exerciseName_p, ' ',UPPER(LEFT(direction_p, 1)), LOWER(SUBSTRING(direction_p, 2)));
+		END IF;
         
-        INSERT IGNORE INTO Exercises(
+        SELECT RTRIM(exerciseName_p) INTO exerciseName_p;        
+        
+        INSERT INTO Exercises(
 			notePatternID, 
             rhythmPatternID,
             exerciseName,
@@ -85,7 +97,8 @@ BEGIN
         
         INSERT INTO UserPracticeSessionExercises (exerciseID, UserPracticeSessionID) VALUES (exerciseID_p, userPracticeSessionID_p);
         
-		SELECT CONCAT(programID_p, '-', exerciseID_p) INTO imageFilename_p;
+		-- SELECT CONCAT(exerciseID_p, '-', REPLACE(exerciseName_p, ' ', '_')) INTO imageFilename_p;
+        SELECT CONCAT(exerciseID_p) INTO imageFilename_p;
         
         UPDATE Exercises
         SET imageFilename = imageFilename_p
@@ -97,32 +110,27 @@ SELECT
 	exerciseName_p AS exerciseName,
 	description_p AS description;
     
-    IF sql_error = FALSE THEN
-        COMMIT;
-    ELSE
-		SELECT('ERROR, rollback') AS message;
-        ROLLBACK;
-    END IF;
+    IF sql_error_code = 0 THEN
+		COMMIT;
+	ELSE
+		ROLLBACK; -- This is redundant due to the handler but can be explicitly stated for clarity
+		SELECT 'Transaction rolled back due to error:', sql_error_message AS Error_Message;
+	END IF;
     
 END //
 
 DELIMITER ;
 
+
+CALL add_new_exercise_proc(524, 392, 'c', 'major', 'static', 0, 130, 136);
+SELECT * FROM Exercises;
+SELECT * FROM RhythmPatterns;
+SELECT * FROM NotePatterns;
 SELECT * FROM UserPrograms;
+SELECT * FROM UserPracticeSession;
+-- SELECT * FROM view_exercises;
 
-
-SELECT REPLACE(CONCAT(UPPER(LEFT(description, 1)), LOWER(SUBSTRING(description, 2))), '_', ' ') AS description_p
-        FROM NotePatterns
-        ;
-        
-SELECT REPLACE(CONCAT(UPPER(LEFT(c.collectionTitle, 1)), LOWER(SUBSTRING(c.collectionTitle, 2))), '_', ' ')
--- INTO collectionTitle_p
-FROM Collections c
-JOIN CollectionPatterns cp 
-ON cp.collectionID = c.collectionID
--- WHERE cp.notePatternID = notePatternID_p
-;
-
-SELECT REPLACE(REPLACE(timeSignature, '[', ''), ']', '') AS CleanBrackets
-	-- REPLACE(REPLACE(REPLACE(timeSignature, '[', ''), ']', ''), ',', ' /') AS TimeSignature
-FROM RhythmPatterns;
+-- SELECT * FROM NotePatterns;
+DELETE FROM UserPracticeSessionExercises;
+DELETE FROM ProgramExercises;
+DELETE FROM Exercises;

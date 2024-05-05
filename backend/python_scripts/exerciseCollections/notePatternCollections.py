@@ -16,7 +16,7 @@ def singleNoteLongToneWholeNotes(minNote, maxNote):
     # One note options
     for i in range(minNote, maxNote):
         notes = [i]
-        directions = ["static"]
+        directions = ['static']
         holdLastNote = False
         toneExercises.append(
             {

@@ -8,15 +8,16 @@ CREATE PROCEDURE start_practice_session(
 
 BEGIN
     
-    DECLARE sql_error BOOLEAN DEFAULT FALSE;
-    
-    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET sql_error = TRUE;
-
-    START TRANSACTION;
 		INSERT INTO UserPracticeSession (sub) VALUES (sub_p);
     
-		SELECT LAST_INSERT_ID;
+		SELECT LAST_INSERT_ID() AS userPracticeSessionID;
     
 END //
 
 DELIMITER ;
+
+
+SELECT * FROM UserPracticeSession;
+
+CALL add_new_user_proc('testSub', 'testEmail', 'testName');
+CALL start_practice_session('testSub')

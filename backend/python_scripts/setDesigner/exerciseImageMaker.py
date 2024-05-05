@@ -1,7 +1,7 @@
 import abjad
 import boto3
 import os
-from setDesigner.exerciseObjects import Exercise
+from exercise import Exercise
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -28,7 +28,7 @@ def exerciseImageMaker(exercise):
 
     current_file_directory = os.path.dirname(__file__)
 
-    absolutePath = os.path.join(current_file_directory, "../", "temp/")
+    absolutePath = os.path.join(current_file_directory, "../", "../temp/")
 
     localPath = os.path.join(absolutePath + fileName)
 

@@ -35,11 +35,11 @@ def getNextNotePattern(interval, collection):
             return notePattern, program
     return None
 
-def getNotePatternRhythmLength(pitches):
-    if pitches.get('holdLastNote'):
-        length = len((pitches.get('notePattern'))) - 1
+def getNotePatternRhythmLength(notePattern, holdLastNote):
+    if holdLastNote:
+        length = len((notePattern)) - 1
         return length
-    length = len((pitches.get('notePattern')))
+    length = len((notePattern))
     return length
 
 def getReviewNotePattern(notePatternOptions, details, exerciseHistory):

@@ -8,11 +8,10 @@ const ExerciseCard = ({
   setExerciseCount,
   currentSet,
   setCurrentSet,
-  playerDetails,
-  updatePlayerDetails,
   buttonText,
   sessionID,
   setCreated,
+  rounds,
 }) => {
   const [showSelfAssementModal, setShowSelfAssessmentModal] = useState(false);
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
@@ -20,6 +19,7 @@ const ExerciseCard = ({
   const [currentRound, setCurrentRound] = useState(1);
   const [showSessionCompleteModal, setShowSessionCompleteModal] =
     useState(false);
+  const [imageURL, setImageURL] = useState(null);
 
   // Fisher-Yates algorithm array shuffling algorithm.
   const shuffleSet = () => {
@@ -41,17 +41,19 @@ const ExerciseCard = ({
   };
 
   const goToNextExercise = () => {
-    if (currentSetIndex === playerDetails.program.exerciseDetails.length - 1) {
+    if (currentSetIndex === currentSet.length - 1) {
       advanceRound();
     }
-    const nextSetIndex =
-      exerciseCount % playerDetails.program.exerciseDetails.length;
+    const nextSetIndex = exerciseCount % currentSet.length;
     setExerciseCount(exerciseCount + 1);
     setCurrentSetIndex(nextSetIndex);
   };
 
   useEffect(() => {
     setCurrentExercise(currentSet[currentSetIndex]);
+    const filename = currentSet[currentSetIndex].filename;
+    const url = filename + ".png";
+    setImageURL(url);
   }, [currentRound, currentSet, currentSetIndex]);
 
   const nextExerciseHandler = () => {
@@ -70,11 +72,11 @@ const ExerciseCard = ({
               <Card.Title className="">
                 {currentExercise.exerciseName}
               </Card.Title>
-              <Card.Img variant="top" src={currentExercise.imageURL}></Card.Img>
+              <Card.Img variant="top" src={imageURL}></Card.Img>
               <Card.Text className="">{currentExercise.description}</Card.Text>
             </Card.Body>
           </Card>
-          {currentRound <= playerDetails.program.rounds && (
+          {currentRound <= rounds && (
             <Button type="submit" className="m-2" onClick={nextExerciseHandler}>
               {buttonText}
             </Button>
@@ -86,8 +88,6 @@ const ExerciseCard = ({
           setShow={setShowSelfAssessmentModal}
           exercise={currentExercise}
           currentSet={currentSet}
-          playerDetails={playerDetails}
-          updatePlayerDetails={updatePlayerDetails}
           exerciseCount={exerciseCount}
           setShowSessionCompleteModal={setShowSessionCompleteModal}
           goToNextExercise={goToNextExercise}
@@ -96,8 +96,6 @@ const ExerciseCard = ({
           show={showSessionCompleteModal}
           setShow={setShowSessionCompleteModal}
           currentSet={currentSet}
-          playerDetails={playerDetails}
-          updatePlayerDetails={updatePlayerDetails}
           setCreated={setCreated}
         />
       </>

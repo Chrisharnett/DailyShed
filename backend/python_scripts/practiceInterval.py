@@ -1,60 +1,79 @@
 import random
 from setDesigner.notePatterns import getNotePatternRhythmLength
 from setDesigner.queries import fetchExercise, addNewExercise
-from setDesigner.exerciseObjects import Exercise
+from exercise import Exercise
 
-class PracticeInterval:
+class PracticeInterval(Exercise):
     def __init__(self, interval):
+        super().__init__(tonic = interval.get('tonic'), mode = interval.get('mode'))
         self.__interval = interval
         self.__notePatternDetails = {}
         self.__rhythmPatternDetails = {}
-        self.__exerciseID = None
-        self.__directionIndex = None
 
     @property
-    def getNotePatternID(self):
-        return self.__notePatternDetails.get('notePatternID')
+    def rhythmPatternDetails(self):
+        return self.__rhythmPatternDetails
+
+    @rhythmPatternDetails.setter
+    def rhythmPatternDetails(self, rhythmPatternDetails):
+        self.rhythmPatternID = rhythmPatternDetails.get('rhythmPatternID')
+        self.rhythmPattern = rhythmPatternDetails.get('rhythmPattern')
+        self.articulation = rhythmPatternDetails.get('articulation')
+        self.timesignature = rhythmPatternDetails.get('timeSignature')
+        self.__rhythmPatternDetails = rhythmPatternDetails
 
     @property
-    def getRhythmPatternID(self):
-        return self.__rhythmPatternDetails.get('notePatternID')
+    def notePatternDetails(self):
+        return self.__notePatternDetails
 
-    def setNotePatternID(self, notePatternID):
-        self.__notePatternDetails = notePatternID
+    @notePatternDetails.setter
+    def notePatternDetails(self, notePatternDetails):
+        self.notePatternID = notePatternDetails.get('notePatternID')
+        self.notePattern = notePatternDetails.get('notePattern')
+        self.directionIndex = notePatternDetails.get('currentDirectionIndex')
+        self.directions = notePatternDetails.get('directions')
+        self.holdLastNote = notePatternDetails.get('holdLastNote')
+        self.repeatMe = notePatternDetails.get('repeatMe')
+        self.__notePatternDetails = notePatternDetails
 
     @property
-    def getDirections(self):
-        return self.__notePatternDetails['directions']
+    def noteLength(self):
+        return self.__notePatternDetails.get('noteLength')
 
-    @property
-    def getDirectionIndex(self):
-        return self.__directionIndex
-
-    @property
-    def getCurrentDirection(self):
-        if self.getDirectionIndex:
-            direction = self.getDirections[int(self.getDirectionIndex)]
-            return direction
-        return None
-
-    def setNoteLength(self, length):
+    @noteLength.setter
+    def noteLength(self, length):
         self.__notePatternDetails['noteLength'] = length
 
-    def setDirection(self):
-        currentDirectionIndex = self.__notePatternDetails.get('directionIndex')
-        directions = self.__notePatternDetails.get('directions')
+    @property
+    def getRhythmDescription(self):
+        return self.__rhythmPatternDetails.get('rhythmDescription')
+
+    @property
+    def getCollectionTitle(self):
+        return self.__interval.get('primaryCollectionTitle')
+
+    @property
+    def userProgramID(self):
+        return self.__interval.get('userProgramID')
+
+    def getExerciseDetails(self):
+        pass
+
+    def determineDirection(self):
+        currentDirectionIndex = self.directionIndex
+        directions = self.directions
         if not currentDirectionIndex:
-            self.__directionIndex =  '0'
+            self.directionIndex = 0
         elif currentDirectionIndex < len(directions):
             newIndex = currentDirectionIndex + 1
-            self.__directionIndex = newIndex
+            self.directionIndex = newIndex
         elif currentDirectionIndex == 'r' or currentDirectionIndex == (len(directions) -1):
-            validDirectionIndices =[i for i in range(len(directions)) if i != self.__notePatternDetails.get('currentDirectionIndex')]
-            self.__directionIndex = random.choice(validDirectionIndices)
+            validDirectionIndices =[i for i in range(len(directions)) if i != self.directionIndex]
+            self.directionIndex = random.choice(validDirectionIndices)
         self.applyNewDirection()
 
     def applyNewDirection(self):
-        direction = self.getDirections[int(self.__directionIndex)]
+        direction = self.directions[int(self.directionIndex)]
         match direction:
             case 'ascending':
                 return
@@ -68,117 +87,72 @@ class PracticeInterval:
                 return
 
     def descendingPattern(self):
-        d = self.__notePatternDetails.get('notePattern').copy()
+        d = self.notePattern.copy()
         d.reverse()
-        self.__notePatternDetails['notePattern'] = d
+        self.notePattern = d
         self.newNoteLength()
 
     def ascendingDescendingPattern(self):
-        a = self.__notePatternDetails.get('notePattern').copy()
-        d = self.__notePatternDetails.get('notePattern').copy()
+        a = self.notePattern.copy()
+        d = self.notePattern.copy()
         d.reverse()
         a.pop()
         a.extend(d)
-        self.__notePatternDetails['notePattern'] = a
+        self.notePattern = a
         self.newNoteLength()
 
     def descendingAscendingPattern(self):
-        d = self.__notePatternDetails.get('notePattern').copy()
+        d = self.notePattern.copy()
         d.reverse()
         d.pop()
-        d.extend(self.__notePatternDetails.get('notePattern'))
-        self.__notePatternDetails['notePattern'] = d
+        d.extend(self.notePattern)
+        self.notePattern = d
         self.newNoteLength()
 
     def newNoteLength(self):
-        newLength = getNotePatternRhythmLength(self.__notePatternDetails.get('notePattern'), self.__notePatternDetails.get('holdLastNote'))
+        newLength = getNotePatternRhythmLength(self.notePattern, self.holdLastNote)
         self.setNoteLength(newLength)
-
-    @property
-    def getTonic(self):
-        return self.__interval.get('tonic')
-
-    @property
-    def getMode(self):
-        return self.__interval.get('mode')
-
-    @property
-    def getTimeSignature(self):
-        return self.__rhythmPatternDetails.get('timeSignature')
-
-    @property
-    def getRhythmDescription(self):
-        return self.__rhythmPatternDetails.get('rhythmDescription')
-
-    @property
-    def getRhythmPatternDetails(self):
-        return self.__rhythmPatternDetails
-
-    @property
-    def getRhythmPattern(self):
-        return self.__rhythmPatternDetails.get('rhythmPattern')
-
-    @property
-    def getRhythmPatternID(self):
-        return self.__rhythmPatternDetails.get('rhythmPatternID')
-
-    @property
-    def getCollectionTitle(self):
-        return self.__interval.get('primaryCollectionTitle')
-
-    @property
-    def getNotePattern(self):
-        return self.__notePatternDetails.get('notePattern')
-
-    @property
-    def getUserProgramID(self):
-        return self.__interval.get('userProgramID')
-
-    def setRhythmPatternDetails(self, rhythmPatternDetails):
-        self.__rhythmPatternDetails = rhythmPatternDetails
-
-    def getExerciseDetails(self):
-        pass
 
     def createExercise(self, userPracticeSessionID):
         """
         These attributes are able to ID an exercise. It may need to change over time.
          notePatternID, rhythmPatternID, tonic, mode, directionIndex
         """
+
         exerciseDetails = fetchExercise(
-            self.getNotePatternID,
-            self.getRhythmPatternID,
-            self.getTonic,
-            self.getMode,
-            self.getDirectionIndex)
+            self.notePatternID,
+            self.rhythmPatternID,
+            self.tonic,
+            self.mode,
+            self.directionIndex)
         if not exerciseDetails:
             self.exerciseImageMaker(userPracticeSessionID)
         else:
             # insert exercise into practice session.
-            self.__exerciseDetails = exerciseDetails
+            self.storeExerciseAttributes(exerciseDetails)
+
+    def storeExerciseAttributes(self, exerciseDetails):
+        self.filename = exerciseDetails.get('imageFilename')
+        self.exerciseID = exerciseDetails.get('exerciseID')
+        self.description = exerciseDetails.get('description')
+        self.exerciseName = exerciseDetails.get('exerciseName')
 
     def insertExercise(self, userPracticeSessionID):
-        addNewExercise(
-            self.getNotePatternID,
-            self.getRhythmPatternID,
-            self.getTonic,
-            self.getMode,
-            self.getCurrentDirection,
-            self.getDirectionIndex,
-            self.getUserProgramID,
+        insertedExercise = addNewExercise(
+            self.notePatternID,
+            self.rhythmPatternID,
+            self.tonic,
+            self.mode,
+            self.directions[self.directionIndex],
+            self.directionIndex,
+            self.userProgramID,
             userPracticeSessionID)
+        self.storeExerciseAttributes(insertedExercise)
+
 
     def exerciseImageMaker(self, userPracticeSessionID):
-        pitches = self.getNotePattern
-        rhythm = self.getRhythmPattern
-        key = self.getTonic
-        mode = self.getMode
-        preamble = 'preamble', r"#(set-global-staff-size 28)"
-        exercise = Exercise(pitches, rhythm, key, mode, preamble)
         self.insertExercise(userPracticeSessionID)
-        exercise.createImage()
-
-
+        self.createImage()
 
     def getDirectionPrep(direction):
         if direction == "ascending" or direction == "ascending descending":

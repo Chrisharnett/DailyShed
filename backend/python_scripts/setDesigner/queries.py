@@ -22,7 +22,7 @@ def getCollections(session):
         with conn.cursor() as cursor:
             collections = []
             collectionsCollected = set()
-            for interval in session:
+            for interval in session.get('intervals'):
                 primaryCollectionID = interval.get('primaryCollectionID')
                 rhythmPatternCollectionID = interval.get('rhythmCollectionID')
                 if primaryCollectionID not in collectionsCollected:
@@ -94,6 +94,7 @@ def startUserPracticeSession(sub):
         with conn.cursor() as cursor:
             cursor.callproc('start_practice_session', [sub])
             result = cursor.fetchone()
+            conn.commit()
             return result['userPracticeSessionID'] if result else None
 
     except Exception as e:
@@ -111,7 +112,26 @@ def getPracticeSession(sub):
             query = "SELECT * FROM get_practice_session WHERE sub = %s"
             cursor.execute(query, (sub, ))
             result = cursor.fetchall()
-        return result
+        session = {'sub': result[0].get('sub'),
+                   'userName': result[0].get('userName'),
+                   'rounds': result[0].get('rounds'),
+                   'setLength': result[0].get('setLength'),
+                   'intervals': []}
+        for exercise in result:
+            session.get('intervals').append({
+                'PrimaryCollectionTitle': exercise.get('PrimaryCollectionTitle'),
+                'rhythmCollectionTitle': exercise.get('rhythmCollectionTitle'),
+                'tonic': exercise.get('tonic'),
+                'mode': exercise.get('mode'),
+                'reviewExercise': exercise.get('reviewExercise'),
+                'currentIndex': exercise.get('currentIndex'),
+                'userProgramID': exercise.get('userProgramID'),
+                'collectionLength': exercise.get('collectionLength'),
+                'primaryCollectionType': exercise.get('PrimaryCollectinType'),
+                'rhythmCollectionID': exercise.get('rhythmCollectionID'),
+                'primaryCollectionID': exercise.get('primaryCollectionID')
+            })
+        return session
 
     except Exception as e:
         return str(e), 500
@@ -130,13 +150,14 @@ def fetchExercise(notePatternID, rhythmPatternID, tonic, mode, directionIndex):
                     "tonic = %s AND " \
                     "mode = %s AND " \
                     "directionIndex = %s"
-            cursor.execute(query, (
+            cursor.execute(query, [
                 notePatternID,
                 rhythmPatternID,
                 tonic,
                 mode,
-                directionIndex))
-            exercise = cursor.fetchall()
+                directionIndex
+            ])
+            exercise = cursor.fetchone()
             return exercise
         conn.commit()
     except Exception as e:
@@ -146,7 +167,6 @@ def fetchExercise(notePatternID, rhythmPatternID, tonic, mode, directionIndex):
         conn.close()
 
 def addNewExercise(notePatternID, rhythmPatternID, tonic, mode, direction, directionIndex, userProgramID, userPracticeSessionID):
-    #TODO: Get the return from the proc.
     conn = getDBConnection()
     try:
         with conn.cursor() as cursor:
@@ -159,8 +179,9 @@ def addNewExercise(notePatternID, rhythmPatternID, tonic, mode, direction, direc
                 directionIndex,
                 userProgramID,
                 userPracticeSessionID])
-        conn.commit()
-        return True
+            exercise = cursor.fetchone()
+            conn.commit()
+            return exercise if exercise else None
 
     except Exception as e:
         conn.rollback()

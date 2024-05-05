@@ -3,7 +3,6 @@ import ExerciseCard from "../components/ExerciseCard";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import TopSpacer from "../util/TopSpacer";
-import { v4 as uuidV4 } from "uuid";
 
 const TheShed = ({ user }) => {
   const [currentSet, setCurrentSet] = useState(null);
@@ -11,15 +10,14 @@ const TheShed = ({ user }) => {
   const [buttonText, setButtonText] = useState("Next Exercise");
   const [sessionID, setSessionID] = useState(null);
   const setCreated = useRef(false);
+  const [rounds, setRounds] = useState(1);
+
+  // useEffect(() => {
+  //   const ID = uuidV4();
+  //   setSessionID(ID);
+  // }, []);
 
   useEffect(() => {
-    const ID = uuidV4();
-    setSessionID(ID);
-  }, []);
-
-  useEffect(() => {
-    // if (currentSet && playerDetails) {
-    //   if (exerciseCount === currentSet.length * playerDetails.program.rounds) {
     if (currentSet) {
       if (exerciseCount === currentSet.length) {
         setButtonText("Complete!");
@@ -29,19 +27,14 @@ const TheShed = ({ user }) => {
     }
   }, [currentSet, exerciseCount]);
 
-  // useEffect(() => {
-  //   if (user && !hasCalledHandleNextSet.current) {
-  //     handleNextSet();
-  //     hasCalledHandleNextSet.current = true;
-  //   }
-  // }, [user]);
-
   useEffect(() => {
     const handleNextPracticeSession = async () => {
       try {
         let response = await axios.post(`/api/generateSet/${user.sub}`);
-        const { set, player } = response.data;
-        setCurrentSet(set);
+        const sessionData = response.data;
+        setSessionID(sessionData.sessionID);
+        setCurrentSet(sessionData.set);
+        setRounds(sessionData.rounds);
       } catch (error) {
         console.error("Error: ", error);
       }
@@ -82,10 +75,9 @@ const TheShed = ({ user }) => {
                 setExerciseCount={setExerciseCount}
                 currentSet={currentSet}
                 setCurrentSet={setCurrentSet}
-                // playerDetails={playerDetails}
-                // updatePlayerDetails={updatePlayerDetails}
                 buttonText={buttonText}
                 setCreated={setCreated}
+                rounds={rounds}
               />
             }
           </div>

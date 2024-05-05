@@ -6,6 +6,7 @@ from practiceInterval import PracticeInterval
 from setDesigner.queries import startUserPracticeSession
 import random
 
+
 class PracticeSession:
     def __init__(self, sessionData, collections):
         self.__sessionData = sessionData
@@ -16,19 +17,23 @@ class PracticeSession:
         self.__userPracticeSessionID = None
 
     @property
-    def getPracticeSession(self):
-        return self.__exerciseDetails
+    def practiceSession(self):
+        return self.__practiceSession
 
     @property
-    def getUserPracticeSessionID(self):
+    def userPracticeSessionID(self):
         return self.__userPracticeSessionID
 
+    @property
+    def rounds(self):
+        return self.__sessionData.get('rounds')
+
     def setUserPracticeSessionID(self):
-        if not self.getUserPracticeSessionID:
-            self.__userPracticeSessionID = startUserPracticeSession(self.__sessionData[0].get('sub'))
+        if not self.userPracticeSessionID:
+            self.__userPracticeSessionID = startUserPracticeSession(self.__sessionData.get('sub'))
 
     def addExerciseToSession(self, exercise):
-        self.__exerciseDetails.appent(exercise)
+        self.__exerciseDetails.append(exercise)
 
     def setCollectionHistory(self, history):
         self.__collectionHistory = history
@@ -62,24 +67,27 @@ class PracticeSession:
         return None
 
     def createSession(self):
-        # TODO: apply the userPracticeSessionID to the exercises!
         self.setUserPracticeSessionID()
-        for i, interval in enumerate(self.__sessionData):
+        for i, interval in enumerate(self.__sessionData.get('intervals')):
             newInterval = PracticeInterval(interval)
-            primaryCollectionID = interval['primaryCollectionID']
-            rhythmCollectionID = interval['rhythmCollectionID']
+            primaryCollectionID = interval.get('primaryCollectionID')
+            rhythmCollectionID = interval.get('rhythmCollectionID')
             if not interval['reviewExercise'] or interval['currentIndex'] < 1:
                 index = self.incrementCurrentIndex(primaryCollectionID)
-                notePattern = self.getNotePattern(index, primaryCollectionID)
-                newInterval.setNotePatternID(notePattern)
-                newInterval.setDirection()
+                notePatternDetails = self.getNotePattern(index, primaryCollectionID)
+                newInterval.notePatternDetails = notePatternDetails
+                newInterval.determineDirection()
                 if rhythmCollectionID:
-                    rhythmPatternID = self.getRandomRhythmPattern(notePattern, rhythmCollectionID)
-                    newInterval.setRhythmPatternDetails(rhythmPatternID)
+                    rhythmPatternDetails = self.getRandomRhythmPattern(notePatternDetails, rhythmCollectionID)
+                    newInterval.rhythmPatternDetails = rhythmPatternDetails
 
             else:
-                exercise = self.getReviewExercise(self, primaryCollectionID)
+                exercise = self.getReviewExercise(self, self.primaryCollectionID)
 
-            newInterval.createExercise(self.getUserPracticeSessionID)
-            self.__practiceSession.append(newInterval)
+            newInterval.createExercise(self.userPracticeSessionID)
+            newExercise = {'exerciseID': newInterval.exerciseID,
+                           'exerciseName': newInterval.exerciseName,
+                           'filename': newInterval.filename,
+                           'description': newInterval.description}
+            self.__practiceSession.append(newExercise)
 

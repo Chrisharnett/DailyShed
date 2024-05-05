@@ -4,9 +4,7 @@ from setDesigner.musicObjects import Scale
 from exerciseBucket import dropItInTheBucket
 from decimal import Decimal
 import os
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
+import tempfile
 
 GLOBAL_PREAMBLE = r"#(set-global-staff-size 28)"
 
@@ -176,7 +174,7 @@ class Exercise:
         notes = self.notePattern
         noteIndex = 0
         for r in self.rhythmPattern:
-            if isinstance(r[0], Decimal) or r[0].isnumeric():
+            if isinstance(r[0], int) or r[0].isnumeric():
                 notationPattern.append([self.notePattern[noteIndex], r[0]])
                 noteIndex += 1
             elif r == ["~"]:
@@ -289,19 +287,18 @@ class Exercise:
         score = self.buildScore()
         lilypond_file = abjad.LilyPondFile([self.preamble, score])
 
-        current_file_directory = os.path.dirname(__file__)
-        absolutePath = os.path.join(current_file_directory, "../", "temp/")
-        localPath = os.path.join(absolutePath + self.filename)
+        # current_file_directory = os.path.dirname(__file__)
+        # absolutePath = os.path.join(current_file_directory, "/", "temp/")
+        # localPathOLD = os.path.join(absolutePath + self.filename)
+        localPath = str(self.filename)
 
-        try:
-            abjad.persist.as_png(lilypond_file, localPath, flags="-dcrop", resolution=300)
-        except Exception as e:
-            logging.error("Error during rendering:", exc_info=True)
 
-        png = os.path.join(localPath + ".png")
+        abjad.persist.as_png(lilypond_file, localPath, flags="-dcrop", resolution=300)
+
+        png = os.path.join(localPath + ".cropped.png")
         # png = os.path.join(localPath + ".cropped.png")
 
-        dropItInTheBucket(png, self.filename)
+        dropItInTheBucket(png, localPath)
         # TODO:
         ly = os.path.join(localPath + ".ly")
         os.remove(png)

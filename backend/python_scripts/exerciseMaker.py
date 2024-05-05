@@ -26,7 +26,9 @@ def generateSet():
         practiceSession.createSession()
         return {
                 "statusCode": 200,
-                "set": practiceSession.getPracticeSession()}
+                "sessionID": practiceSession.userPracticeSessionID,
+                "rounds": practiceSession.rounds,
+                "set": practiceSession.practiceSession}
 
     except Exception as e:
         return jsonify({
