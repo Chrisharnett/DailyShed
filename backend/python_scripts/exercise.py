@@ -167,7 +167,7 @@ class Exercise:
 # The functions below create the notation image.
 
     def notationPattern(self):
-        if not self.description:
+        if not self.notationPattern:
             notationPattern = []
         else:
             notationPattern = [["repeat"]]

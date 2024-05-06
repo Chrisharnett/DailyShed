@@ -1,13 +1,14 @@
 USE Daily_Shed;
 CREATE OR REPLACE VIEW view_exercises AS
    SELECT 
-		e.ExerciseID,
+		e.ExerciseID AS exerciseID,
         e.exerciseName,
         e.tonic,
         e.mode,
         e.directionIndex,
         e.rhythmPatternID,
         e.notePatternID,
+        e.imageFilename,
         np.description,     
         rp.articulation,
         c.collectionTitle AS notePatternTitle,

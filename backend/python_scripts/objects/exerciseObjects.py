@@ -2,7 +2,7 @@ import os
 import boto3
 import abjad
 import math
-import json
+from exerciseBucket import imageURL
 from objects.musicObjects import Scale
 
 
@@ -78,8 +78,8 @@ class Exercise:
         collection = self.__pitchPattern.getCollectionTitle.replace(" ", "_").lower()
         return f"{self.__key}_{self.__mode}_{collection}_{str(self.__pitchPattern.getPatternId)}_{str(self.__rhythmPattern.getRhythmPatternId)}"
 
-    def imageURL(self):
-        return f"https://mysaxpracticeexercisebucket.s3.amazonaws.com/{self.exerciseFileName()}"
+    # def imageURL(self):
+    #     return f"https://mysaxpracticeexercisebucket.s3.amazonaws.com/{self.exerciseFileName()}"
 
     def createRepeatPhrase(self, scaleNotes, notes):
         container = abjad.Container("")
@@ -354,13 +354,13 @@ class RhythmPattern:
         count -= n
         return count
 
-    def __str__(self):
-        if self.__rhythmType == "tone":
-            string = f" in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
-        else:
-            string = f"{self.__rhythmDescription} rhythm, in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
-        if self.__articulation is not None:
-            # TODO Include articulation with nameing
-            # string += f" with {self.__articulation.get('name')}."
-            pass
-        return string
+    # def __str__(self):
+    #     if self.__rhythmType == "tone":
+    #         string = f" in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
+    #     else:
+    #         string = f"{self.__rhythmDescription} rhythm, in {self.__timeSignature[0]} / {self.__timeSignature[1]}"
+    #     if self.__articulation is not None:
+    #         # TODO Include articulation with nameing
+    #         # string += f" with {self.__articulation.get('name')}."
+    #         pass
+    #     return string

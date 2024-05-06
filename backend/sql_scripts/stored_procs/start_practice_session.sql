@@ -8,8 +8,7 @@ CREATE PROCEDURE start_practice_session(
 
 BEGIN
     
-		INSERT INTO UserPracticeSession (sub) VALUES (sub_p);
-    
+		INSERT INTO UserPracticeSession (sub) VALUES (sub_p);    
 		SELECT LAST_INSERT_ID() AS userPracticeSessionID;
     
 END //
@@ -17,6 +16,8 @@ END //
 DELIMITER ;
 
 
+SELECT * FROM users;
+CALl start_practice_session('e9f073a9-e846-445d-b755-f1acb14300dd');
 SELECT * FROM UserPracticeSession;
 
 CALL add_new_user_proc('testSub', 'testEmail', 'testName');

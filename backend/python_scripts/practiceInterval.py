@@ -126,10 +126,12 @@ class PracticeInterval(Exercise):
             self.mode,
             self.directionIndex)
         if not exerciseDetails:
-            self.exerciseImageMaker(userPracticeSessionID)
+            self.insertExercise(userPracticeSessionID)
+            self.createImage()
         else:
+            self.createImage()
             # insert exercise into practice session.
-            self.storeExerciseAttributes(exerciseDetails)
+            # self.storeExerciseAttributes(exerciseDetails)
 
     def storeExerciseAttributes(self, exerciseDetails):
         self.filename = exerciseDetails.get('imageFilename')
@@ -148,11 +150,6 @@ class PracticeInterval(Exercise):
             self.userProgramID,
             userPracticeSessionID)
         self.storeExerciseAttributes(insertedExercise)
-
-
-    def exerciseImageMaker(self, userPracticeSessionID):
-        self.insertExercise(userPracticeSessionID)
-        self.createImage()
 
     def getDirectionPrep(direction):
         if direction == "ascending" or direction == "ascending descending":

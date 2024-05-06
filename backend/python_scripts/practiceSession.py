@@ -87,7 +87,7 @@ class PracticeSession:
             newInterval.createExercise(self.userPracticeSessionID)
             newExercise = {'exerciseID': newInterval.exerciseID,
                            'exerciseName': newInterval.exerciseName,
-                           'filename': newInterval.filename,
+                           'filename': 'https://mysaxpracticeexercisebucket.s3.amazonaws.com/' + newInterval.filename,
                            'description': newInterval.description}
             self.__practiceSession.append(newExercise)
 
