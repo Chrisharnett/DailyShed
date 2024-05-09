@@ -1,20 +1,9 @@
 from util.getDBConnection import getDBConnection
 import json
 from flask import jsonify
-
-# def getIntervalDetails(notePatternID, rhythmPatternID, tonic, mode):
-#     conn = getDBConnection()
-#     try:
-#         with conn.cursor() as cursor:
-#             cursor.callproc('get_interval_details_proc', [notePatternID, rhythmPatternID, tonic, mode])
-#             exercise = cursor.fetchall()
-#             return exercise
-#         conn.commit()
-#     except Exception as e:
-#         conn.rollback()
-#         return  str(e)
-#     finally:
-#         conn.close()
+from data.instruments import instrumentList
+from data.tonicSequences import tonicSequenceList
+from data.modes import modeList
 
 def getCollections(session):
     conn = getDBConnection()
@@ -191,30 +180,51 @@ def addNewExercise(notePatternID, rhythmPatternID, tonic, mode, direction, direc
     finally:
         conn.close()
 
-def insertTonicsAndModes():
+def addTheBasics():
     conn = getDBConnection()
-    tonics = ['c', 'g', 'd', 'a', 'e', 'b', 'gb', 'db', 'ab', 'eb', 'bb', 'f']
-    modes =  {
-            "major": [0, 2, 4, 5, 7, 9, 11],
-            "natural_minor": [0, 2, 3, 5, 7, 8, 10],
-            "harmonic_minor": [0, 2, 3, 5, 7, 8, 11],
-            "jazz_minor": [0, 2, 3, 5, 7, 9, 11],
-        }
-    modeJSON = {key : json.dumps(value) for key, value in modes.items()}
+    instruments = instrumentList()
+    tonicSequences = tonicSequenceList()
+    modes =  modeList()
     try:
-        with conn.cursor() as cursor:
-            with conn.cursor() as cursor:
-                # Inserting modes using executemany for batch processing
-                mode_data = [(mode, pattern) for mode, pattern in modeJSON.items()]
-                cursor.executemany('INSERT INTO scaleModes (scaleModeName, scaleModePattern) VALUES (%s, %s)',
-                                   mode_data)
+        cursor = conn.cursor()
+        query = "INSERT IGNORE INTO Instruments (" \
+                "instrumentName, " \
+                "beginnerLowNote, " \
+                "intermediateLowNote, " \
+                "advancedLowNote, " \
+                "beginnerHighNote, " \
+                "intermediateHighNote, " \
+                "advancedHighNote, " \
+                "defaultTonic" \
+                ") VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
 
-                # Inserting tonics using executemany for batch processing
-                tonic_data = [(tonic,) for tonic in tonics]  # note the comma to make it a tuple
-                cursor.executemany('INSERT INTO pitchNames (pitchNames) VALUES (%s)', tonic_data)
+        for instrument in instruments:
+            cursor.execute(query, (
+                instrument['instrumentName'],
+                instrument['beginnerLowNote'],
+                instrument['intermediateLowNote'],
+                instrument['advancedLowNote'],
+                instrument['beginnerHighNote'],
+                instrument['intermediateHighNote'],
+                instrument['advancedHighNote'],
+                instrument['defaultTonic']
+            ))
 
-        # FIXME: Commented out to prevent duplicating accidentally.
-        # conn.commit()
+        query = "INSERT IGNORE INTO TonicSequences (name, sequence) VALUES (%s, %s)"
+        for sequence in tonicSequences:
+            cursor.execute(query, (
+                sequence['name'],
+                json.dumps(sequence['sequence'])
+            ))
+
+        query = "INSERT IGNORE INTO scaleModes (scaleModeName, scaleModePattern) VALUES (%s, %s)"
+        for mode in modes:
+            cursor.execute(query, (
+                mode['modeName'],
+                json.dumps(mode['modePattern'])
+            ))
+
+        conn.commit()
         return True
 
     except Exception as e:
@@ -228,13 +238,14 @@ def insertTonicsAndModes():
 def insertPrograms(programs):
     conn = getDBConnection()
     #Being used now to create default starting programs for a give user on saxophone
-    # insertTonicsAndModes()
+    addTheBasics()
     try:
         with conn.cursor() as cursor:
             for program in programs:
                 primary = program['primaryCollectionTitle']
                 rhythm = program['rhythmPatternTitle']
-                cursor.callproc('add_program_proc', [primary, rhythm])
+                instrument = 'saxophone'
+                cursor.callproc('add_program_proc', [primary, rhythm, instrument, None, None])
         conn.commit()
         return True
 

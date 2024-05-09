@@ -19,7 +19,7 @@ class PracticeInterval(Exercise):
         self.rhythmPatternID = rhythmPatternDetails.get('rhythmPatternID')
         self.rhythmPattern = rhythmPatternDetails.get('rhythmPattern')
         self.articulation = rhythmPatternDetails.get('articulation')
-        self.timesignature = rhythmPatternDetails.get('timeSignature')
+        self.timeSignature = rhythmPatternDetails.get('timeSignature')
         self.__rhythmPatternDetails = rhythmPatternDetails
 
     @property
@@ -126,12 +126,15 @@ class PracticeInterval(Exercise):
             self.mode,
             self.directionIndex)
         if not exerciseDetails:
+            # FIXME
             self.insertExercise(userPracticeSessionID)
             self.createImage()
         else:
-            self.createImage()
+            # FIXME
+            self.storeExerciseAttributes(exerciseDetails)
+            # self.createImage()
             # insert exercise into practice session.
-            # self.storeExerciseAttributes(exerciseDetails)
+
 
     def storeExerciseAttributes(self, exerciseDetails):
         self.filename = exerciseDetails.get('imageFilename')

@@ -1,18 +1,17 @@
-
 import abjad
 
-def abjadTest():
-    staff = abjad.Staff("c'4")
-    # score = abjad.Score([staff])
-    score = abjad.Score("{ { { { g'1 } { g'1 } } } }", name='Score', simultaneous=True)
-    # Create a LilyPond file and add a simple note
-    lilypond_file = abjad.LilyPondFile(items=[r"#(set-global-staff-size 28)", score])
+noteString = "r4 r4 g'4 r4"
+lastMeasure = "a'1"
+container = abjad.Container(noteString)
+container2 = abjad.Container(lastMeasure)
 
-    # Save the score to a PNG file
-    abjad.persist.as_png(lilypond_file, 'simple_score.png', flags="-dcrop", resolution=300)
+staff = abjad.Staff([container])
+staff.append(lastMeasure)
+repeat = abjad.Repeat()
+abjad.attach(repeat, container)
 
-def main():
-    abjadTest()
-
-if __name__ == '__main__':
-    main()
+key_signature = abjad.KeySignature(
+    abjad.NamedPitchClass("e"), abjad.Mode("minor")
+)
+abjad.attach(key_signature, container[0])
+abjad.show(staff)

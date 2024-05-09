@@ -27,6 +27,7 @@ class Exercise:
         self.__filename = None
         self.__description = None
         self.__exerciseName = None
+        self.__ties = []
 
     @property
     def notePatternID(self):
@@ -164,45 +165,69 @@ class Exercise:
     def exerciseName(self, exerciseName):
         self.__exerciseName = exerciseName
 
+    @property
+    def ties(self):
+        return self.__ties
+
+    def addTie(self, tie):
+        self.__ties.append(tie)
 # The functions below create the notation image.
 
     def notationPattern(self):
-        if not self.notationPattern:
+        if not self.repeatMe:
             notationPattern = []
         else:
             notationPattern = [["repeat"]]
         notes = self.notePattern
         noteIndex = 0
+        # Notes in a tie need to be in the same container!
         for r in self.rhythmPattern:
             if isinstance(r[0], int) or r[0].isnumeric():
                 notationPattern.append([self.notePattern[noteIndex], r[0]])
                 noteIndex += 1
             elif r == ["~"]:
                 noteIndex -= 1
+                self.addTie(noteIndex)
+                notationPattern.append(r)
             else:
                 notationPattern.append(r)
 
         returnPattern = [notationPattern]
-        if self.description:
-            heldNoteRhythm = "1"
-            if self.description == (4, 4):
-                heldNoteRhythm = "1"
+        heldNoteRhythm = None
+        if self.holdLastNote:
+            match self.timeSignature:
+                case (4,4):
+                    heldNoteRhythm = "1"
+                case _:
+                    pass
             returnPattern.append([notes[-1], heldNoteRhythm])
         return returnPattern
 
     def createRepeatPhrase(self, scaleNotes, notes):
-        container = abjad.Container("")
+        repeatPhrase = abjad.Container()
         for note in notes:
             if isinstance(note[0], (int, Decimal)):
                 n = self.numberToNote(scaleNotes, note)
-                container.append(n)
+                repeatPhrase.append(n)
             elif note[0][0] == "r" and note[0] != "repeat":
-                container.append(note[0])
-        return container
+                rest = abjad.Rest(note[0])
+                repeatPhrase.append(rest)
+        repeat = abjad.Repeat()
+        abjad.attach(repeat, repeatPhrase)
+        return repeatPhrase
 
     def createNotePhrase(self, scaleNotes, note):
         container = abjad.Container("")
-        if isinstance(note[0], (int, Decimal)):
+        if isinstance(note[0], list):
+            for i, n in enumerate(note):
+                if isinstance(n[0], int):
+                    container.append(self.numberToNote(scaleNotes, n))
+                elif n[0] == '~':
+                    tie = abjad.Tie()
+                    abjad.attach(tie, container[i-1])
+                else:
+                    container.append(n)
+        elif isinstance(note[0], (int, Decimal)):
             n = self.numberToNote(scaleNotes, note)
             container.append(n)
         elif note[0][0] == "r" and note[0] != "repeat":
@@ -213,6 +238,7 @@ class Exercise:
         n = int(note[0])
         pitch = ""
         octave = 0
+        noteOctave = 0
         if n < 0:
             pitch = scaleNotes[n % 7]
             noteOctave = math.floor(n / 8)
@@ -224,7 +250,6 @@ class Exercise:
         if 0 < noteOctave:
             octave = abjad.NamedInterval(("+P" + (str(7 + noteOctave))))
         pitch += octave
-
         pitchName = pitch.get_name()
         return pitchName + str(note[1]) + " "
 
@@ -232,50 +257,39 @@ class Exercise:
         container = abjad.Container("")
         scaleNotes = self.getScaleNotes()
         pattern = self.notationPattern()
-        p = pattern
         for index, group in enumerate(pattern):
-            if isinstance(group[0], list) and group[0][0] == "repeat":
-                p = group[1:]
-                c = self.createRepeatPhrase(scaleNotes, group[1:])
-                r = abjad.Repeat()
-                abjad.attach(r, c)
-                container.append(c)
+            if not isinstance(group[0], int) and isinstance(group, list) and any('repeat' in item for item in group):
+                p = group
+                repeatPhrase = self.createRepeatPhrase(scaleNotes, p)
+                container.append(repeatPhrase)
             else:
-                if isinstance(group[0], list):
-                    container.append(self.createNotePhrase(scaleNotes, group[0]))
+                if isinstance(group, list):
+                    container.append(self.createNotePhrase(scaleNotes, group))
                 else:
                     container.append(self.createNotePhrase(scaleNotes, group))
-
-        attachHere = ""
-        if len(container) >= 1:
-            # attachHere = container[0]
-            attachHere = container[0][0]
-        if attachHere != "":
-            keySignature = abjad.KeySignature(
-                abjad.NamedPitchClass(self.tonic), abjad.Mode(self.mode)
-            )
-            abjad.attach(keySignature, attachHere)
-            ts = tuple(int(x) for x in self.timeSignature)
-            timeSignature = abjad.TimeSignature(ts)
-            abjad.attach(timeSignature, attachHere)
-            if not abjad.get.indicators(container[-1], abjad.Repeat):
-                bar_line = abjad.BarLine("|.")
-                last_leaf = abjad.select.leaf(container[-1], -1)
-
-                if last_leaf is not None:
-                    abjad.attach(bar_line, last_leaf)
-                else:
-                    print("No suitable leaf for bar line attachment found in the last container.")
-        # FIXME articulation.get('articulation')???
         if self.articulation:
             for articulation in self.articulation:
-                if articulation.get("articulation").lower() == "fermata":
-                    a = abjad.Fermata()
-                    abjad.attach(a, container[0][int(articulation.get("index"))])
+                match articulation.get('articulation').lower():
+                    case 'fermata':
+                        a = abjad.Fermata()
+                        abjad.attach(a, container[0][int(articulation.get("index"))])
+                    case _:
+                        pass
+        keySignature = abjad.KeySignature(abjad.NamedPitchClass(self.tonic), abjad.Mode(self.mode))
+        abjad.attach(keySignature, container[0][0])
 
-        voice = abjad.Voice([container], name="Exercise_Voice")
-        staff = abjad.Staff([voice], name="Exercise_Staff")
-        score = abjad.Score([staff], name="Score")
+        ts = tuple(int(x) for x in self.timeSignature)
+        timeSignature = abjad.TimeSignature(ts)
+        abjad.attach(timeSignature, container[0][0])
+
+        if not abjad.get.indicators(container[-1], abjad.Repeat):
+            bar_line = abjad.BarLine("|.")
+            last_leaf = abjad.select.leaf(container[-1], -1)
+            if last_leaf is not None:
+                abjad.attach(bar_line, last_leaf)
+            else:
+                print("No suitable leaf for bar line attachment found in the last container.")
+        score = abjad.Score([container], name="Score")
         return score
 
     def getScaleNotes(self):
@@ -287,19 +301,12 @@ class Exercise:
         score = self.buildScore()
         lilypond_file = abjad.LilyPondFile([self.preamble, score])
 
-        # current_file_directory = os.path.dirname(__file__)
-        # absolutePath = os.path.join(current_file_directory, "/", "temp/")
-        # localPathOLD = os.path.join(absolutePath + self.filename)
-        localPath = str(self.filename)
-
-
+        # localPath = str(self.filename)
+        localPath = self.filename
         abjad.persist.as_png(lilypond_file, localPath, flags="-dcrop", resolution=300)
-
         png = os.path.join(localPath + ".cropped.png")
-        # png = os.path.join(localPath + ".cropped.png")
-
         dropItInTheBucket(png, localPath)
-        # TODO:
+
         ly = os.path.join(localPath + ".ly")
         os.remove(png)
         os.remove(ly)

@@ -5,6 +5,7 @@ It will process those inputs and create the specific exercises for a new practic
 from practiceInterval import PracticeInterval
 from setDesigner.queries import startUserPracticeSession
 import random
+import math
 
 
 class PracticeSession:
@@ -58,12 +59,55 @@ class PracticeSession:
                 return collection.get('patterns')[index]
         return None
 
+    def maxRhythmNoteLength(self, rhythms):
+        return max(rhythms.get('patterns'), key=lambda x: x.get('rhythmLength')).get('rhythmLength')
+
+    def multipleBarRhythm(self, notePattern, rhythms):
+        length = notePattern.get('noteLength')
+        maxRhythmLength = self.maxRhythmNoteLength(rhythms)
+        minimumNumberOfMeasures = math.ceil(length / maxRhythmLength)
+        # measureNumber = 0
+        remainder = length
+        r = []
+        id = "Multi"
+        rLength = 0
+        artic = []
+        while remainder > maxRhythmLength:
+            # Get the rhythms that are at least length/minNumberOfMesures
+            possibleRhythms = [
+                x for x in rhythms.get('patterns') if length / minimumNumberOfMeasures <= x.get('rhythmLength')
+            ]
+            measure = random.choice(possibleRhythms)
+            r.extend(measure.get('rhythmPattern'))
+            id += str(measure.get('rhythmPatternId'))
+            rLength += measure.get('rhythmLength')
+            remainder -= measure.get('rhythmLength')
+            if measure.get('articulation'):
+                artic.extend(measure.get('articulation'))
+        possibleRhythms = [x for x in rhythms.get('patterns') if x.get('rhythmLength') == remainder]
+        lastMeasure = random.choice(possibleRhythms)
+        rLength += lastMeasure.get('rhythmLength')
+        if lastMeasure.get('articulation'):
+            artic.extend(lastMeasure.get('articulation'))
+        r.extend(lastMeasure.get('rhythmPattern'))
+        random.shuffle(r)
+        return {'rhythmPatternID': id,
+                'rhythmDescription': lastMeasure.get('rhythmDescription'),
+                'rhythmPattern': r,
+                'rhythmLength': rLength,
+                'timeSignature': lastMeasure.get('timeSignature'),
+                'articulation': artic,
+                }
+
     def getRandomRhythmPattern(self, notePattern, rhythmCollectionID):
         for collection in self.__collections:
             if collection.get('collectionID') == rhythmCollectionID:
                 patterns = collection.get('patterns')
                 matchingRhythms = [pattern for pattern in patterns if pattern.get('rhythmLength') == notePattern.get('noteLength')]
-                return random.choice(matchingRhythms)
+                choice = random.choice(matchingRhythms)
+                if not choice:
+                    choice = self.multipleBarRhythm(notePattern, collection)
+                return choice
         return None
 
     def createSession(self):
@@ -89,5 +133,6 @@ class PracticeSession:
                            'exerciseName': newInterval.exerciseName,
                            'filename': 'https://mysaxpracticeexercisebucket.s3.amazonaws.com/' + newInterval.filename,
                            'description': newInterval.description}
+            print(newInterval.exerciseName)
             self.__practiceSession.append(newExercise)
 

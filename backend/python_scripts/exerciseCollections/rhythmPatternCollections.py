@@ -41,8 +41,8 @@ def singleNoteWholeToneRhythms(numerator, denominator):
             'rhythmLength': rhythmPatternNoteLength(pattern),
             'timeSignature': (numerator, denominator),
             'articulation': [
-                {"articulation": "fermata", "index": 0, "name": "fermata"},
-                {"articulation": "fermata", "index": 1, "name": ""}
+                # {"articulation": "fermata", "index": 0, "name": "fermata"},
+                # {"articulation": "fermata", "index": 1, "name": ""}
             ]
         }
     )

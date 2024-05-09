@@ -14,5 +14,7 @@ END //
 
 DELIMITER ;
 
+CALL clear_exercises_proc;
+SELECT * FROM Exercises;
 
  
