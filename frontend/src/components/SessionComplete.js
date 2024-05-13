@@ -8,8 +8,8 @@ export const SessionCompleteModal = ({
   show,
   setShow,
   currentSet,
-  playerDetails,
-  updatePlayerDetails,
+  // playerDetails,
+  // updatePlayerDetails,
   setCreated,
 }) => {
   const handleClose = () => setShow(false);
@@ -23,12 +23,12 @@ export const SessionCompleteModal = ({
         setCreated.current = false;
         navigate("/");
         handleClose();
-      }, 2000);
-      const newPlayerDetails = {
-        ...playerDetails,
-        previousSet: currentSet,
-      };
-      updatePlayerDetails(newPlayerDetails);
+      }, 1500);
+      // const newPlayerDetails = {
+      //   ...playerDetails,
+      //   previousSet: currentSet,
+      // };
+      // updatePlayerDetails(newPlayerDetails);
       return () => clearTimeout(timeout);
     }
   }, [show]);
@@ -40,8 +40,8 @@ export const SessionCompleteModal = ({
           <Modal.Header closeButton>
             <Modal.Title className=""> Congratulations</Modal.Title>
           </Modal.Header>
-          <Modal.Body className="">You earned these achievements</Modal.Body>
-          <Modal.Footer>Saving practice data. See you next time.</Modal.Footer>
+          <Modal.Body className="">You have a new tool in the shed.</Modal.Body>
+          <Modal.Footer>See you next time.</Modal.Footer>
         </Modal>
       </Container>
     </>

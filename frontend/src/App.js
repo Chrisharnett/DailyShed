@@ -85,7 +85,13 @@ export function App() {
         <Routes>
           <Route
             path="/"
-            element={<HomePage loggedIn={loggedIn} cognitoURL={cognitoURL} />}
+            element={
+              <HomePage
+                loggedIn={loggedIn}
+                cognitoURL={cognitoURL}
+                user={user}
+              />
+            }
           />
           <Route path="*" element={<NotFoundPage />} />
           <Route element={<PrivateRoute />}>

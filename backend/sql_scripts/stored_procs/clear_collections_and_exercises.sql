@@ -25,13 +25,12 @@ DELIMITER ;
 CALL clear_collections_and_exercises_proc;
 CALL clearUsers;
 
-SELECT * FROM Exercises;
 SELECT * FROM CollectionPatterns;
 SELECT * FROM Collections;
 SELECT * FROM ExerciseLog;
 SELECT * FROM Exercises;
 SELECT * FROM NotePatterns;
-SELECT * FROM pitchNames;
+SELECT * FROM TonicSequences;
 SELECT * FROM ProgramExercises;
 SELECT * FROM Programs;
 SELECT * FROM RhythmPatterns;

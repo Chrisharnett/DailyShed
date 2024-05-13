@@ -9,6 +9,15 @@ class PracticeInterval(Exercise):
         self.__interval = interval
         self.__notePatternDetails = {}
         self.__rhythmPatternDetails = {}
+        self.__incrementMe = False
+
+    @property
+    def incrementMe(self):
+        return self.__incrementMe
+
+    @incrementMe.setter
+    def incrementMe(self, boolean):
+        self.__incrementMe = boolean
 
     @property
     def rhythmPatternDetails(self):

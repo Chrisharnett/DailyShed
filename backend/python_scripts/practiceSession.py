@@ -3,7 +3,7 @@ This class should take sessionData and the appropriate collections needed to bui
 It will process those inputs and create the specific exercises for a new practice session.
 """
 from practiceInterval import PracticeInterval
-from setDesigner.queries import startUserPracticeSession
+from setDesigner.queries import startUserPracticeSession, incrementProgramIndex, getNotePatternHistory
 import random
 import math
 
@@ -16,6 +16,25 @@ class PracticeSession:
         self.__collectionHistory = []
         self.__exerciseDetails = []
         self.__userPracticeSessionID = None
+        self.__incrementData = {}
+
+    @property
+    def incrementData(self):
+        return self.__incrementData
+
+    @incrementData.setter
+    def incrementData(self, programID):
+        newIndex = None
+        if 'programID' in self.incrementData:
+            newIndex = self.incrementData[programID] + 1
+        else:
+            for interval in self.__sessionData.get('intervals'):
+                if interval.get('userProgramID') == programID:
+                    newIndex = interval.get('currentIndex') + 1
+        if newIndex:
+            self.incrementData['programID'] = newIndex
+
+        return self.__
 
     @property
     def practiceSession(self):
@@ -42,21 +61,31 @@ class PracticeSession:
     def getNewExercise(self, interval):
         pass
 
-    def getReviewExercise(self, interval):
-        pass
+    def minPlayCount(self, patterns):
+        return min(pattern['playcount'] for pattern in patterns)
 
-    def incrementCurrentIndex(self, collectionID):
+    def getReviewNotePattern(self, interval):
+        notePatternHistory = getNotePatternHistory(self.__sessionData.get('sub'), interval.get('primaryCollectionID'))
+        min = self.minPlayCount(notePatternHistory)
+        reviewPatterns = [pattern for pattern in notePatternHistory if pattern.get('playcount') == min]
+        notePatternID  = random.choice(reviewPatterns).get('notePatternID')
+        directionIndex = next(pattern.get('directionIndex') for pattern in notePatternHistory if pattern.get('notePatternID') == notePatternID)
+        coll = next(collection for collection in self.__collections if collection.get('collectionID') == interval.get('primaryCollectionID'))
+        notePattern = next(pattern for pattern in coll.get('patterns') if pattern.get('notePatternID') == notePatternID)
+        notePattern['currentDirectionIndex'] = directionIndex
+        return notePattern
+
+    def incrementCurrentIndex(self, collectionID, userProgramID):
         for collection in self.__collections:
             if collection.get('collectionID') == collectionID:
-                newIndex = collection.get('currentIndex') + 1
-                collection['currentIndex']  = newIndex
-                return newIndex
+                collection['currentIndex']  = incrementProgramIndex(userProgramID)
+                return collection['currentIndex']
         return None
 
     def getNotePattern(self, index, collectionID):
         for collection in self.__collections:
             if collection.get('collectionID') == collectionID:
-                return collection.get('patterns')[index]
+                return collection.get('patterns')[index % len(collection.get('patterns'))]
         return None
 
     def maxRhythmNoteLength(self, rhythms):
@@ -113,26 +142,31 @@ class PracticeSession:
     def createSession(self):
         self.setUserPracticeSessionID()
         for i, interval in enumerate(self.__sessionData.get('intervals')):
+            print(f"{i}.{interval.get('PrimaryCollectionTitle')} - {interval.get('rhythmCollectionTitle')} - {interval.get('currentIndex')}")
             newInterval = PracticeInterval(interval)
             primaryCollectionID = interval.get('primaryCollectionID')
             rhythmCollectionID = interval.get('rhythmCollectionID')
             if not interval['reviewExercise'] or interval['currentIndex'] < 1:
-                index = self.incrementCurrentIndex(primaryCollectionID)
+                # FIXME: Increment when the exercises are played ONCE. Not created. Part of logging process.
+                # self.incrementData.append(primaryCollectionID, interval.get('userProgramID'))
+                newInterval.incrementMe = True
+                index = self.incrementCurrentIndex(primaryCollectionID, interval.get('userProgramID'))
                 notePatternDetails = self.getNotePattern(index, primaryCollectionID)
                 newInterval.notePatternDetails = notePatternDetails
                 newInterval.determineDirection()
-                if rhythmCollectionID:
-                    rhythmPatternDetails = self.getRandomRhythmPattern(notePatternDetails, rhythmCollectionID)
-                    newInterval.rhythmPatternDetails = rhythmPatternDetails
-
             else:
-                exercise = self.getReviewExercise(self, self.primaryCollectionID)
-
+                notePatternDetails = self.getReviewNotePattern(interval)
+                newInterval.notePatternDetails = notePatternDetails
+                newInterval.applyNewDirection()
+            if rhythmCollectionID:
+                rhythmPatternDetails = self.getRandomRhythmPattern(notePatternDetails, rhythmCollectionID)
+                newInterval.rhythmPatternDetails = rhythmPatternDetails
             newInterval.createExercise(self.userPracticeSessionID)
             newExercise = {'exerciseID': newInterval.exerciseID,
                            'exerciseName': newInterval.exerciseName,
                            'filename': 'https://mysaxpracticeexercisebucket.s3.amazonaws.com/' + newInterval.filename,
-                           'description': newInterval.description}
-            print(newInterval.exerciseName)
+                           'description': newInterval.description,
+                           'incrementMe': newInterval.incrementMe}
+            print(f"{newInterval.notePatternID} - {newInterval.rhythmPatternID} ")
             self.__practiceSession.append(newExercise)
 

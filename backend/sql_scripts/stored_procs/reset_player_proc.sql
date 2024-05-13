@@ -1,17 +1,14 @@
 USE Daily_Shed;
-DROP PROCEDURE IF EXISTS clear_exercises_proc;
+DROP PROCEDURE IF EXISTS reset_player_proc;
 DELIMITER //
 
-CREATE PROCEDURE clear_exercises_proc(
-
+CREATE PROCEDURE reset_player_proc(
 )
 BEGIN
-	DELETE FROM UserPracticeSessionExercises;
-	DELETE FROM ProgramExercises;
     DELETE FROM ExerciseLog;
-	DELETE FROM Exercises;
+    
+    
 END //
-
 
 DELIMITER ;
 

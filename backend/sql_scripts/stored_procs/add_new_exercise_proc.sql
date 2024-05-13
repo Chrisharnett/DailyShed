@@ -50,44 +50,57 @@ BEGIN
         ON cp.collectionID = c.collectionID
         WHERE cp.notePatternID = notePatternID_p;
         
-        SELECT REPLACE(REPLACE(REPLACE(REPLACE(timeSignature, '[', ''), ']', ''), ',', '_'), ' ', '')
+        SELECT REPLACE(REPLACE(REPLACE(REPLACE(timeSignature, '[', ''), ']', ''), ',', '/'), ' ', '')
         INTO timeSignature_p
         FROM RhythmPatterns
         WHERE rhythmPatternID = rhythmPatternID_p;
         
-		SELECT CONCAT(
-        COALESCE(CONCAT(UPPER(LEFT(tonic_p, 1)), LOWER(SUBSTRING(tonic_p, 2))), ''), ' ',
-        COALESCE(CONCAT(UPPER(LEFT(mode_p, 1)), LOWER(SUBSTRING(mode_p, 2))), ''), ' ',
-        COALESCE(collectionTitle_p, ''), ' in ',
-        COALESCE(timeSignature_p, ''), ' '
-		)
-		INTO exerciseName_p;
+        SELECT exerciseID INTO exerciseID_p
+		FROM Exercises
+		WHERE notePatternID = notePatternID_p
+		  AND rhythmPatternID = rhythmPatternID_p
+		  AND tonic = tonic_p
+		  AND mode = mode_p
+		  AND directionIndex = directionIndex_p;
+		
         
-         IF direction_p <> 'static' THEN
-			SET exerciseName_p =  CONCAT(exerciseName_p, ' ',UPPER(LEFT(direction_p, 1)), LOWER(SUBSTRING(direction_p, 2)));
+        IF exerciseID_p IS NULL THEN
+			SELECT CONCAT(
+			COALESCE(CONCAT(UPPER(LEFT(tonic_p, 1)), LOWER(SUBSTRING(tonic_p, 2))), ''), ' ',
+			COALESCE(CONCAT(UPPER(LEFT(mode_p, 1)), LOWER(SUBSTRING(mode_p, 2))), ''), ' ',
+			COALESCE(collectionTitle_p, ''), ' in ',
+			COALESCE(timeSignature_p, ''), ' '
+			)
+			INTO exerciseName_p;
+			
+			 IF direction_p <> 'static' THEN
+				SET exerciseName_p =  CONCAT(exerciseName_p, ' ',UPPER(LEFT(direction_p, 1)), LOWER(SUBSTRING(direction_p, 2)));
+			END IF;
+			
+			SELECT RTRIM(exerciseName_p) INTO exerciseName_p;        
+			
+			
+			
+			INSERT INTO Exercises(
+				notePatternID, 
+				rhythmPatternID,
+				exerciseName,
+				tonic,
+				mode,
+				description,
+				directionIndex
+				) VALUES (
+				notePatternID_p,
+				rhythmPatternID_p,
+				exerciseName_p,
+				tonic_p,
+				mode_p,
+				description_p,
+				directionIndex_p
+				);
+				
+			SELECT LAST_INSERT_ID() INTO exerciseID_p;
 		END IF;
-        
-        SELECT RTRIM(exerciseName_p) INTO exerciseName_p;        
-        
-        INSERT INTO Exercises(
-			notePatternID, 
-            rhythmPatternID,
-            exerciseName,
-            tonic,
-            mode,
-            description,
-            directionIndex
-            ) VALUES (
-            notePatternID_p,
-            rhythmPatternID_p,
-            exerciseName_p,
-            tonic_p,
-            mode_p,
-            description_p,
-            directionIndex_p
-            );
-            
-		SELECT LAST_INSERT_ID() INTO exerciseID_p;
         
         SELECT programID INTO programID_p
         FROM UserPrograms 
@@ -128,6 +141,8 @@ SELECT * FROM RhythmPatterns;
 SELECT * FROM NotePatterns;
 SELECT * FROM UserPrograms;
 SELECT * FROM UserPracticeSession;
+
+CALL clear_exercises_proc();
 -- SELECT * FROM view_exercises;
 
 -- SELECT * FROM NotePatterns;

@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from exerciseCollections.collectionCreator import collectionCreator
-from setDesigner.queries import insertCollectionsInDatabase, insertPrograms, getCollections, getPracticeSession
+from setDesigner.queries import insertCollectionsInDatabase, insertPrograms, getCollections, getPracticeSession, logExerciseDetails
 from practiceSession import PracticeSession
 import boto3
 
@@ -16,6 +16,20 @@ s3_client = boto3.client("s3")
 def home():
     return "Connected"
 
+@app.route("/logExercise", methods=["POST"])
+def logExercise():
+    try:
+        details = request.get_json()
+        logExerciseDetails(details)
+        return {
+            "statusCode": 200}
+
+    except Exception as e:
+        return jsonify({
+            "statusCode": 400,
+            "error": str(e)
+        })
+
 @app.route("/generateSet", methods=["GET", "POST"])
 def generateSet():
     try:
@@ -28,7 +42,9 @@ def generateSet():
                 "statusCode": 200,
                 "sessionID": practiceSession.userPracticeSessionID,
                 "rounds": practiceSession.rounds,
-                "set": practiceSession.practiceSession}
+                "set": practiceSession.practiceSession,
+                #FIXME: Move increment data through frontEnd, on to logging,
+                "incrementData": practiceSession.incrementData}
 
     except Exception as e:
         return jsonify({

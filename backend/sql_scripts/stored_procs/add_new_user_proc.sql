@@ -30,14 +30,12 @@ BEGIN
 		FROM Programs p
 		JOIN Collections c ON p.primaryCollectionID = c.collectionID
 		WHERE c.collectionTitle = 'single_note_long_tone'
-		AND p.tonic = 'g'
 		AND scaleModeID = defaultMode_p;
 		
         SELECT p.programID INTO defaultProgram2_p
 		FROM Programs p
 		JOIN Collections c ON p.primaryCollectionID = c.collectionID
 		WHERE c.collectionTitle = 'scale_to_the_ninth'
-		AND p.tonic = 'g'
 		AND scaleModeID = defaultMode_p;
 		
         INSERT INTO users (sub, email, userName) VALUES (sub, email, name);
@@ -49,7 +47,7 @@ BEGIN
 			IF ROW_COUNT() > 0 THEN
 				SELECT LAST_INSERT_ID() INTO userProgramID1_p;
 				
-				INSERT INTO UserPrograms(programID, sub) VALUES (defaultProgram2_p, sub);
+				INSERT INTO UserPrograms(programID, sub, scaleTonicIndex) VALUES (defaultProgram2_p, sub, 1);
 				SELECT LAST_INSERT_ID() INTO userProgramID2_p;
 
 				-- Insert default routine into UserPracticeRoutines
@@ -81,53 +79,12 @@ BEGIN
     END IF;
 END //
 
-
 DELIMITER ;
-
 
 CALL add_new_user_proc(534, 'testemail','testname');
 
-SELECT p.programID, p.tonic, sm.scaleModeName, rc.CollectionTitle AS rhythm, pc.CollectionTitle as notes
-FROM Programs p 
-JOIN scaleModes sm USING(scaleModeID)
-LEFT JOIN Collections rc ON(p.rhythmCollectionID = rc.collectionID)
-LEFT JOIN Collections pc ON(p.primaryCollectionID = pc.collectionID);
-
-SELECT * FROM scaleModes;
-SELECT p.programID
-FROM Programs p
-JOIN Collections c ON p.primaryCollectionID = c.collectionID
-WHERE c.collectionTitle = "scale_to_the_ninth"
-AND p.tonic = 'g'
-AND scaleModeID = 5
-;
-
-SELECT scaleModeID FROM scaleModes WHERE scaleModeName = 'major';
-        
-CALL add_new_user_proc(421, 'testemail','testname');
-
-CALL clearAll();
-CALL clearUsers();
-SELECT * FROM users;
-SELECT * FROM RhythmPatterns;
-SELECT * FROM UserPrograms;
-SELECT * FROM UserPracticeRoutines;
-SELECT * FROM UserRoutineExercises;
-
-SELECT * FROM Programs;
-
- INSERT INTO users (sub, email, userName) VALUES (1, 'email@test.com', 'name');
- INSERT INTO UserPrograms(programID, sub) VALUES (2, 1), (3, 1);
- INSERT INTO UserPracticeRoutines(sub) VALUES (1);
- 
- SELECT * FROM users;
- SELECT * FROM UserPracticeRoutines;
- SELECT * FROM UserPrograms;
- 
- INSERT INTO UserRoutineExercises (UserPracticeRoutineID, UserProgramID, reviewExercise) 
-	VALUES 
-		(2, 7, TRUE),
-		(2, 7, FALSE),
-		(2, 8, TRUE),
-		(2, 8, FALSE);
+SELECT* FROM  UserPrograms;
+UPDATE UserPrograms
+SET scaleTonicIndex = 1 
+WHERE scaleTonicIndex = 0;
  

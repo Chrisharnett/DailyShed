@@ -5,7 +5,6 @@ DELIMITER //
 CREATE PROCEDURE add_program_proc(
     IN primaryTitle_p   VARCHAR(45),
     IN rhythmTitle_p  	VARCHAR(45),
-    IN instrument_p		VARCHAR(45),
     IN scaleMode_p		VARCHAR(45),
     IN tonicSequence_p 	VARCHAR(45)
 )
@@ -14,7 +13,6 @@ BEGIN
     DECLARE primaryCollectionID_p 	INT;
     DECLARE rhythmCollectionID_p 	INT;
     DECLARE scaleModeID_p 			INT;
-    DECLARE instrumentID_p 			INT;
     DECLARE tonicSequenceID_p		INT;
     DECLARE message					VARCHAR(255);
     DECLARE done 					INT DEFAULT FALSE;
@@ -35,11 +33,12 @@ BEGIN
         FROM Collections 
         WHERE collectionTitle = rhythmTitle_p;
 		
+        /*
         SELECT instrumentID
         INTO instrumentID_p
         FROM Instruments
         WHERE instrumentName = instrument_p;
-        
+        */
        --  IF tonic_p IS NULL THEN
 -- 			SELECT defaultTonic 
 -- 			INTO tonic_p
@@ -67,8 +66,8 @@ BEGIN
             WHERE name = tonicSequence_p;
 		END IF;
         
-        INSERT INTO Programs (scaleModeID, rhythmCollectionID, primaryCollectionID, instrumentID, tonicSequenceID) 
-			VALUES (scaleModeID_p, rhythmCollectionID_p, primaryCollectionID_p, instrumentID_p, tonicSequenceID_p);
+        INSERT INTO Programs (scaleModeID, rhythmCollectionID, primaryCollectionID, tonicSequenceID) 
+			VALUES (scaleModeID_p, rhythmCollectionID_p, primaryCollectionID_p, tonicSequenceID_p);
             
         -- SET message = CONCAT(tonic_p, ' ', scaleModeID_p, ' ', rhythmCollectionID_p, ' ', primaryCollectionID_p, ' ', instrumentID_p, ' ', tonicSequenceID_p); 
         

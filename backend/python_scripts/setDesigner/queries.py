@@ -5,6 +5,80 @@ from data.instruments import instrumentList
 from data.tonicSequences import tonicSequenceList
 from data.modes import modeList
 
+def getNotePatternHistory(sub, collectionID):
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.callproc('get_notePattern_history_proc', [sub, collectionID])
+            result = cursor.fetchall()
+            history = []
+            for np in result:
+                history.append({
+                    'notePatternID': np.get('notePatternID'),
+                    'playcount': np.get('playcount'),
+                    'direction': json.loads(np.get('directions'))[np.get('directionIndex')],
+                    'directionIndex': np.get('directionIndex')
+                })
+            conn.commit()
+            return history if history else None
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
+
+    finally:
+        conn.close()
+    # need ID, playCount
+    pass
+
+def incrementProgramIndex(userProgramID):
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.callproc('increment_program_index_proc', [userProgramID])
+            result = cursor.fetchone()
+            conn.commit()
+            return result['currentIndex'] if result else None
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
+
+    finally:
+        conn.close()
+
+def logExerciseDetails(exerciseDetails):
+    # FIXME: Add an increment boolean here. If true, increment the user index. Increment should stay within overall length of program.
+    conn = getDBConnection()
+    sessionID = exerciseDetails.get('sessionID')
+    timestamp = exerciseDetails.get('timestamp')
+    sub = exerciseDetails.get('sub')
+    exerciseID = exerciseDetails.get('exerciseID')
+    rating = exerciseDetails.get('rating')
+    comment = exerciseDetails.get('comment')
+    try:
+        cursor = conn.cursor()
+        cursor.callproc(
+            'log_exercise_proc',
+            [
+                sessionID,
+                timestamp,
+                sub,
+                exerciseID,
+                rating,
+                comment
+            ])
+        conn.commit()
+        return True
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
+    finally:
+        conn.close()
+
 def getCollections(session):
     conn = getDBConnection()
     try:
@@ -107,10 +181,12 @@ def getPracticeSession(sub):
                    'setLength': result[0].get('setLength'),
                    'intervals': []}
         for exercise in result:
+            tonicSequence = json.loads(exercise.get('tonicSequence'))
             session.get('intervals').append({
                 'PrimaryCollectionTitle': exercise.get('PrimaryCollectionTitle'),
                 'rhythmCollectionTitle': exercise.get('rhythmCollectionTitle'),
-                'tonic': exercise.get('tonic'),
+                'tonicSequence': tonicSequence,
+                'tonic': tonicSequence[exercise.get('scaleTonicIndex')],
                 'mode': exercise.get('mode'),
                 'reviewExercise': exercise.get('reviewExercise'),
                 'currentIndex': exercise.get('currentIndex'),
@@ -244,8 +320,7 @@ def insertPrograms(programs):
             for program in programs:
                 primary = program['primaryCollectionTitle']
                 rhythm = program['rhythmPatternTitle']
-                instrument = 'saxophone'
-                cursor.callproc('add_program_proc', [primary, rhythm, instrument, None, None])
+                cursor.callproc('add_program_proc', [primary, rhythm, None, None])
         conn.commit()
         return True
 

@@ -64,7 +64,7 @@ const TheShed = ({ user }) => {
           <div className="titles p-2">
             <h2 className="dropShadow">Practice Time</h2>
             <h3 className="dropShadow">
-              Exercise {exerciseCount} of {currentSet.length}
+              Exercise {exerciseCount} of {currentSet.length * rounds}
             </h3>
           </div>
           <div className="d-flex flex-column align-items-center">
@@ -78,6 +78,7 @@ const TheShed = ({ user }) => {
                 buttonText={buttonText}
                 setCreated={setCreated}
                 rounds={rounds}
+                user={user}
               />
             }
           </div>

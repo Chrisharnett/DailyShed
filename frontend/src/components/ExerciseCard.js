@@ -12,6 +12,7 @@ const ExerciseCard = ({
   sessionID,
   setCreated,
   rounds,
+  user,
 }) => {
   const [showSelfAssementModal, setShowSelfAssessmentModal] = useState(false);
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
@@ -91,6 +92,8 @@ const ExerciseCard = ({
           exerciseCount={exerciseCount}
           setShowSessionCompleteModal={setShowSessionCompleteModal}
           goToNextExercise={goToNextExercise}
+          user={user}
+          rounds={rounds}
         />
         <SessionCompleteModal
           show={showSessionCompleteModal}

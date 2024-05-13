@@ -10,11 +10,11 @@ export const SelfAssessmentModal = ({
   sessionID,
   exercise,
   currentSet,
-  playerDetails,
-  updatePlayerDetails,
+  user,
   exerciseCount,
   setShowSessionCompleteModal,
   goToNextExercise,
+  rounds,
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [rating, setRating] = useState("");
@@ -30,35 +30,15 @@ export const SelfAssessmentModal = ({
       const exerciseEntry = {
         sessionID: sessionID,
         timestamp: new Date().toISOString(),
-        sub: playerDetails.sub,
-        exerciseName: exercise.fileName,
-        exercise: {
-          imageURL: exercise.imageURL,
-          notePatternRhythmLength: exercise.notePattern.notePatternRhythmLength,
-          notePatternType: exercise.notePattern.notePatternType,
-          rhythmMatcher: exercise.rhythmPattern.rhythmDescription,
-          direction: exercise.notePattern.direction,
-        },
+        sub: user.sub,
+        exerciseID: exercise.exerciseID,
         rating: rating,
         comment: comment,
       };
 
       const logEntry = await axios.post("/api/logExercise", exerciseEntry);
 
-      const exerciseMetadata = {
-        exerciseName: exercise.fileName,
-        exercise: exerciseEntry.exercise,
-        rating: rating,
-        comment: comment,
-      };
-
-      const updatedPlayer = updatePlayerMetadata(
-        playerDetails,
-        exerciseMetadata
-      );
-      updatePlayerDetails(updatedPlayer);
-
-      if (exerciseCount === currentSet.length * playerDetails.program.rounds) {
+      if (exerciseCount === currentSet.length * rounds) {
         setShowSessionCompleteModal(true);
       } else {
         goToNextExercise();

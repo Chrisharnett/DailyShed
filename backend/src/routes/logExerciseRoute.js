@@ -1,4 +1,5 @@
-import { logExercise } from "../commands/exercises.js";
+import axios from "axios";
+import { logExercise } from "../commands/flaskRoutes.js";
 
 export const logExerciseRoute = {
   path: "/api/logExercise",
@@ -7,11 +8,16 @@ export const logExerciseRoute = {
     const exerciseEntry = req.body;
 
     try {
-      const response = await logExercise(exerciseEntry);
-      res.status(200).json({ response });
+      const response = await axios.post(logExercise, exerciseEntry, {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (response.status === 200) {
+        res.status(200).json(response.data);
+      } else {
+        res.status(500).json({ error: "Exercise logging failed" });
+      }
     } catch (error) {
-      console.error(error);
-      res.sendStatus(500);
+      res.status(500).json({ error: "Error communicating with Flask server" });
     }
   },
 };

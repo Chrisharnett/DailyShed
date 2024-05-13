@@ -7,8 +7,6 @@ export const generateSetRoute = {
   handler: async (req, res) => {
     const sub = req.params.sub;
 
-    // const playerDetails = req.body;
-
     try {
       const response = await axios.post(
         setGenerator,
