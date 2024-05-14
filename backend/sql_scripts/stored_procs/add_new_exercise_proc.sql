@@ -135,7 +135,7 @@ END //
 DELIMITER ;
 
 
-CALL add_new_exercise_proc(524, 392, 'c', 'major', 'static', 0, 130, 136);
+CALL add_new_exercise_proc(584, 392, 'c', 'major', 'ascending', 0, 130, 136);
 SELECT * FROM Exercises;
 SELECT * FROM RhythmPatterns;
 SELECT * FROM NotePatterns;

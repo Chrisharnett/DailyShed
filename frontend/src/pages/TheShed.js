@@ -30,7 +30,7 @@ const TheShed = ({ user }) => {
   useEffect(() => {
     const handleNextPracticeSession = async () => {
       try {
-        let response = await axios.post(`/api/generateSet/${user.sub}`);
+        const response = await axios.post(`/api/generateSet/${user.sub}`);
         const sessionData = response.data;
         setSessionID(sessionData.sessionID);
         setCurrentSet(sessionData.set);

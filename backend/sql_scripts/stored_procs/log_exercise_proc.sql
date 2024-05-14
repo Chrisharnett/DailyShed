@@ -8,14 +8,16 @@ CREATE PROCEDURE log_exercise_proc(
     IN sub_p				VARCHAR(45),
     IN exerciseID_p			INT,
     IN rating_p				INT,
-    IN comment_p			VARCHAR(255)
+    IN comment_p			VARCHAR(255),
+    IN incrementMe_p		INT
 )
 
 BEGIN
-        
-    -- DECLARE sql_error BOOLEAN DEFAULT FALSE;
+	DECLARE userProgramID_p		INT;    
+
     DECLARE sql_error_code INT DEFAULT 0;
 	DECLARE sql_error_message VARCHAR(255) DEFAULT '';
+
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		BEGIN
@@ -30,6 +32,13 @@ BEGIN
     
 		INSERT INTO ExerciseLog (exerciseID, timestamp, comment, rating, sub, sessionID)
         VALUES(exerciseID_p, timestamp_p, comment_p, rating_p, sub_p, sessionID_p);
+        
+        IF incrementMe_p IS TRUE THEN
+			UPDATE UserPrograms
+            SET currentIndex = currentIndex + 1
+            WHERE userProgramID = incrementMe_p;
+        END IF;
+			
 		
     IF sql_error_code = 0 THEN
 		SELECT 'Exercise logged' AS message;
@@ -43,8 +52,10 @@ END //
 
 DELIMITER ;
 
+SELECT * FROM UserPrograms;
 SELECT * FROM ExerciseLog;
+SELECT * FROM Exercises;
 DELETE FROM ExerciseLog;
-SELECT * FROM users;
+SELECT * FROM UserPrograms;
 INSERT INTO ExerciseLog (exerciseID, timestamp, comment, rating, sub, sessionID)
 VALUES(124, '2024-05-10T13:19:12.711Z', 'test', 1, '0b44c9de-c681-479d-8f89-e8af14a57458', 257);

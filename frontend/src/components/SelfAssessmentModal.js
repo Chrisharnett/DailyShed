@@ -2,7 +2,6 @@ import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Form, Button, Container, Modal } from "react-bootstrap";
 import axios from "axios";
-import updatePlayerMetadata from "../util/UpdatePlayerMetadata.js";
 
 export const SelfAssessmentModal = ({
   show,
@@ -34,9 +33,14 @@ export const SelfAssessmentModal = ({
         exerciseID: exercise.exerciseID,
         rating: rating,
         comment: comment,
+        incrementMe: exercise.incrementMe,
       };
 
       const logEntry = await axios.post("/api/logExercise", exerciseEntry);
+
+      if (exercise.incrementMe) {
+        exercise.incrementMe = false;
+      }
 
       if (exerciseCount === currentSet.length * rounds) {
         setShowSessionCompleteModal(true);

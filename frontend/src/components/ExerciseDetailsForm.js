@@ -3,64 +3,69 @@ import KeyAndModeSelector from "./KeyAndModeSelector";
 import ToTitleCase from "../util/ToTitleCase";
 import { useEffect, useState } from "react";
 
-const ExerciseDetailsForm = ({ i, details, collections, onDetailsChange }) => {
+const ExerciseDetailsForm = ({
+  i,
+  interval,
+  programs,
+  scaleModes,
+  onDetailsChange,
+}) => {
   const [rhythmOptions, setRhythmOptions] = useState([]);
 
   useEffect(() => {
-    const rhythms = collections
-      .filter(
-        (collection) => collection.collectionTitle === details.collectionTitle
-      )
-      .map((collection) => collection.rhythmMatcher);
-    setRhythmOptions(rhythms);
+    // const rhythms = collections
+    //   .filter(
+    //     (collection) => collection.collectionTitle === details.collectionTitle
+    //   )
+    //   .map((collection) => collection.rhythmMatcher);
+    // setRhythmOptions(rhythms);
   }, []);
 
   const handleKeyChange = (key) => {
-    onDetailsChange({ ...details, key });
+    // onDetailsChange({ ...details, key });
   };
 
   const handleModeChange = (mode) => {
-    onDetailsChange({ ...details, mode });
+    // onDetailsChange({ ...details, mode });
   };
 
   const handleRhythmChange = (e) => {
-    onDetailsChange({ ...details, rhythmMatcher: e.target.value });
+    // onDetailsChange({ ...details, rhythmMatcher: e.target.value });
   };
 
   const handleCollectionChange = (e) => {
-    const matcher = collections.find(
-      (collection) => collection.collectionTitle === e.target.value
-    ).notePatternType;
-
-    const rhythms = collections
-      .filter((collection) => collection.collectionTitle === e.target.value)
-      .flatMap((collection) => collection.rhythmMatcher);
-    if (rhythms.length > 0) {
-      setRhythmOptions(rhythms);
-      onDetailsChange({
-        ...details,
-        collectionTitle: e.target.value,
-        notePatternType: matcher,
-        rhythmMatcher: rhythms[0],
-      });
-    } else {
-      setRhythmOptions("None");
-      onDetailsChange({
-        ...details,
-        collectionTitle: e.target.value,
-        notePatternType: matcher,
-        rhythmMatcher: null,
-      });
-    }
+    // const matcher = collections.find(
+    //   (collection) => collection.collectionTitle === e.target.value
+    // ).notePatternType;
+    // const rhythms = collections
+    //   .filter((collection) => collection.collectionTitle === e.target.value)
+    //   .flatMap((collection) => collection.rhythmMatcher);
+    // if (rhythms.length > 0) {
+    //   setRhythmOptions(rhythms);
+    //   onDetailsChange({
+    //     ...details,
+    //     collectionTitle: e.target.value,
+    //     notePatternType: matcher,
+    //     rhythmMatcher: rhythms[0],
+    //   });
+    // } else {
+    //   setRhythmOptions("None");
+    //   onDetailsChange({
+    //     ...details,
+    //     collectionTitle: e.target.value,
+    //     notePatternType: matcher,
+    //     rhythmMatcher: null,
+    //   });
+    // }
   };
 
   const handleCheckboxChange = (e) => {
-    onDetailsChange({ ...details, reviewBool: e.target.checked });
+    // onDetailsChange({ ...details, reviewBool: e.target.checked });
   };
 
-  useEffect(() => {
-    onDetailsChange(details);
-  }, [details]);
+  // useEffect(() => {
+  //   onDetailsChange(details);
+  // }, [details]);
 
   return (
     <>
@@ -68,28 +73,29 @@ const ExerciseDetailsForm = ({ i, details, collections, onDetailsChange }) => {
         <Col xs={12} md="auto" className="my-2 fs-4">
           <Form.Label className="dropShadow">Exercise {i + 1}</Form.Label>
           <Form.Select
-            value={details.collectionTitle}
-            onChange={handleCollectionChange}
+            value={ToTitleCase(interval.PrimaryCollectionTitle)}
+            // onChange={handleCollectionChange}
           >
-            {collections.map((collection, index) => (
-              <option key={index} value={collection.collectionTitle}>
-                {collection.collectionTitle}
+            {programs.map((program, index) => (
+              <option key={index} value={program.programTitle}>
+                {program.programTitle}
               </option>
             ))}
           </Form.Select>
         </Col>
         <KeyAndModeSelector
-          keyCenter={details.key}
-          mode={details.mode}
-          onKeyChange={handleKeyChange}
-          onModeChange={handleModeChange}
-          parentIndex={`${details.collectionTitle}_${i}`}
+          keyCenter={interval.tonic}
+          mode={interval.mode}
+          modes={scaleModes}
+          // onKeyChange={handleKeyChange}
+          // onModeChange={handleModeChange}
+          parentIndex={`${interval.collectionTitle}_${i}`}
         />
         <Col xs={12} md="auto" className="my-2 fs-4">
           <Form.Label className="dropShadow">Rhythm</Form.Label>
           <Form.Select
-            value={details.rhythmMatcher}
-            onChange={handleRhythmChange}
+          // value={interval.rhythmMatcher}
+          // onChange={handleRhythmChange}
           >
             {rhythmOptions.map((rhythm, index) => (
               <option key={index} value={rhythm}>
@@ -103,8 +109,8 @@ const ExerciseDetailsForm = ({ i, details, collections, onDetailsChange }) => {
             type="checkbox"
             label="Review Exercise"
             id={`reviewBool-${i}`}
-            checked={details.reviewBool}
-            onChange={handleCheckboxChange}
+            checked={interval.reviewBool}
+            // onChange={handleCheckboxChange}
             className="dropShadow"
           />
         </Col>

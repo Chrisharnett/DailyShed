@@ -17,7 +17,8 @@ CREATE OR REPLACE VIEW get_practice_session AS
 		pc.collectionLength AS collectionLength,
 		pc.collectionType AS PrimaryCollectionType,
         p.rhythmCollectionID,
-        p.primaryCollectionID
+        p.primaryCollectionID,
+        pc.collectionLength AS collectionLength
     FROM users u 
     JOIN UserPrograms up ON u.sub = up.sub
     JOIN UserRoutineExercises ure ON(ure.UserProgramID = up.UserProgramID)
@@ -45,7 +46,8 @@ SELECT
 		pc.collectionLength AS collectionLength,
 		pc.collectionType AS PrimaryCollectionType,
         p.rhythmCollectionID,
-        p.primaryCollectionID
+        p.primaryCollectionID,
+        pc.collectionLength AS collectionLength
     FROM users u 
     JOIN UserPrograms up ON u.sub = up.sub
     JOIN UserRoutineExercises ure ON(ure.UserProgramID = up.UserProgramID)
@@ -57,5 +59,12 @@ SELECT
     WHERE u.userName = 'Chris Harnett';
     
 SELECT * FROM users;
+SELECT * FROM UserPrograms;
 SELECT * FROM Programs;
+SELECT * FROM RhythmPatterns;
+
+SELECT * FROM get_practice_session;
+
+ALTER TABLE Daily_Shed.RhythmPatterns 
+ADD COLUMN measures INT NULL DEFAULT 1 AFTER rhythmLength;
     

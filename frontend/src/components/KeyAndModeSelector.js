@@ -5,6 +5,7 @@ import ToTitleCase from "../util/ToTitleCase";
 const KeyAndModeSelector = ({
   keyCenter,
   mode,
+  scaleModes,
   onKeyChange,
   onModeChange,
   parentIndex,
@@ -23,12 +24,12 @@ const KeyAndModeSelector = ({
     "a#",
     "b",
   ]);
-  const [modes, setModes] = useState([
-    "major",
-    "minor",
-    "dorian",
-    "mixolydian",
-  ]);
+  // const [scaleModes, setModes] = useState([
+  //   "major",
+  //   "minor",
+  //   "dorian",
+  //   "mixolydian",
+  // ]);
 
   const handleKeyChange = (e) => {
     onKeyChange(e.target.value);
@@ -61,7 +62,7 @@ const KeyAndModeSelector = ({
           <Form.Group className="" controlId="modeSelector">
             <Form.Label className="dropShadow fs-4">Mode</Form.Label>
             <Form.Select value={mode} onChange={handleModeChange}>
-              {modes.map((modeOption, i) => (
+              {scaleModes.map((modeOption, i) => (
                 <option
                   key={`${parentIndex}_${modeOption}_${i}`}
                   value={modeOption}

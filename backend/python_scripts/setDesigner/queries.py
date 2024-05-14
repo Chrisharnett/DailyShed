@@ -5,6 +5,24 @@ from data.instruments import instrumentList
 from data.tonicSequences import tonicSequenceList
 from data.modes import modeList
 
+def fetchModes():
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            modes = []
+            query = "SELECT scaleModeName FROM scaleModes"
+            cursor.execute(query, )
+            result = cursor.fetchall()
+            for mode in result:
+                modes.append(mode.get('scaleModeName').replace('_', ' ').title())
+        return modes
+
+    except Exception as e:
+        return str(e)
+
+    finally:
+        conn.close()
+
 def getNotePatternHistory(sub, collectionID):
     conn = getDBConnection()
     try:
@@ -58,6 +76,7 @@ def logExerciseDetails(exerciseDetails):
     exerciseID = exerciseDetails.get('exerciseID')
     rating = exerciseDetails.get('rating')
     comment = exerciseDetails.get('comment')
+    incrementMe = exerciseDetails.get('incrementMe') or None
     try:
         cursor = conn.cursor()
         cursor.callproc(
@@ -68,9 +87,11 @@ def logExerciseDetails(exerciseDetails):
                 sub,
                 exerciseID,
                 rating,
-                comment
+                comment,
+                incrementMe
             ])
         conn.commit()
+        exerciseDetails['incrementMe'] = False
         return True
     except Exception as e:
         conn.rollback()
@@ -194,9 +215,41 @@ def getPracticeSession(sub):
                 'collectionLength': exercise.get('collectionLength'),
                 'primaryCollectionType': exercise.get('PrimaryCollectinType'),
                 'rhythmCollectionID': exercise.get('rhythmCollectionID'),
-                'primaryCollectionID': exercise.get('primaryCollectionID')
+                'primaryCollectionID': exercise.get('primaryCollectionID'),
+                'collectionLength': exercise.get('collectionLength')
             })
         return session
+
+    except Exception as e:
+        return str(e), 500
+
+    finally:
+        conn.close()
+
+def fetchUserPrograms(sub):
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            query = "SELECT * FROM get_user_programs WHERE sub = %s"
+            cursor.execute(query, (sub, ))
+            result = cursor.fetchall()
+        programs = {'userName': result[0].get('userName'),
+                    'programs': []}
+        for interval in result:
+            program = {
+                        'programTitle': interval.get('collectionTitle').replace('_', ' ').title(),
+                        'collectionType': interval.get('collectionType'),
+                        'collectionLength': interval.get('collectionLength'),
+                        'instrument': interval.get('instrumentName'),
+                        'tonicSequence': json.loads(interval.get('sequence')),
+                        'tonicSequenceName': interval.get('tonicSequenceName'),
+                        'scaleTonicIndex': interval.get('scaleTonicIndex'),
+                        'mode': interval.get('scaleModeName'),
+                        'currentIndex': interval.get('currentIndex'),
+                        'rhythmCollection': interval.get('rhythmCollection').replace('_', ' ').title()
+                        }
+            programs['programs'].append(program)
+        return programs
 
     except Exception as e:
         return str(e), 500
@@ -401,3 +454,35 @@ def insertCollectionsInDatabase(collections):
     finally:
         conn.close()
 
+def insertNewRhythmPattern(
+        collectionID,
+        rhythmDescription,
+        articulation,
+        timeSignature,
+        rhythmPattern,
+        rhythmLength,
+        subRhythms
+):
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.callproc('insert_new_rhythmPattern_proc',
+                            [
+                                collectionID,
+                                rhythmDescription,
+                                json.dumps(articulation),
+                                json.dumps(timeSignature),
+                                json.dumps(rhythmPattern),
+                                rhythmLength,
+                                json.dumps(subRhythms)
+                            ])
+            result = cursor.fetchone()
+            return result.get('rhythmPatternID')
+        conn.commit()
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+    finally:
+        conn.close()

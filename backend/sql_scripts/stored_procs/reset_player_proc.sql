@@ -7,13 +7,20 @@ CREATE PROCEDURE reset_player_proc(
 BEGIN
     DELETE FROM ExerciseLog;
     
+    UPDATE UserPrograms
+	SET scaleTonicIndex = 1;
+    
+    UPDATE UserPrograms
+    SET currentIndex = -1;
     
 END //
 
 DELIMITER ;
 
-CALL clear_exercises_proc;
+CALL reset_player_proc;
 SELECT * FROM Exercises;
+
+SELECT * FROM UserPrograms;
 
 DELETE FROM UserPracticeSessionExercises;
 DELETE FROM ProgramExercises;

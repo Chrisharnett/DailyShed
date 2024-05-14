@@ -16,7 +16,7 @@ CREATE PROCEDURE insert_rhythmPattern_proc (
 )
 BEGIN 
 	DECLARE collectionID_p				INT;
-    DECLARE rhythmPatternID_p				INT;
+    DECLARE rhythmPatternID_p			INT;
     DECLARE sql_error					TINYINT DEFAULT FALSE;
         
 	DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
@@ -25,13 +25,14 @@ BEGIN
 		END;
     
     START TRANSACTION;
+ 
         SELECT collectionID INTO collectionID_p
         FROM Collections
         WHERE collectionTitle = collectionTitle_p
 			AND collectionType = collectionType_p
             AND collectionLength = collectionLength_p;
 		
-        If collectionID_p IS NULL THEN
+        IF collectionID_p IS NULL THEN
 			INSERT IGNORE INTO Collections (
 				collectionTitle, 
 				collectionType, 
@@ -41,7 +42,6 @@ BEGIN
 				collectionType_p, 
 				collectionLength_p
 				);
-		
 			SET collectionID_p = LAST_INSERT_ID();
 		END IF;
         
@@ -94,28 +94,6 @@ CALL insert_rhythmPattern_proc(
 	"sdfgsdfg"    
 );
 
-INSERT INTO CollectionPatterns (
-			collectionID, 
-			rhythmPatternID
-		) VALUES (
-			51,
-			5
-			);   
-
-INSERT INTO RhythmPatterns(
-			rhythmDescription,
-			articulation,
-			timeSignature,
-			rhythmPattern,
-			collectionRhythmPatternID
-			) VALUES (
-			"description",
-			23,
-			"sdfgsdfg",
-			"sdfgsdfg",
-			"sdfgsdfg"
-			);
-            
 
 USE Daily_Shed;
 SELECT * FROM NotePatterns;

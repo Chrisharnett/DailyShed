@@ -27,7 +27,8 @@ def singleNoteWholeToneRhythms(numerator, denominator):
         'rhythmPattern': pattern,
         'rhythmLength' : rhythmPatternNoteLength(pattern),
         'timeSignature': (numerator, denominator),
-        'articulation': [{"articulation": "fermata", "index": 0, "name": "fermata"}]
+        'articulation': [{"articulation": "fermata", "index": 0, "name": "fermata"}],
+        'measureLength': 1
     }
     )
     toneRhythmId += 1
@@ -43,7 +44,8 @@ def singleNoteWholeToneRhythms(numerator, denominator):
             'articulation': [
                 # {"articulation": "fermata", "index": 0, "name": "fermata"},
                 # {"articulation": "fermata", "index": 1, "name": ""}
-            ]
+            ],
+            'measureLength': 1
         }
     )
 
@@ -71,7 +73,8 @@ def quarterNoteRhythms(numerator, denominator):
         'rhythmPattern': pattern,
         'rhythmLength': rhythmPatternNoteLength(pattern),
         'timeSignature': (numerator, denominator),
-        'articulation': None
+        'articulation': None,
+        'measureLength': 1
     }
     )
     rhythmId += 1
@@ -89,7 +92,8 @@ def quarterNoteRhythms(numerator, denominator):
                     'rhythmPattern': oneBarQuarterNoteRhythm,
                     'rhythmLength': rhythmPatternNoteLength(oneBarQuarterNoteRhythm),
                     'timeSignature': (numerator, denominator),
-                    'articulation': None
+                    'articulation': None,
+                    'measureLength': 1
                 }
             )
             rhythmId += 1
@@ -108,7 +112,8 @@ def quarterNoteRhythms(numerator, denominator):
                         'rhythmPattern': oneBarQuarterNoteRhythm,
                         'rhythmLength': rhythmPatternNoteLength(oneBarQuarterNoteRhythm),
                         'timeSignature': (numerator, denominator),
-                        'articulation': None
+                        'articulation': None,
+                        'measureLength': 1
                     }
                 )
                 rhythmId += 1
@@ -133,7 +138,8 @@ def quarterNoteRhythms(numerator, denominator):
                     'rhythmPattern': newPattern,
                     'rhythmLength': rhythmPatternNoteLength(newPattern),
                     'timeSignature': (numerator, denominator),
-                    'articulation': None
+                    'articulation': None,
+                    'measureLength': 1
                 }
             )
             rhythmId += 1

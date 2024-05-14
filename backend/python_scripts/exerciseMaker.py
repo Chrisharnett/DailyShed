@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from exerciseCollections.collectionCreator import collectionCreator
-from setDesigner.queries import insertCollectionsInDatabase, insertPrograms, getCollections, getPracticeSession, logExerciseDetails
+from setDesigner.queries import insertCollectionsInDatabase, insertPrograms, getCollections, getPracticeSession, logExerciseDetails, fetchUserPrograms, fetchModes
 from practiceSession import PracticeSession
 import boto3
 
@@ -15,6 +15,53 @@ s3_client = boto3.client("s3")
 @app.route("/")
 def home():
     return "Connected"
+
+@app.route("/getScaleModes", methods=["GET"])
+def getScaleModes():
+    try:
+        modes = fetchModes()
+        return {
+                "statusCode": 200,
+                "modes": modes
+        }
+
+    except Exception as e:
+        return jsonify({
+            "statusCode": 400,
+            "error": str(e)
+        })
+
+@app.route("/getUserPrograms", methods=["GET", "POST"])
+def getUserPrograms():
+    try:
+        sub = request.get_json().get('sub')
+        programs = fetchUserPrograms(sub)
+        return {
+                "statusCode": 200,
+                "programs": programs
+        }
+
+    except Exception as e:
+        return jsonify({
+            "statusCode": 400,
+            "error": str(e)
+        })
+
+@app.route("/getUserPracticeSession", methods=["GET", "POST"])
+def getUserPracticeSession():
+    try:
+        sub = request.get_json().get('sub')
+        practiceSession = getPracticeSession(sub)
+        return {
+                "statusCode": 200,
+                "practiceSession": practiceSession
+        }
+
+    except Exception as e:
+        return jsonify({
+            "statusCode": 400,
+            "error": str(e)
+        })
 
 @app.route("/logExercise", methods=["POST"])
 def logExercise():
@@ -42,9 +89,8 @@ def generateSet():
                 "statusCode": 200,
                 "sessionID": practiceSession.userPracticeSessionID,
                 "rounds": practiceSession.rounds,
-                "set": practiceSession.practiceSession,
-                #FIXME: Move increment data through frontEnd, on to logging,
-                "incrementData": practiceSession.incrementData}
+                "set": practiceSession.userPracticeSession
+        }
 
     except Exception as e:
         return jsonify({

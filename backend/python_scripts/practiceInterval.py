@@ -12,12 +12,20 @@ class PracticeInterval(Exercise):
         self.__incrementMe = False
 
     @property
+    def currentIndex(self):
+        return self.__interval.get('currentIndex')
+
+    @currentIndex.setter
+    def currentIndex(self, index):
+        self.__interval['currentIndex'] = index
+
+    @property
     def incrementMe(self):
         return self.__incrementMe
 
     @incrementMe.setter
-    def incrementMe(self, boolean):
-        self.__incrementMe = boolean
+    def incrementMe(self, userProgramID):
+        self.__incrementMe = userProgramID
 
     @property
     def rhythmPatternDetails(self):
@@ -120,7 +128,7 @@ class PracticeInterval(Exercise):
 
     def newNoteLength(self):
         newLength = getNotePatternRhythmLength(self.notePattern, self.holdLastNote)
-        self.setNoteLength(newLength)
+        self.noteLength = newLength
 
     def createExercise(self, userPracticeSessionID):
         """
@@ -136,14 +144,14 @@ class PracticeInterval(Exercise):
             self.directionIndex)
         if not exerciseDetails:
             # FIXME
-            self.insertExercise(userPracticeSessionID)
+            exerciseID = self.insertExercise(userPracticeSessionID)
+            # self.filename = exerciseID
             self.createImage()
         else:
             # FIXME
             self.storeExerciseAttributes(exerciseDetails)
             # self.createImage()
             # insert exercise into practice session.
-
 
     def storeExerciseAttributes(self, exerciseDetails):
         self.filename = exerciseDetails.get('imageFilename')

@@ -19,13 +19,13 @@ SELECT
         CollectionPatterns cp
         JOIN NotePatterns np ON np.notePatternID = cp.notePatternID
         LEFT JOIN Exercises e ON np.notePatternID = e.notePatternID
-        -- ExerciseLog is causing multiple entries
-        -- LEFT JOIN ExerciseLog el ON e.ExerciseID = el.exerciseID
         GROUP BY notePatternID 
         ;
         
-SELECT * FROM get_notePattern_collections WHERE collectionID = 129
+SELECT * FROM get_notePattern_collection
 ;
+
+SELECT * FROM Collections;
 
 SELECT * FROM CollectionPatterns 
 where collectionID = 129
