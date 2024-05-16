@@ -4,3 +4,5 @@ export const getUserPracticeSession =
   "http://127.0.0.1:5000/getUserPracticeSession";
 export const getUserPrograms = "http://127.0.0.1:5000/getUserPrograms";
 export const getScaleModes = "http://127.0.0.1:5000/getScaleModes";
+export const getRhythmOptions = "http://127.0.0.1:5000/getRhythmPatternOptions";
+export const getUserJournal = "http://127.0.0.1:5000/userExerciseLog";

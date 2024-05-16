@@ -28,7 +28,7 @@ export const SessionCompleteModal = ({
   return (
     <>
       <Container className="container">
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} className="glassModal">
           <Modal.Header closeButton>
             <Modal.Title className=""> Congratulations</Modal.Title>
           </Modal.Header>

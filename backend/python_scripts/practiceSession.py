@@ -5,6 +5,7 @@ It will process those inputs and create the specific exercises for a new practic
 from practiceInterval import PracticeInterval
 from setDesigner.queries import startUserPracticeSession, incrementProgramIndex, getNotePatternHistory, insertNewRhythmPattern
 import random
+from util.imageURL import imageURL
 import math
 
 
@@ -152,7 +153,7 @@ class PracticeSession:
             newInterval.createExercise(self.userPracticeSessionID)
             newExercise = {'exerciseID': newInterval.exerciseID,
                            'exerciseName': newInterval.exerciseName,
-                           'filename': 'https://mysaxpracticeexercisebucket.s3.amazonaws.com/' + newInterval.filename,
+                           'filename': imageURL(newInterval.filename),
                            'description': newInterval.description,
                            'incrementMe': newInterval.incrementMe
                            }

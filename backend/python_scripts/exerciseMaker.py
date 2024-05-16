@@ -1,20 +1,47 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from exerciseCollections.collectionCreator import collectionCreator
-from setDesigner.queries import insertCollectionsInDatabase, insertPrograms, getCollections, getPracticeSession, logExerciseDetails, fetchUserPrograms, fetchModes
+from setDesigner.queries import insertCollectionsInDatabase, insertPrograms, getCollections, getPracticeSession, logExerciseDetails, fetchUserPrograms, fetchModes, fetchRhythmPatternOptions, fetchUserExerciseLog
 from practiceSession import PracticeSession
 import boto3
 
-
 app = Flask(__name__)
-
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-
 s3_client = boto3.client("s3")
 
 @app.route("/")
 def home():
     return "Connected"
+
+@app.route("/userExerciseLog", methods=["GET", "POST"])
+def userExerciseLog():
+    try:
+        sub = request.get_json().get('sub')
+        history = fetchUserExerciseLog(sub)
+        return {
+                "statusCode": 200,
+                "userHistory": history
+        }
+    except Exception as e:
+        return jsonify({
+            "statusCode": 400,
+            "error": str(e)
+        })
+
+@app.route("/getRhythmPatternOptions", methods=["GET", "POST"])
+def getRhythmPatternOptions():
+    try:
+        sub = request.get_json().get('sub')
+        options = fetchRhythmPatternOptions(sub)
+        return {
+                "statusCode": 200,
+                "rhythmPatternOptions": options
+        }
+    except Exception as e:
+        return jsonify({
+            "statusCode": 400,
+            "error": str(e)
+        })
 
 @app.route("/getScaleModes", methods=["GET"])
 def getScaleModes():

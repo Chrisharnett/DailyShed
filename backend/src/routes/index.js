@@ -8,8 +8,10 @@ import { getUserJournalRoute } from "./getUserJournalRoute.js";
 import { getUserPracticeSessionRoute } from "./getUserPracticeSessionRoute.js";
 import { getUserProgramsRoute } from "./getUserProgramsRoute.js";
 import { getScaleModesRoute } from "./getScaleModesRoute.js";
+import { getRhythmOptionsRoute } from "./getRhythmOptionsRoute.js";
 
 export const routes = [
+  getRhythmOptionsRoute,
   getScaleModesRoute,
   getUserProgramsRoute,
   getUserPracticeSessionRoute,

@@ -53,8 +53,8 @@ const ExerciseCard = ({
   useEffect(() => {
     setCurrentExercise(currentSet[currentSetIndex]);
     const filename = currentSet[currentSetIndex].filename;
-    const url = filename + ".png";
-    setImageURL(url);
+    // const url = filename + ".png";
+    setImageURL(filename);
   }, [currentRound, currentSet, currentSetIndex]);
 
   const nextExerciseHandler = () => {

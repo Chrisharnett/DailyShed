@@ -8,9 +8,17 @@ const ExerciseDetailsForm = ({
   interval,
   programs,
   scaleModes,
+  rhythmOptions,
   onDetailsChange,
 }) => {
-  const [rhythmOptions, setRhythmOptions] = useState([]);
+  const [validRhythmOptions, setValidRhythmOptions] = useState([]);
+
+  useEffect(() => {
+    const validRhythms = rhythmOptions.filter(
+      (rhythm) => rhythm.programTitle === interval.primaryCollectionTitle
+    );
+    setValidRhythmOptions(validRhythms);
+  }, []);
 
   useEffect(() => {
     // const rhythms = collections
@@ -73,33 +81,34 @@ const ExerciseDetailsForm = ({
         <Col xs={12} md="auto" className="my-2 fs-4">
           <Form.Label className="dropShadow">Exercise {i + 1}</Form.Label>
           <Form.Select
-            value={ToTitleCase(interval.PrimaryCollectionTitle)}
+            value={interval.primaryCollectionTitle}
             // onChange={handleCollectionChange}
           >
             {programs.map((program, index) => (
               <option key={index} value={program.programTitle}>
-                {program.programTitle}
+                {ToTitleCase(program.programTitle)}
               </option>
             ))}
           </Form.Select>
         </Col>
         <KeyAndModeSelector
-          keyCenter={interval.tonic}
+          tonic={interval.tonic}
           mode={interval.mode}
-          modes={scaleModes}
+          scaleModes={scaleModes}
+          tonicSequence={interval.tonicSequence}
           // onKeyChange={handleKeyChange}
           // onModeChange={handleModeChange}
-          parentIndex={`${interval.collectionTitle}_${i}`}
+          parentIndex={`${interval.primaryCollectionTitle}_${i}`}
         />
         <Col xs={12} md="auto" className="my-2 fs-4">
           <Form.Label className="dropShadow">Rhythm</Form.Label>
           <Form.Select
-          // value={interval.rhythmMatcher}
-          // onChange={handleRhythmChange}
+            value={ToTitleCase(interval.rhythmCollectionTitle)}
+            // onChange={handleRhythmChange}
           >
-            {rhythmOptions.map((rhythm, index) => (
-              <option key={index} value={rhythm}>
-                {ToTitleCase(rhythm)}
+            {validRhythmOptions.map((rhythm, index) => (
+              <option key={index} value={rhythm.rhythmCollection}>
+                {ToTitleCase(rhythm.rhythmCollection)}
               </option>
             ))}
           </Form.Select>
@@ -109,7 +118,7 @@ const ExerciseDetailsForm = ({
             type="checkbox"
             label="Review Exercise"
             id={`reviewBool-${i}`}
-            checked={interval.reviewBool}
+            checked={interval.reviewExercise}
             // onChange={handleCheckboxChange}
             className="dropShadow"
           />

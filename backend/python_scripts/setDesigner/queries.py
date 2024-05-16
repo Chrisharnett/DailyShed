@@ -4,6 +4,72 @@ from flask import jsonify
 from data.instruments import instrumentList
 from data.tonicSequences import tonicSequenceList
 from data.modes import modeList
+from util.imageURL import imageURL
+
+def fetchUserExerciseLog(sub):
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            query = "SELECT userName, lastPlay, playHistory, averageRating, playCount, exerciseName, imageFilename FROM get_user_history WHERE sub = %s"
+            cursor.execute(query, (sub,))
+            result = cursor.fetchall()
+        history = {'userName': result[0].get('userName'),
+                   'exerciseHistory': []}
+        for exercise in result:
+            playHistoryRaw = exercise.get('playHistory').split('| ')
+            playHistory = []
+            for play in playHistoryRaw:
+                details = play.split('-', 1)
+                if len(details) == 2:
+                    playHistory.append({'date': details[0], 'comment': '', 'rating': details[1][1:]})
+                else:
+                    playHistory.append({'date': details[0], 'comment': details[1], 'rating': details[2]})
+            history.get('exerciseHistory').append({
+                'exerciseName': exercise.get('exerciseName'),
+                'playCount': exercise.get('playCount'),
+                'lastPlay': exercise.get('lastPlay'),
+                'playHistory': playHistory,
+                'averageRating': exercise.get('averageRating'),
+                'imageFilename': imageURL(exercise.get('imageFilename')),
+            })
+        return history
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
+
+    finally:
+        conn.close()
+
+def fetchRhythmPatternOptions(sub):
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.callproc('get_rhythmPattern_options', [sub])
+            options = []
+            while True:
+                result = cursor.fetchall()
+                for rhythm in result:
+                    options.append({
+                        'programID': rhythm.get('programID'),
+                        'programTitle': rhythm.get('programTitle'),
+                        'primaryCollectionID': rhythm.get('primaryCollectionID'),
+                        'rhythmCollection': rhythm.get('rhythmCollection')
+                    })
+                if not cursor.nextset():
+                    break
+
+            conn.commit()
+            return options if options else None
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
+
+    finally:
+        conn.close()
 
 def fetchModes():
     conn = getDBConnection()
@@ -47,8 +113,6 @@ def getNotePatternHistory(sub, collectionID):
 
     finally:
         conn.close()
-    # need ID, playCount
-    pass
 
 def incrementProgramIndex(userProgramID):
     conn = getDBConnection()
@@ -204,7 +268,7 @@ def getPracticeSession(sub):
         for exercise in result:
             tonicSequence = json.loads(exercise.get('tonicSequence'))
             session.get('intervals').append({
-                'PrimaryCollectionTitle': exercise.get('PrimaryCollectionTitle'),
+                'primaryCollectionTitle': exercise.get('PrimaryCollectionTitle'),
                 'rhythmCollectionTitle': exercise.get('rhythmCollectionTitle'),
                 'tonicSequence': tonicSequence,
                 'tonic': tonicSequence[exercise.get('scaleTonicIndex')],
@@ -212,8 +276,7 @@ def getPracticeSession(sub):
                 'reviewExercise': exercise.get('reviewExercise'),
                 'currentIndex': exercise.get('currentIndex'),
                 'userProgramID': exercise.get('userProgramID'),
-                'collectionLength': exercise.get('collectionLength'),
-                'primaryCollectionType': exercise.get('PrimaryCollectinType'),
+                'primaryCollectionType': exercise.get('PrimaryCollectionType'),
                 'rhythmCollectionID': exercise.get('rhythmCollectionID'),
                 'primaryCollectionID': exercise.get('primaryCollectionID'),
                 'collectionLength': exercise.get('collectionLength')
@@ -237,7 +300,7 @@ def fetchUserPrograms(sub):
                     'programs': []}
         for interval in result:
             program = {
-                        'programTitle': interval.get('collectionTitle').replace('_', ' ').title(),
+                        'programTitle': interval.get('collectionTitle'),
                         'collectionType': interval.get('collectionType'),
                         'collectionLength': interval.get('collectionLength'),
                         'instrument': interval.get('instrumentName'),
@@ -246,7 +309,7 @@ def fetchUserPrograms(sub):
                         'scaleTonicIndex': interval.get('scaleTonicIndex'),
                         'mode': interval.get('scaleModeName'),
                         'currentIndex': interval.get('currentIndex'),
-                        'rhythmCollection': interval.get('rhythmCollection').replace('_', ' ').title()
+                        'rhythmCollection': interval.get('rhythmCollection')
                         }
             programs['programs'].append(program)
         return programs

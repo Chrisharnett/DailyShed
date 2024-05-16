@@ -12,11 +12,6 @@ const TheShed = ({ user }) => {
   const setCreated = useRef(false);
   const [rounds, setRounds] = useState(1);
 
-  // useEffect(() => {
-  //   const ID = uuidV4();
-  //   setSessionID(ID);
-  // }, []);
-
   useEffect(() => {
     if (currentSet) {
       if (exerciseCount === currentSet.length) {

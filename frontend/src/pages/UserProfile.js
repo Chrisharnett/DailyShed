@@ -11,8 +11,8 @@ const UserProfile = ({ user }) => {
   const [message, setMessage] = useState("");
   const [practiceSession, setPracticeSession] = useState(null);
   const [userPrograms, setUserPrograms] = useState(null);
-  const [scaleModes, setScaleModes] = useState([]);
-  const [userName, setUserName] = useState("");
+  const [scaleModes, setScaleModes] = useState(null);
+  const [rhythmOptions, setRhythmOptions] = useState(null);
 
   useEffect(() => {
     const fetchPracticeSession = async () => {
@@ -20,15 +20,17 @@ const UserProfile = ({ user }) => {
         const sessionResponse = await axios.post(
           `/api/getUserPracticeSession/${user.sub}`
         );
-        // const { userName, programs } = sessionResponse.data;
         setPracticeSession(sessionResponse.data);
-        // setUserName(userName);
         const programResponse = await axios.post(
           `/api/getUserPrograms/${user.sub}`
         );
         setUserPrograms(programResponse.data);
         const scaleModesResponse = await axios.get("/api/getScaleModes");
         setScaleModes(scaleModesResponse.data);
+        const rhythmOptionsResponse = await axios.post(
+          `/api/getRhythmOptions/${user.sub}`
+        );
+        setRhythmOptions(rhythmOptionsResponse.data);
       } catch (error) {
         console.error("Error: ", error);
       }
@@ -73,7 +75,7 @@ const UserProfile = ({ user }) => {
     // });
   };
 
-  if (!userPrograms) {
+  if (!userPrograms || !practiceSession || !scaleModes || !rhythmOptions) {
     return (
       <>
         <TopSpacer />
@@ -120,6 +122,7 @@ const UserProfile = ({ user }) => {
                           interval={interval}
                           programs={userPrograms.programs}
                           scaleModes={scaleModes}
+                          rhythmOptions={rhythmOptions}
                           onDetailsChange={(updatedDetails) =>
                             handleDetailsChange(i, updatedDetails)
                           }

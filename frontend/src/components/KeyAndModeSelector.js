@@ -3,27 +3,29 @@ import { useState } from "react";
 import ToTitleCase from "../util/ToTitleCase";
 
 const KeyAndModeSelector = ({
-  keyCenter,
+  tonic,
   mode,
+  tonicSequence,
+  tonicSequenceName,
   scaleModes,
   onKeyChange,
   onModeChange,
   parentIndex,
 }) => {
-  const [keys, setKeys] = useState([
-    "c",
-    "db",
-    "d",
-    "eb",
-    "e",
-    "f",
-    "f#",
-    "g",
-    "g#",
-    "a",
-    "a#",
-    "b",
-  ]);
+  // const [keys, setKeys] = useState([
+  //   "c",
+  //   "db",
+  //   "d",
+  //   "eb",
+  //   "e",
+  //   "f",
+  //   "f#",
+  //   "g",
+  //   "g#",
+  //   "a",
+  //   "a#",
+  //   "b",
+  // ]);
   // const [scaleModes, setModes] = useState([
   //   "major",
   //   "minor",
@@ -45,8 +47,8 @@ const KeyAndModeSelector = ({
         <Col xs={12} sm="auto">
           <Form.Group className="" controlId="keySelector">
             <Form.Label className="dropShadow fs-4">Key</Form.Label>
-            <Form.Select value={keyCenter} onChange={handleKeyChange}>
-              {keys.map((keyOption, i) => {
+            <Form.Select value={tonic} onChange={handleKeyChange}>
+              {tonicSequence.map((keyOption, i) => {
                 const uniqueKey = `${parentIndex}_${keyOption}`;
                 return (
                   <option key={uniqueKey} value={keyOption}>
@@ -55,13 +57,16 @@ const KeyAndModeSelector = ({
                 );
               })}
             </Form.Select>
+            <Form.Text className="dropShadow fs-6">
+              {tonicSequenceName}
+            </Form.Text>
           </Form.Group>
         </Col>
 
         <Col xs={12} md="auto">
           <Form.Group className="" controlId="modeSelector">
             <Form.Label className="dropShadow fs-4">Mode</Form.Label>
-            <Form.Select value={mode} onChange={handleModeChange}>
+            <Form.Select value={ToTitleCase(mode)} onChange={handleModeChange}>
               {scaleModes.map((modeOption, i) => (
                 <option
                   key={`${parentIndex}_${modeOption}_${i}`}

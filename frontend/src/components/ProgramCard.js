@@ -12,7 +12,7 @@ const ProgramCard = ({ i, program }) => {
       <Container key={i}>
         <Card className="">
           <Card.Header>
-            {program.programTitle} in{" "}
+            {ToTitleCase(program.programTitle)} in{" "}
             {ToTitleCase(program.tonicSequence[program.scaleTonicIndex])}{" "}
             {ToTitleCase(program.mode)}
           </Card.Header>
@@ -20,6 +20,9 @@ const ProgramCard = ({ i, program }) => {
             <Card.Text>Instrument: {ToTitleCase(program.instrument)}</Card.Text>
             <Card.Text>
               Rhythm: {ToTitleCase(program.rhythmCollection)}
+            </Card.Text>
+            <Card.Text>
+              Key Sequence: {ToTitleCase(program.tonicSequenceName)}
             </Card.Text>
           </Card.Body>
           <Card.Footer>

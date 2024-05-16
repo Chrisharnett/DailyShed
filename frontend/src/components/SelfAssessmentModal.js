@@ -61,7 +61,7 @@ export const SelfAssessmentModal = ({
   return (
     <>
       <Container className="container">
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} className="glassModal">
           <Modal.Header closeButton>
             <Modal.Title className=""> Journal Entry </Modal.Title>
           </Modal.Header>

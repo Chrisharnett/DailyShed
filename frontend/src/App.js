@@ -95,34 +95,11 @@ export function App() {
           />
           <Route path="*" element={<NotFoundPage />} />
           <Route element={<PrivateRoute />}>
-            <Route
-              path="/theShed"
-              element={
-                <TheShed
-                  user={user}
-                  // playerDetails={playerDetails}
-                  // updatePlayerDetails={setPlayerDetails}
-                />
-              }
-            />
-            <Route
-              path="/userProfile"
-              element={
-                <UserProfile
-                  user={user}
-                  // playerDetails={playerDetails}
-                  // updatePlayerDetails={setPlayerDetails}
-                />
-              }
-            />
+            <Route path="/theShed" element={<TheShed user={user} />} />
+            <Route path="/userProfile" element={<UserProfile user={user} />} />
             <Route
               path="/practiceJournal"
-              element={
-                <PracticeJournal
-                  user={user}
-                  // playerDetails={playerDetails}
-                />
-              }
+              element={<PracticeJournal user={user} />}
             />
           </Route>
         </Routes>
