@@ -1,3 +1,7 @@
+from musicData.modes import modeList
+from objects.NotePattern import NotePattern
+from objects.PatternCollection import PatternCollection
+from musicData.modes import modeList
 
 def getNotePatternRhythmLength(pattern, holdLastNote):
     if holdLastNote:
@@ -66,3 +70,19 @@ def stepwiseScaleNotePatterns(minNote, maxNote):
             PATTERN_ID += 1
     collectionLength = len(scale1) * len(directions)
     return scale1, collectionLength
+
+def scaleExerciseCollection(mode, scalePattern):
+    notePatternType = 'scaleExercise'
+    directions = ['ascending', 'descending', 'ascending/descending', 'descending/ascending']
+    holdLastNote = True
+    repeatMe = True
+    notePattern = mode.get('modePattern')
+    collectionTitle=f"{mode},{scalePattern}"
+    collectionType='scaleExercise'
+    collection = PatternCollection(collectionTitle, collectionType)
+
+    description = f"{mode.get('modeName').title()} {scalePattern.title().replace('_', ' ')}. Play twice. Repeat both times."
+    collection.addPattern(
+        {'patternCollectionID': 0,
+         'notePattern': NotePattern(notePatternType, notePattern, description, directions, repeatMe, holdLastNote)})
+    return collection

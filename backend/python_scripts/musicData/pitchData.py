@@ -1,28 +1,3 @@
-from musicData.modes import getScaleDetails
-
-# def getPitchesInRange(tonic, mode):
-#     scaleInfo = getScaleDetails(tonic, mode)
-#     if not scaleInfo:
-#         return flatPitchSet()
-#
-#     if (tonic, mode) in sharpModes():
-#         baseScale = sharpPitchSet()
-#     else:
-#         baseScale = flatPitchSet()
-#     adjustments = scaleInfo.get('adjustments', {})
-#     adjustedScale = baseScale.copy()
-#     for i, note in enumerate(baseScale):
-#         if note[:-1] in adjustments:
-#             adjustedScale[i] = adjustments.get(note[:-1]) + baseScale[i][-1]
-#     return adjustedScale
-#
-# def applyScalePattern(baseScale, tonic, pattern):
-#     startIndex = baseScale.index(tonic + '0')  # Starting point for the scale
-#     pitches = [baseScale[(startIndex + interval) % 12] + str(octave)
-#                for octave in range(1, 8)
-#                for interval in pattern]
-#     return pitches
-
 def sharpPitchSet():
     flats_to_sharps = {
         'db': 'cs',

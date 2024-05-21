@@ -1,7 +1,6 @@
 import random
-# from setDesigner.notePatterns import getNotePatternRhythmLength
-from queries import fetchExercise, addNewExercise
-from exercise import Exercise
+from queries.queries import fetchExercise, addNewExercise
+from objects.Exercise import Exercise
 
 class PracticeInterval(Exercise):
     def __init__(self, interval):
@@ -131,11 +130,6 @@ class PracticeInterval(Exercise):
         self.noteLength = newLength
 
     def createExercise(self, userPracticeSessionID):
-        """
-        These attributes are able to ID an exercise. It may need to change over time.
-         notePatternID, rhythmPatternID, tonic, mode, directionIndex
-        """
-
         exerciseDetails = fetchExercise(
             self.notePatternID,
             self.rhythmPatternID,
@@ -150,7 +144,7 @@ class PracticeInterval(Exercise):
         else:
             # FIXME
             self.storeExerciseAttributes(exerciseDetails)
-            # self.createImage()
+            self.createImage()
             # insert exercise into practice session.
 
     def storeExerciseAttributes(self, exerciseDetails):

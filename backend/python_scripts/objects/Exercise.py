@@ -1,6 +1,6 @@
 import abjad
 import math
-from Scale import Scale
+from objects.Scale import Scale
 from util.exerciseBucket import dropItInTheBucket
 from decimal import Decimal
 import os
@@ -8,17 +8,17 @@ import os
 GLOBAL_PREAMBLE = r"#(set-global-staff-size 28)"
 
 class Exercise:
-    def __init__(self, tonic, mode):
+    def __init__(self, tonic, mode, notePattern = None, repeatMe=False, holdLastNote=False):
         self.__notePatternID = None
         self.__rhythmPatternID = None
-        self.__notePattern = []
+        self.__notePattern = notePattern if notePattern is not None else []
         self.__rhythmPattern = []
         self.__tonic = tonic
         self.__mode = mode
         self.__directionIndex = None
         self.__direction = None
-        self.__repeatMe = False
-        self.__holdLastNote = False
+        self.__repeatMe = repeatMe
+        self.__holdLastNote = holdLastNote
         self.__timeSignature = (4,4)
         self.__preamble = GLOBAL_PREAMBLE
         self.__articulation = None
@@ -177,7 +177,6 @@ class Exercise:
 
     def addTie(self, tie):
         self.__ties.append(tie)
-# The functions below create the notation image.
 
     def notationPattern(self):
         if not self.repeatMe:
@@ -209,7 +208,7 @@ class Exercise:
             returnPattern.append([notes[-1], heldNoteRhythm])
         return returnPattern
 
-    def createRepeatPhrase(self, scaleNotes, notes):
+    def createRepeatPhrase(self, notes, scaleNotes):
         repeatPhrase = abjad.Container()
         for note in notes:
             if isinstance(note[0], (int, Decimal)):
@@ -299,22 +298,23 @@ class Exercise:
         return score
 
     def getScaleNotes(self):
-        scale = Scale(self.tonic + "'", self.mode)
+        scale = Scale(self.tonic + "'", self.mode, None, None)
         scaleNotes = scale.makeScale()
         return scaleNotes
 
     def createImage(self):
         score = self.buildScore()
         lilypond_file = abjad.LilyPondFile([self.preamble, score])
-
-        # localPath = str(self.filename)
         localPath = self.filename
         abjad.persist.as_png(lilypond_file, localPath, flags="-dcrop", resolution=300)
         png = os.path.join(localPath + ".cropped.png")
         dropItInTheBucket(png, localPath)
-
-        ly = os.path.join(localPath + ".ly")
         os.remove(png)
-        os.remove(ly)
+        os.remove(os.path.join(localPath + ".ly"))
 
+    def createTestImage(self):
+        lilypond_file = abjad.LilyPondFile([self.preamble, self.buildScore()])
+        localPath = self.filename
+        abjad.persist.as_png(lilypond_file, localPath, flags="-dcrop", resolution=300)
+        os.remove(os.path.join(localPath + ".ly"))
 

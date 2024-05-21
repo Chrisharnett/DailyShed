@@ -1,8 +1,9 @@
 from objects.MusicPattern import MusicPattern
+import math
 
 class RhythmPattern(MusicPattern):
-    def __init__(self, rhythmPatternType, rhythmPattern, description, timeSignature=(4, 4), articulation = None, measureLength = None):
-        super().__init__(rhythmPatternType, rhythmPattern, description)
+    def __init__(self, rhythmPatternType, rhythmPattern, description, timeSignature=(4, 4), articulation = None, measureLength = None, collectionPatternID=None):
+        super().__init__(rhythmPatternType, rhythmPattern, description, collectionPatternID)
         self.__timeSignature = timeSignature
         self.__articulation = articulation
         self.__measureLength = measureLength
@@ -36,11 +37,11 @@ class RhythmPattern(MusicPattern):
     def rhythmLength(self):
         return self.__rhythmLength
 
-    def noDuplicateRhythms(self, patternList):
-        for pattern in patternList:
-            if pattern.get('rhythmPattern') == self.pattern:
-                return False
-        return True
+    # def noDuplicateRhythms(self, patternList):
+    #     for pattern in patternList:
+    #         if pattern.get('rhythmPattern') == self.pattern:
+    #             return False
+    #     return True
 
     def rhythmPatternNoteLength(self):
         count = 0
@@ -52,16 +53,16 @@ class RhythmPattern(MusicPattern):
         count -= n
         return count
 
-    def fillBar(self, element, numerator):
-        bar = []
-        for i in range(numerator):
-            if (element[0] == 'r'):
-                rhythm = int(element[1:])
-            else:
-                rhythm = int(element)
-            for j in range(math.floor(rhythm / numerator)):
-                bar.append([element])
-        return bar
+    # def fillBar(self, element, numerator):
+    #     bar = []
+    #     for i in range(numerator):
+    #         if (element[0] == 'r'):
+    #             rhythm = int(element[1:])
+    #         else:
+    #             rhythm = int(element)
+    #         for j in range(math.floor(rhythm / numerator)):
+    #             bar.append([element])
+    #     return bar
 
     def oneBarOfRhythm(self, numerator, denominator, note):
         oneBarOfRhythm = self.fillBar(denominator, numerator)

@@ -2,8 +2,8 @@
 This class should take sessionData and the appropriate collections needed to build a session.
 It will process those inputs and create the specific exercises for a new practice session.
 """
-from practiceInterval import PracticeInterval
-from queries import startUserPracticeSession, getNotePatternHistory, insertNewRhythmPattern
+from objects.PracticeInterval import PracticeInterval
+from queries.queries import startUserPracticeSession, getNotePatternHistory, insertNewRhythmPattern
 import random
 from util.imageURL import imageURL
 
@@ -80,12 +80,12 @@ class PracticeSession:
         id = []
         rLength = 0
         artic = []
-        while remainder > rhythms.get('patterns')[0].get('timeSignature')[0]:
-            # Get the rhythms that are at least length/minNumberOfMeasures
-            possibleRhythms = [
-                x for x in rhythms.get('patterns') if remainder/2 <= x.get('rhythmLength') <= remainder
-            ]
-            measure = random.choice(possibleRhythms)
+        # TODO: changed placement so a measure is repeated until
+        possibleRhythms = [
+            x for x in rhythms.get('patterns') if remainder / 2 <= x.get('rhythmLength') <= remainder
+        ]
+        measure = random.choice(possibleRhythms)
+        while remainder >= measure.notelength:
             r.extend(measure.get('rhythmPattern'))
             id.append(f"-{str(measure.get('rhythmPatternID'))}")
             rLength += measure.get('rhythmLength')
@@ -99,7 +99,7 @@ class PracticeSession:
         if lastMeasure.get('articulation'):
             artic.extend(lastMeasure.get('articulation'))
         r.extend(lastMeasure.get('rhythmPattern'))
-        random.shuffle(r)
+        # random.shuffle(r)
         rhythmDescription = lastMeasure.get('rhythmDescription')
         timeSignature = lastMeasure.get('timeSignature')
         rhythmPatternID = insertNewRhythmPattern(
