@@ -1,6 +1,6 @@
 import random
-from setDesigner.notePatterns import getNotePatternRhythmLength
-from setDesigner.queries import fetchExercise, addNewExercise
+# from setDesigner.notePatterns import getNotePatternRhythmLength
+from queries import fetchExercise, addNewExercise
 from exercise import Exercise
 
 class PracticeInterval(Exercise):
@@ -127,7 +127,7 @@ class PracticeInterval(Exercise):
         self.newNoteLength()
 
     def newNoteLength(self):
-        newLength = getNotePatternRhythmLength(self.notePattern, self.holdLastNote)
+        newLength = self.getNotePatternRhythmLength()
         self.noteLength = newLength
 
     def createExercise(self, userPracticeSessionID):

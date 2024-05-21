@@ -1,9 +1,9 @@
 from util.getDBConnection import getDBConnection
 import json
 from flask import jsonify
-from data.instruments import instrumentList
-from data.tonicSequences import tonicSequenceList
-from data.modes import modeList
+from musicData.instruments import instrumentList
+from musicData.tonicSequences import tonicSequenceList
+from musicData.modes import modeList
 from util.imageURL import imageURL
 
 def fetchUserExerciseLog(sub):

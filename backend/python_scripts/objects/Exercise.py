@@ -1,10 +1,9 @@
 import abjad
 import math
-from setDesigner.musicObjects import Scale
-from exerciseBucket import dropItInTheBucket
+from Scale import Scale
+from util.exerciseBucket import dropItInTheBucket
 from decimal import Decimal
 import os
-import tempfile
 
 GLOBAL_PREAMBLE = r"#(set-global-staff-size 28)"
 
@@ -168,6 +167,13 @@ class Exercise:
     @property
     def ties(self):
         return self.__ties
+
+    def getNotePatternRhythmLength(self):
+        if self.holdLastNote:
+            length = len((self.notePattern)) - 1
+            return length
+        length = len((self.notePattern))
+        return length
 
     def addTie(self, tie):
         self.__ties.append(tie)

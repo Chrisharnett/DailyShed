@@ -3,10 +3,9 @@ This class should take sessionData and the appropriate collections needed to bui
 It will process those inputs and create the specific exercises for a new practice session.
 """
 from practiceInterval import PracticeInterval
-from setDesigner.queries import startUserPracticeSession, incrementProgramIndex, getNotePatternHistory, insertNewRhythmPattern
+from queries import startUserPracticeSession, getNotePatternHistory, insertNewRhythmPattern
 import random
 from util.imageURL import imageURL
-import math
 
 
 class PracticeSession:
@@ -134,7 +133,7 @@ class PracticeSession:
     def createSession(self):
         self.setUserPracticeSessionID()
         for i, interval in enumerate(self.__sessionData.get('intervals')):
-            print(f"{i}.{interval.get('PrimaryCollectionTitle')} - {interval.get('rhythmCollectionTitle')} - {interval.get('currentIndex')}")
+            print(f"{i}.{interval.get('primaryCollectionTitle')} - {interval.get('rhythmCollectionTitle')} - {interval.get('currentIndex')}")
             newInterval = PracticeInterval(interval)
             primaryCollectionID = interval.get('primaryCollectionID')
             rhythmCollectionID = interval.get('rhythmCollectionID')
