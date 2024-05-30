@@ -29,34 +29,13 @@ def flatPitchSet():
     ]
 
 def sharpModes():
-    return [
-        # Major Scales
-        ('c', 'major'), ('g', 'major'), ('d', 'major'), ('a', 'major'),
-        ('e', 'major'), ('b', 'major'), ('fs', 'major'), ('cs', 'major'),
-
-        # Harmonic Minor Scales
-        ('a', 'harmonic minor'), ('e', 'harmonic minor'), ('b', 'harmonic minor'),
-        ('fs', 'harmonic minor'), ('cs', 'harmonic minor'), ('gs', 'harmonic minor'),
-        ('ds', 'harmonic minor'), ('as', 'harmonic minor'),
-
-        # Melodic Minor Scales
-        ('a', 'melodic minor'), ('e', 'melodic minor'), ('b', 'melodic minor'),
-        ('fs', 'melodic minor'), ('cs', 'melodic minor'), ('gs', 'melodic minor'),
-        ('ds', 'melodic minor'), ('as', 'melodic minor'),
-
-        # Jazz Minor Scales
-        ('a', 'jazz minor'), ('e', 'jazz minor'), ('b', 'jazz minor'),
-        ('fs', 'jazz minor'), ('cs', 'jazz minor'), ('gs', 'jazz minor'),
-        ('ds', 'jazz minor'), ('as', 'jazz minor'),
-
-        # Altered Scales
-        ('c', 'altered'), ('g', 'altered'), ('d', 'altered'), ('a', 'altered'),
-        ('e', 'altered'), ('b', 'altered'), ('fs', 'altered'), ('cs', 'altered'),
-
-        # Church Modes
-        ('c', 'ionian'), ('g', 'ionian'), ('d', 'ionian'), ('a', 'ionian'),
-        ('e', 'ionian'), ('b', 'ionian'), ('fs', 'ionian'), ('cs', 'ionian'),
-
+    majorSharpKeys = ['c', 'g', 'd', 'a', 'e', 'b', 'fs', 'cs']
+    majorModes = ['major', 'major_pentatonic', 'bebop_major', 'bebop_dominant', 'altered', 'ionian',
+                  'klezmer', 'freygish', 'gypsy_major', 'gypsy_minor',
+                  'bhairav', 'ahir_bhairav', 'kafi', 'khamaj', 'marwa', 'yaman', 'todi']
+    minorSharpKeys = ['a', 'e', 'b', 'fs', 'cs', 'gs', 'ds', 'as']
+    minorModes = ['harmonic minor', 'minor_pentatonic', 'bebop_minor', 'melodic_minor', 'jazz_minor']
+    sharpDefaultModes =  [
         ('d', 'dorian'), ('a', 'dorian'), ('e', 'dorian'), ('b', 'dorian'),
         ('fs', 'dorian'), ('cs', 'dorian'), ('gs', 'dorian'), ('ds', 'dorian'),
 
@@ -74,41 +53,12 @@ def sharpModes():
 
         ('b', 'locrian'), ('fs', 'locrian'), ('cs', 'locrian'), ('gs', 'locrian'),
         ('ds', 'locrian'), ('as', 'locrian'), ('es', 'locrian'), ('bs', 'locrian'),
-
-        # Klezmer Scales
-        ('c', 'klezmer'), ('g', 'klezmer'), ('d', 'klezmer'), ('a', 'klezmer'),
-        ('e', 'klezmer'), ('b', 'klezmer'), ('fs', 'klezmer'), ('cs', 'klezmer'),
-
-        ('c', 'freygish'), ('g', 'freygish'), ('d', 'freygish'), ('a', 'freygish'),
-        ('e', 'freygish'), ('b', 'freygish'), ('fs', 'freygish'), ('cs', 'freygish'),
-
-        # Balkan Scales
-        ('c', 'gypsy_major'), ('g', 'gypsy_major'), ('d', 'gypsy_major'), ('a', 'gypsy_major'),
-        ('e', 'gypsy_major'), ('b', 'gypsy_major'), ('fs', 'gypsy_major'), ('cs', 'gypsy_major'),
-
-        ('c', 'gypsy_minor'), ('g', 'gypsy_minor'), ('d', 'gypsy_minor'), ('a', 'gypsy_minor'),
-        ('e', 'gypsy_minor'), ('b', 'gypsy_minor'), ('fs', 'gypsy_minor'), ('cs', 'gypsy_minor'),
-
-        # Indian Scales (Ragas)
-        ('c', 'bhairav'), ('g', 'bhairav'), ('d', 'bhairav'), ('a', 'bhairav'),
-        ('e', 'bhairav'), ('b', 'bhairav'), ('fs', 'bhairav'), ('cs', 'bhairav'),
-
-        ('c', 'ahir_bhairav'), ('g', 'ahir_bhairav'), ('d', 'ahir_bhairav'), ('a', 'ahir_bhairav'),
-        ('e', 'ahir_bhairav'), ('b', 'ahir_bhairav'), ('fs', 'ahir_bhairav'), ('cs', 'ahir_bhairav'),
-
-        ('c', 'kafi'), ('g', 'kafi'), ('d', 'kafi'), ('a', 'kafi'),
-        ('e', 'kafi'), ('b', 'kafi'), ('fs', 'kafi'), ('cs', 'kafi'),
-
-        ('c', 'khamaj'), ('g', 'khamaj'), ('d', 'khamaj'), ('a', 'khamaj'),
-        ('e', 'khamaj'), ('b', 'khamaj'), ('fs', 'khamaj'), ('cs', 'khamaj'),
-
-        ('c', 'marwa'), ('g', 'marwa'), ('d', 'marwa'), ('a', 'marwa'),
-        ('e', 'marwa'), ('b', 'marwa'), ('fs', 'marwa'), ('cs', 'marwa'),
-
-        ('c', 'yaman'), ('g', 'yaman'), ('d', 'yaman'), ('a', 'yaman'),
-        ('e', 'yaman'), ('b', 'yaman'), ('fs', 'yaman'), ('cs', 'yaman'),
-
-        ('c', 'todi'), ('g', 'todi'), ('d', 'todi'), ('a', 'todi'),
-        ('e', 'todi'), ('b', 'todi'), ('fs', 'todi'), ('cs', 'todi')
     ]
+    for mode in majorModes:
+        for key in majorSharpKeys:
+            sharpDefaultModes.append((key, mode))
+    for mode in minorModes:
+        for key in minorSharpKeys:
+            sharpDefaultModes.append((key, mode))
+    return sharpDefaultModes
 

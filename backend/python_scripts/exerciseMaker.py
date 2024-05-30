@@ -116,15 +116,13 @@ def logExercise():
 def generateSet():
     try:
         sub = request.get_json().get('sub')
-        sessionData = getPracticeSession(sub)
-        collections = getCollections(sessionData)
-        practiceSession = PracticeSession(sessionData, collections)
+        practiceSession = getPracticeSession(sub)
         practiceSession.createSession()
         return {
                 "statusCode": 200,
                 "sessionID": practiceSession.userPracticeSessionID,
                 "rounds": practiceSession.rounds,
-                "set": practiceSession.userPracticeSession
+                "set": [exercise.toDict() for exercise in practiceSession.userPracticeSession]
         }
 
     except Exception as e:
@@ -140,8 +138,8 @@ def generateCollections():
         insertCollectionsInDatabase(collections)
         insertPrograms(programs)
         return {
-                "statusCode": 200,
-                "collections": collections}
+                "statusCode": 200
+        }
 
     except Exception as e:
         return jsonify({

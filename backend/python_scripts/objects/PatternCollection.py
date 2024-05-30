@@ -68,26 +68,23 @@ class PatternCollection:
         return [pattern for pattern in self.__patterns if pattern.patternType == patternType]
 
 class ScalePatternCollection(PatternCollection):
-    def __init__(self, mode, scalePattern):
+    def __init__(self, mode, scalePatternType):
         id = 0
-        collectionType = 'scale_exercise'
-        title = f"{mode.get('modeName').title()} {scalePattern.title().replace('_', ' ')}"
+        collectionType = 'notePattern'
+        collectionName = 'scale_exercise'
+        title = f"{mode.get('modeName')},{collectionName}"
         super().__init__(title, collectionType)
-
-        self.__mode = mode
-        self.__scalePattern = scalePattern
-        # Reexamine directions
-
+        self.mode = mode
+        self.__scalePatternType = scalePatternType
         notePattern = mode.get('modePattern')
-        description = f"{mode.get('modeName').title()} {scalePattern.title().replace('_', ' ')}. Play twice. Repeat both times."
-
-        self.addPattern(ScalePattern(f"{collectionType},{scalePattern}", notePattern, description, str(id)))
+        description = f"{title.title().replace('_', ' ')}. Play twice. Repeat both times."
+        self.addPattern(ScalePattern(title, notePattern, description, scalePatternType, patternID=str(id)))
         id += 1
 
 class ScaleToTheNinthBuilderCollection(PatternCollection):
     def __init__(self, mode):
-        collectionType = 'scale_to_the_ninth'
-        title = f"{mode.get('modeName').title()} {collectionType.replace('_', ' ').title()} Starter"
+        collectionType = 'notePattern'
+        title = f"{mode.get('modeName')},scale_to_the_ninth"
         super().__init__(title, collectionType)
         self.__mode = mode
         directions = ['ascending', 'descending', 'ascending/descending', 'descending/ascending']
@@ -102,8 +99,8 @@ class ScaleToTheNinthBuilderCollection(PatternCollection):
         for pattern in notePatterns:
             id = 0
             #  FIXME
-            description = f"First {mode.get('modeName').title()} {collectionType.title().replace('_', ' ')}. Play twice. Repeat both times."
-            self.addPattern(NotePattern(f"{mode.get('modeName').title()} {collectionType}", pattern, description, directions,
+            description = f"{title.title().replace('_', ' ')}. Play twice. Repeat both times."
+            self.addPattern(ScalePattern(f"{title}", pattern, description, 'scale_to_the_ninth', directions,
                                       holdLastNote=holdLastNote, repeatMe=repeatMe, patternID=str(id)))
             id += 1
 
@@ -144,14 +141,13 @@ class ScaleToTheNinthBuilderCollection(PatternCollection):
         return result
 
 class SingleNoteDiatonicLongToneCollection(PatternCollection):
-    def __init__(self, mode, scalePattern):
+    def __init__(self, mode):
         id = 0
-        collectionType = 'single_note_long_tone'
-        title = f"{mode.get('modeName').title()} {scalePattern.title().replace('_', ' ')}"
+        collectionType = 'notePattern'
+        title = f"{mode.get('modeName')},single_note_long_tone"
         super().__init__(title, collectionType)
 
         self.__mode = mode
-        self.__scalePattern = scalePattern
 
         directions = ['static']
         holdLastNote = False
@@ -162,14 +158,15 @@ class SingleNoteDiatonicLongToneCollection(PatternCollection):
         for note in modePattern:
             id = 0
             #  FIXME
-            description = f"{mode.get('modeName').title()} {collectionType.title().replace('_', ' ')}. Play twice. Internalize to the sound you create"
-            self.addPattern(LongTone(collectionType, note, description, directions,
-                                      holdLastNote=holdLastNote, repeatMe=repeatMe, collectionPatternID=str(id)))
+            description = f"{title.title().replace('_', ' ')}. Play twice. Internalize the sound you create."
+            self.addPattern(LongTone(collectionType, [note], description, directions,
+                                      holdLastNote=holdLastNote, repeatMe=repeatMe, patternID=str(id)))
             id += 1
 
 class RhythmCollection(PatternCollection):
-    def __init__(self, title, collectionType, timeSignature):
+    def __init__(self, title, collectionType, timeSignature=(4,4)):
         super().__init__(title, collectionType)
+        self.__timeSignature = timeSignature
 
     def fillBar(self, element, numerator):
         bar = []
@@ -191,7 +188,7 @@ class RhythmCollection(PatternCollection):
 
 class SingleNoteLongToneRhythms(RhythmCollection):
     def __init__(self, timeSignature):
-        collectionType='single_note_long_tone_rhythms'
+        collectionType='rhythm'
         title='single_note_long_tone_rhythms'
         match timeSignature:
             case (4, 4):
@@ -207,7 +204,7 @@ class SingleNoteLongToneRhythms(RhythmCollection):
         noteRhythm = [rhythm]
         pattern = [noteRhythm]
         measureLength = 1
-        description = title + 'with fermata'
+        description = title[:-1] + 'with fermata'
         articulation = [{"articulation": "fermata", "index": 0, "name": "fermata"}]
         self.addPattern(RhythmPattern(collectionType,
                                     pattern,
@@ -215,11 +212,11 @@ class SingleNoteLongToneRhythms(RhythmCollection):
                                     timeSignature,
                                     articulation,
                                     measureLength,
-                                    collectionPatternID=str(id)))
+                                    patternID=str(id)))
         id += 1
 
         pattern = [noteRhythm, ["~"], noteRhythm]
-        description = 'Hold 2 measures, tied.'
+        description = f"{title[:-1].title().replace('_', ' ')}.Hold 2 measures."
         articulation = None
         measureLength = 2
         self.addPattern(RhythmPattern(collectionType,
@@ -228,11 +225,11 @@ class SingleNoteLongToneRhythms(RhythmCollection):
                                       timeSignature,
                                       articulation,
                                       measureLength,
-                                      collectionPatternID=str(id)))
+                                      patternID=str(id)))
 
 class QuarterNoteAndRestCollection(RhythmCollection):
     def __init__(self, timeSignature):
-        title = 'quarterNote'
+        title = 'quarter_note'
         collectionType = 'rhythm'
         match timeSignature:
             case (4, 4):
@@ -244,22 +241,22 @@ class QuarterNoteAndRestCollection(RhythmCollection):
         id = 0
         rhythmPatterns = []
         rest = 'r4'
-        barOfQuarters = self.fillBar(timeSignature[1], timeSignature[0])
+        bar = self.fillBar(timeSignature[1], timeSignature[0])
         description = 'Full bar of quarters'
         articulation = None
         measureLength = 1
         self.addPattern(RhythmPattern(collectionType,
-                                      barOfQuarters,
+                                      bar,
                                       description,
                                       timeSignature,
                                       articulation,
                                       measureLength,
-                                      collectionPatternID=str(id)))
+                                      patternID=str(id)))
         id += 1
 
         for i in range(timeSignature[0]):
-            quarterAndRestRhythms = copy.deepcopy(barOfQuarters)
-            for j, note in enumerate(barOfQuarters):
+            quarterAndRestRhythms = copy.deepcopy(bar)
+            for j, note in enumerate(bar):
                 quarterAndRestRhythms[j][0] = rest
 
             quarterAndRestRhythms[i] = [timeSignature[1]]
@@ -271,7 +268,7 @@ class QuarterNoteAndRestCollection(RhythmCollection):
                                               timeSignature,
                                               articulation,
                                               measureLength,
-                                              collectionPatternID=str(id)))
+                                              patternID=str(id)))
                 id += 1
 
         for i in range(timeSignature[0]):
@@ -287,13 +284,13 @@ class QuarterNoteAndRestCollection(RhythmCollection):
                                                   timeSignature,
                                                   articulation,
                                                   measureLength,
-                                                  collectionPatternID=str(id)))
+                                                  patternID=str(id)))
                     id += 1
 
         oppositePatterns = []
-        for barOfQuarters in rhythmPatterns[1:]:
+        for bar in self.patterns[1:]:
             newPattern = []
-            p = barOfQuarters.get('rhythmPattern')
+            p = bar.pattern
             for r in p:
                 if r == [timeSignature[1]]:
                     newPattern.append([rest])
@@ -310,7 +307,7 @@ class QuarterNoteAndRestCollection(RhythmCollection):
                                               timeSignature,
                                               articulation,
                                               measureLength,
-                                              collectionPatternID=str(id)))
+                                              patternID=str(id)))
                 id += 1
 
 class EighthAndQuarterRhythms(RhythmCollection):
@@ -349,7 +346,7 @@ class EighthAndQuarterRhythms(RhythmCollection):
                                                   timeSignature,
                                                   articulation,
                                                   measureLength,
-                                                  collectionPatternID=str(id)))
+                                                  patternID=str(id)))
                     id += 1
                 if division != 1:
                     for k, beat in enumerate(oneBarOfBeats):
@@ -367,7 +364,7 @@ class EighthAndQuarterRhythms(RhythmCollection):
                                                               timeSignature,
                                                               articulation,
                                                               measureLength,
-                                                              collectionPatternID=str(id)))
+                                                              patternID=str(id)))
                                 id += 1
         oneBarOfEights = self.fillBar('8', numerator)
         description = 'One bar of eighths'
@@ -377,7 +374,7 @@ class EighthAndQuarterRhythms(RhythmCollection):
                                       timeSignature,
                                       articulation,
                                       measureLength,
-                                      collectionPatternID=str(id)))
+                                      patternID=str(id)))
 
         for i, eighth in enumerate(oneBarOfEights):
             if i % 2 == 0:
@@ -390,5 +387,5 @@ class EighthAndQuarterRhythms(RhythmCollection):
                                               timeSignature,
                                               articulation,
                                               measureLength,
-                                              collectionPatternID=str(id)))
+                                              patternID=str(id)))
                 id += 1

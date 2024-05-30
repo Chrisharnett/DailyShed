@@ -1,64 +1,17 @@
-from exerciseCollections.notePatternCollections import singleNoteLongToneWholeNotes, stepwiseScaleNotePatterns, scaleExerciseCollection
-from exerciseCollections.rhythmPatternCollections import singleNoteWholeToneRhythms, quarterNoteAndRestRhythms
-from objects.PatternCollection import PatternCollection
 from musicData.modes import modeList
 from musicData.scalePatternLists import scaleExercisePatterns
 from objects.PatternCollection import (ScalePatternCollection,
                                        ScaleToTheNinthBuilderCollection,
                                        SingleNoteLongToneRhythms,
                                        QuarterNoteAndRestCollection,
-                                       EighthAndQuarterRhythms)
+                                       EighthAndQuarterRhythms,
+                                       SingleNoteDiatonicLongToneCollection)
+from musicData.instruments import getInstrumentsBySkillLevel
+from musicData.tonicSequences import tonicSequenceList
+from objects.Program import Program
 
 def collectionCreator():
     collections = []
-    programs = []
-
-    # newPattern, collectionLength = stepwiseScaleNotePatterns(1, 9)
-    # notePatternTitle = "scale_to_the_ninth"
-    # collections.append({
-    #     'collectionType': 'notePattern',
-    #     'title': notePatternTitle,
-    #     'patterns': newPattern,
-    #     'collectionLength': collectionLength
-    # })
-    # rhythmPatternTitle= 'quarter_note'
-    # newPattern, collectionLength = quarterNoteAndRestRhythms(4, 4)
-    # collections.append({
-    #     'collectionType': 'rhythm',
-    #     'title': rhythmPatternTitle,
-    #     'patterns': newPattern,
-    #     'collectionLength': collectionLength
-    # })
-    #
-    # programs.append({'primaryCollectionTitle': notePatternTitle, 'rhythmPatternTitle' : rhythmPatternTitle})
-    #
-    # notePatternTitle = 'single_note_long_tone'
-    # newPattern, collectionLength = singleNoteLongToneWholeNotes(1,9)
-    # collections.append({
-    #     'collectionType': 'notePattern',
-    #     'title': notePatternTitle,
-    #     'patterns': newPattern,
-    #     'collectionLength': collectionLength
-    # })
-    # rhythmPatternTitle = 'single_note_long_tone_rhythms'
-    # newPattern, collectionLength = singleNoteWholeToneRhythms(4, 4)
-    # collections.append({
-    #     'collectionType': 'rhythm',
-    #     'title': rhythmPatternTitle,
-    #     'patterns': newPattern,
-    #     'collectionLength': collectionLength
-    # })
-    # programs.append({'primaryCollectionTitle': notePatternTitle, 'rhythmPatternTitle': rhythmPatternTitle})
-
-
-    # scaleCollections = scaleExerciseCollections()
-    # collections.append(scaleCollections)
-    # programs.append({'primaryCollectionTitle': notePatternTitle, 'rhythmPatternTitle': rhythmPatternTitle})
-
-    return collections, programs
-
-def main():
-    collections=[]
     timeSignature = (4, 4)
     collections.append(EighthAndQuarterRhythms(timeSignature))
     collections.append(QuarterNoteAndRestCollection(timeSignature))
@@ -66,12 +19,27 @@ def main():
     modes = modeList()
     scalePatterns = scaleExercisePatterns()
     for mode in modes:
+        collections.append(SingleNoteDiatonicLongToneCollection(mode))
         collections.append(ScaleToTheNinthBuilderCollection(mode))
         for scalePatternName in scalePatterns:
             collections.append(ScalePatternCollection(mode, scalePatternName))
-    for collection in collections:
-        for pattern in collection.patterns:
-            print(pattern.pattern)
+    defaultPrograms = []
+
+    for instrument in getInstrumentsBySkillLevel('beginner'):
+        scaleToTheNinth = next((collection for collection in collections if collection.title == 'major,scale_to_the_ninth') or None)
+        quarterNotes = next((collection for collection in collections if collection.title == 'quarter_note_in_4-4') or None)
+        tonicSequence = next((sequence for sequence in tonicSequenceList() if sequence.get('name') == 'circle_of_fifths') or None)
+        tonic = instrument.defaultTonic
+        defaultPrograms.append(Program(tonic, 'major', scaleToTheNinth, quarterNotes, tonicSequence, instrument))
+        longTones = next((collection for collection in collections if collection.title == 'major,single_note_long_tone') or None)
+        longToneRhythms = next((collection for collection in collections if collection.title == 'single_note_long_tone_rhythms_in_4-4') or None)
+        defaultPrograms.append(Program(tonic, 'major', longTones, longToneRhythms, tonicSequence, instrument))
+
+    return collections, defaultPrograms
+
+def main():
+    collections, defaultPrograms = collectionCreator()
+
 
 
 

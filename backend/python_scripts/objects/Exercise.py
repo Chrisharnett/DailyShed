@@ -26,7 +26,7 @@ class Exercise:
         self.__filename = None
         self.__description = None
         self.__exerciseName = None
-        self.__ties = []
+        # self.__ties = []
 
     @property
     def notePatternID(self):
@@ -94,6 +94,8 @@ class Exercise:
 
     @property
     def filename(self):
+        if not self.__filename:
+            self.__filename = self.exerciseID
         return self.__filename
 
     @filename.setter
@@ -164,19 +166,18 @@ class Exercise:
     def exerciseName(self, exerciseName):
         self.__exerciseName = exerciseName
 
-    @property
-    def ties(self):
-        return self.__ties
+    # @property
+    # def ties(self):
+    #     return self.__ties
 
     def getNotePatternRhythmLength(self):
-        if self.holdLastNote:
-            length = len((self.notePattern)) - 1
-            return length
-        length = len((self.notePattern))
-        return length
+        # if self.holdLastNote:
+        #     length = len((self.notePattern)) - 1
+        #     return length
+        return len(self.notePattern)
 
-    def addTie(self, tie):
-        self.__ties.append(tie)
+    # def addTie(self, tie):
+    #     self.__ties.append(tie)
 
     def notationPattern(self):
         if not self.repeatMe:
@@ -185,7 +186,6 @@ class Exercise:
             notationPattern = [["repeat"]]
         notes = self.notePattern
         noteIndex = 0
-        # Notes in a tie need to be in the same container!
         for r in self.rhythmPattern:
             if isinstance(r[0], int) or r[0].isnumeric():
                 notationPattern.append([self.notePattern[noteIndex], r[0]])
@@ -302,6 +302,10 @@ class Exercise:
         scaleNotes = scale.makeScale()
         return scaleNotes
 
+    def setDetails(self):
+        self.exerciseName = f"{self.tonic}-{self.mode}-"
+        self.description = f"{self.tonic.title()} {self.mode.title()} scale."
+
     def createImage(self):
         score = self.buildScore()
         lilypond_file = abjad.LilyPondFile([self.preamble, score])
@@ -312,7 +316,7 @@ class Exercise:
         os.remove(png)
         os.remove(os.path.join(localPath + ".ly"))
 
-    def createTestImage(self):
+    def createTestImage(self, id = None):
         lilypond_file = abjad.LilyPondFile([self.preamble, self.buildScore()])
         localPath = self.filename
         abjad.persist.as_png(lilypond_file, localPath, flags="-dcrop", resolution=300)

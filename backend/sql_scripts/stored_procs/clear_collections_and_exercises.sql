@@ -6,44 +6,44 @@ CREATE PROCEDURE clear_collections_and_exercises_proc(
 
 )
 BEGIN
-	DELETE FROM UserPracticeSessionExercises;
-	DELETE FROM ProgramExercises;
-	DELETE FROM Exercises;
-	DELETE FROM UserRoutineExercises;
-	DELETE FROM UserPrograms;
-	DELETE FROM Programs;
-	DELETE FROM CollectionPatterns;
-	DELETE FROM Collections;
-	DELETE FROM NotePatterns;
-	DELETE FROM RhythmPatterns;
+	DECLARE sql_error BOOLEAN DEFAULT FALSE;    
+    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET sql_error = TRUE;
     
+    START TRANSACTION;
+		
+		DELETE FROM UserPracticeSessionExercises;
+		DELETE FROM ProgramExercises;
+		DELETE FROM UserRoutineExercises;
+		DELETE FROM UserPrograms;
+		DELETE FROM Programs;
+		DELETE FROM Instruments;
+		DELETE FROM scaleModes;
+		DELETE FROM CollectionPatterns;
+		DELETE FROM Collections;
+		DELETE FROM ExerciseLog;
+		DELETE FROM Exercises;
+		DELETE FROM NotePatterns;
+		DELETE FROM RhythmPatterns;
+		DELETE FROM UserPracticeRoutines;
+		DELETE FROM UserPracticeSession;
+		DELETE FROM TonicSequences;
+		DELETE FROM scalePatternTypes;
+        
+	IF sql_error = FALSE THEN
+		SELECT('Data removed') AS message;
+        COMMIT;
+    ELSE
+		SELECT('ERROR, rollback') AS message;
+        ROLLBACK;
+    END IF;
 END //
 
 
 DELIMITER ;
 
 CALL clear_collections_and_exercises_proc;
-CALL clearUsers;
 
-SELECT * FROM CollectionPatterns;
-SELECT * FROM Collections;
-SELECT * FROM ExerciseLog;
-SELECT * FROM Exercises;
-SELECT * FROM NotePatterns;
-SELECT * FROM TonicSequences;
-SELECT * FROM ProgramExercises;
-SELECT * FROM Programs;
-SELECT * FROM RhythmPatterns;
-SELECT * FROM scaleModes;
-SELECT * FROM UserPracticeRoutines;
-SELECT * FROM UserPracticeSession;
-SELECT * FROM UserPracticeSessionExercises;
-SELECT * FROM UserPrograms;
-SELECT * FROM UserRoutineExercises;
-SELECT * FROM users;
 
-DELETE FROM pitchNames;
-DELETE FROM scaleModes;
 
 
 

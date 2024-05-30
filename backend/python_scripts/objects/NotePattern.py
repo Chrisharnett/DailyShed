@@ -3,7 +3,7 @@ from objects.MusicPattern import MusicPattern
 class NotePattern(MusicPattern):
     def __init__(self, notePatternType, notePattern, description, directions = ['ascending', 'descending', 'ascending_descending', 'descending_ascending'], repeatMe = False, holdLastNote = False, patternID=None):
         super().__init__(notePatternType, notePattern, description, patternID=patternID)
-        self.__noteLength = self.getNotePatternRhythmLength(notePattern, holdLastNote)
+        self.__noteLength = len(notePattern)
         self.__directions = directions
         self.__repeatMe = repeatMe
         self.__holdLastNote = holdLastNote
@@ -51,18 +51,32 @@ class NotePattern(MusicPattern):
     def holdLastNote(self, value):
         self.__holdLastNote = value
 
-    def getNotePatternRhythmLength(self, notes, holdLastNote):
-        # Placeholder implementation, replace with actual logic
-        # return len(notes) + (1 if holdLastNote else 0)
-        return len(self.pattern) if not holdLastNote else len(self.pattern) -1
-
 class LongTone(NotePattern):
-    def __init__(self, notePatternType, notePattern, description, directions = 'static', repeatMe = False, holdLastNote = False, patternID=None):
-        super().__init__(notePatternType, notePattern, description, directions, repeatMe, holdLastNote, patternID=patternID)
+    def __init__(self, notePatternType, notePattern, description, directions='static', repeatMe = False, holdLastNote = False, patternID=None):
+        super().__init__(notePatternType, notePattern, description, directions, repeatMe, holdLastNote, patternID)
+        self.__scalePatternType = 'long_tone'
+
+    @property
+    def scalePatternType(self):
+        return self.__scalePatternType
+
+    @scalePatternType.setter
+    def scalePatternType(self, scalePattern):
+        self.__scalePatternType = scalePattern
 
 class ScalePattern(NotePattern):
-    def __init__(self, notePatternType, notePattern, description, directions = ['ascending', 'descending', 'ascending_descending', 'descending_ascending'], repeatMe = True, holdLastNote = True, patternID=None):
+    def __init__(self, notePatternType, notePattern, description, scalePatternType, directions = ['ascending', 'descending', 'ascending_descending', 'descending_ascending'], repeatMe = True, holdLastNote = True, patternID=None):
         super().__init__(notePatternType, notePattern, description, directions, repeatMe, holdLastNote, patternID=patternID)
+        self.__scalePatternType = scalePatternType
+
+    @property
+    def scalePatternType(self):
+        return self.__scalePatternType
+
+    @scalePatternType.setter
+    def scalePatternType(self, scalePattern):
+        self.__scalePatternType = scalePattern
+
 
 class CreativePattern(NotePattern):
     def __init__(self, notePatternType, notePattern, description, directions, repeatMe = False, holdLastNote = False, patternID=None):

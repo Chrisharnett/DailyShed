@@ -16,20 +16,27 @@ CREATE OR REPLACE VIEW get_practice_session AS
         up.userProgramID,
 		pc.collectionLength AS collectionLength,
 		pc.collectionType AS PrimaryCollectionType,
+        pc.scalePatternType,
         p.rhythmCollectionID,
         p.primaryCollectionID,
-        pc.collectionLength AS collectionLength
+        i.instrumentName,
+        i.lowNote,
+        i.highNote,
+        i.level,
+        i.defaultTonic
     FROM users u 
     JOIN UserPrograms up ON u.sub = up.sub
     JOIN UserRoutineExercises ure ON(ure.UserProgramID = up.UserProgramID)
     JOIN UserPracticeRoutines upr ON(upr.sub = u.sub)
     JOIN Programs p ON(p.programID = up.programID)
+    JOIN Instruments i ON i.instrumentID = p.instrumentID
 	JOIN TonicSequences ts ON ts.tonicSequenceID = p.tonicSequenceID
     JOIN scaleModes sm ON sm.scaleModeID = p.scaleModeID
     LEFT JOIN Collections rc ON rc.collectionID = p.rhythmCollectionID
     LEFT JOIN Collections pc ON pc.collectionID = p.primaryCollectionID
     ;
 
+SELECT * FROM Programs;
 SELECT * FROM get_practice_session;
 SELECT 
 		u.sub, 
@@ -47,6 +54,11 @@ SELECT
 		pc.collectionType AS PrimaryCollectionType,
         p.rhythmCollectionID,
         p.primaryCollectionID,
+        i.instrumentName,
+        i.lownote,
+        i.highNote,
+        i.level,
+        i.defaultTonic,
         pc.collectionLength AS collectionLength
     FROM users u 
     JOIN UserPrograms up ON u.sub = up.sub
@@ -62,6 +74,7 @@ SELECT * FROM users;
 SELECT * FROM UserPrograms;
 SELECT * FROM Programs;
 SELECT * FROM RhythmPatterns;
+SELECT * FROM Instruments;
 
 SELECT * FROM get_practice_session;
 

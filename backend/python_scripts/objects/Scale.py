@@ -183,7 +183,7 @@ class Scale:
             self.tonic = next(note for note in self.pitchesInRange if self.__tonic == note[:-1])
 
     def scalePatterns(self):
-        return ['full_range_ascending_descending_scale', 'one_octave_ascending_descending_scale', 'two_octave_ascending_descending_scale']
+        return ['full_range_ascending_descending_scale', 'one_octave_ascending_descending_scale', 'two_octave_ascending_descending_scale', 'scale_to_the_ninth']
 
     def fullRangeAscendingScale(self):
         self.getNotesInRange()
@@ -225,6 +225,24 @@ class Scale:
             pass
         self.ascendingDescending()
 
+    def scaleToTheNinth(self):
+        self.getNotesInRange()
+        self.getTonicInRange()
+        sequence = self.getDefaultPattern()
+        self.getNamedPitches(sequence)
 
+    def getDefaultPattern(self):
+        sequence = []
+        tonicIndex = self.pitchesInRange.index(self.tonic)
+        for note in self.notePattern:
+            noteIndex = tonicIndex + note
+            sequence.append(self.pitchesInRange[noteIndex])
+        return sequence
+
+    def defaultScaleExercise(self):
+        self.getNotesInRange()
+        self.getTonicInRange()
+        sequence = self.getDefaultPattern()
+        self.getNamedPitches(sequence)
 
 

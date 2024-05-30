@@ -6,6 +6,9 @@ class Instrument:
         self.__highNote = highNote
         self.__defaultTonic = defaultTonic
 
+    def __str__(self):
+        return f"{self.level}_{self.instrumentName}"
+
     # instrumentName property
     @property
     def instrumentName(self):

@@ -12,7 +12,8 @@ CREATE PROCEDURE insert_rhythmPattern_proc (
     IN timeSignature_p					TEXT,
     IN rhythmPattern_p 					TEXT,
     IN collectionRhythmPatternID_p		INT,
-    IN rhythmLength_p					INT
+    IN rhythmLength_p					INT,
+    IN measures_p						INT
 )
 BEGIN 
 	DECLARE collectionID_p				INT;
@@ -51,14 +52,16 @@ BEGIN
 			timeSignature,
 			rhythmPattern,
 			collectionRhythmPatternID,
-            rhythmLength
+            rhythmLength,
+            measures
 			) VALUES (
 			rhythmDescription_p,
 			articulation_p,
 			timeSignature_p,
 			rhythmPattern_p,
 			collectionRhythmPatternID_p,
-            rhythmLength_p
+            rhythmLength_p,
+            measures_p
 			);
 		SET rhythmPatternID_p = LAST_INSERT_ID();
 			

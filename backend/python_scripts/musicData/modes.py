@@ -107,100 +107,99 @@ def modeList():
                                [11, 14, 17]],
             'adjustments': {}
         },
-        {
-            'modeName': 'dorian',
-            'modePattern': [0, 2, 3, 5, 7, 9, 10],
-            'diatonicTriads': [[0, 3, 7], [2, 5, 9], [3, 7, 10], [5, 9, 12], [7, 10, 14], [9, 12, 16], [10, 14, 17]],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'phrygian',
-            'modePattern': [0, 1, 3, 5, 7, 8, 10],
-            'diatonicTriads': [[0, 3, 7], [1, 5, 8], [3, 7, 10], [5, 8, 12], [7, 10, 14], [8, 12, 15], [10, 14, 17]],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'lydian',
-            'modePattern': [0, 2, 4, 6, 7, 9, 11],
-            'diatonicTriads': [[0, 4, 7], [2, 6, 9], [4, 7, 11], [6, 9, 12], [7, 11, 14], [9, 12, 16], [11, 14, 17]],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'mixolydian',
-            'modePattern': [0, 2, 4, 5, 7, 9, 10],
-            'diatonicTriads': [[0, 4, 7], [2, 5, 9], [4, 7, 10], [5, 9, 12], [7, 10, 14], [9, 12, 16], [10, 14, 17]],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'aeolian',
-            'modePattern': [0, 2, 3, 5, 7, 8, 10],
-            'diatonicTriads': [[0, 3, 7], [2, 5, 8], [3, 7, 10], [5, 8, 12], [7, 10, 14], [8, 12, 15], [10, 14, 17]],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'locrian',
-            'modePattern': [0, 1, 3, 5, 6, 8, 10],
-            'diatonicTriads': [[0, 3, 6], [1, 5, 8], [3, 6, 10], [5, 8, 11], [6, 10, 13], [8, 11, 15], [10, 13, 17]],
-            'adjustments': {}
-        },
-        # Klezmer Scales
-        {
-            'modeName': 'klezmer',
-            'modePattern': [0, 1, 4, 5, 7, 8, 10],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'freygish',
-            'modePattern': [0, 1, 4, 5, 7, 8, 11],
-            'adjustments': {}
-        },
-        # Balkan Scales
-        {
-            'modeName': 'gypsy_major',
-            'modePattern': [0, 1, 4, 5, 7, 8, 11],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'gypsy_minor',
-            'modePattern': [0, 2, 3, 6, 7, 8, 11],
-            'adjustments': {}
-        },
-        # Indian Scales (Ragas)
-        {
-            'modeName': 'bhairav',
-            'modePattern': [0, 1, 4, 5, 7, 8, 11],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'ahir_bhairav',
-            'modePattern': [0, 1, 4, 6, 7, 9, 11],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'kafi',
-            'modePattern': [0, 2, 3, 5, 7, 9, 10],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'khamaj',
-            'modePattern': [0, 2, 4, 5, 7, 9, 10],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'marwa',
-            'modePattern': [0, 1, 4, 6, 7, 9, 11],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'yaman',
-            'modePattern': [0, 2, 4, 6, 7, 9, 11],
-            'adjustments': {}
-        },
-        {
-            'modeName': 'todi',
-            'modePattern': [0, 1, 3, 6, 7, 8, 11],
-            'adjustments': {}
-        }
+        # {
+        #     'modeName': 'dorian',
+        #     'modePattern': [0, 2, 3, 5, 7, 9, 10],
+        #     'diatonicTriads': [[0, 3, 7], [2, 5, 9], [3, 7, 10], [5, 9, 12], [7, 10, 14], [9, 12, 16], [10, 14, 17]],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'phrygian',
+        #     'modePattern': [0, 1, 3, 5, 7, 8, 10],
+        #     'diatonicTriads': [[0, 3, 7], [1, 5, 8], [3, 7, 10], [5, 8, 12], [7, 10, 14], [8, 12, 15], [10, 14, 17]],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'lydian',
+        #     'modePattern': [0, 2, 4, 6, 7, 9, 11],
+        #     'diatonicTriads': [[0, 4, 7], [2, 6, 9], [4, 7, 11], [6, 9, 12], [7, 11, 14], [9, 12, 16], [11, 14, 17]],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'mixolydian',
+        #     'modePattern': [0, 2, 4, 5, 7, 9, 10],
+        #     'diatonicTriads': [[0, 4, 7], [2, 5, 9], [4, 7, 10], [5, 9, 12], [7, 10, 14], [9, 12, 16], [10, 14, 17]],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'aeolian',
+        #     'modePattern': [0, 2, 3, 5, 7, 8, 10],
+        #     'diatonicTriads': [[0, 3, 7], [2, 5, 8], [3, 7, 10], [5, 8, 12], [7, 10, 14], [8, 12, 15], [10, 14, 17]],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'locrian',
+        #     'modePattern': [0, 1, 3, 5, 6, 8, 10],
+        #     'diatonicTriads': [[0, 3, 6], [1, 5, 8], [3, 6, 10], [5, 8, 11], [6, 10, 13], [8, 11, 15], [10, 13, 17]],
+        #     'adjustments': {}
+        # },
+        # # Klezmer Scales
+        # {
+        #     'modeName': 'klezmer',
+        #     'modePattern': [0, 1, 4, 5, 7, 8, 10],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'freygish',
+        #     'modePattern': [0, 1, 4, 5, 7, 8, 11],
+        #     'adjustments': {}
+        # },
+        # # Balkan Scales
+        # {
+        #     'modeName': 'gypsy_major',
+        #     'modePattern': [0, 1, 4, 5, 7, 8, 11],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'gypsy_minor',
+        #     'modePattern': [0, 2, 3, 6, 7, 8, 11],
+        #     'adjustments': {}
+        # },
+        # # Indian Scales (Ragas)
+        # {
+        #     'modeName': 'bhairav',
+        #     'modePattern': [0, 1, 4, 5, 7, 8, 11],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'ahir_bhairav',
+        #     'modePattern': [0, 1, 4, 6, 7, 9, 11],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'kafi',
+        #     'modePattern': [0, 2, 3, 5, 7, 9, 10],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'khamaj',
+        #     'modePattern': [0, 2, 4, 5, 7, 9, 10],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'marwa',
+        #     'modePattern': [0, 1, 4, 6, 7, 9, 11],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'yaman',
+        #     'modePattern': [0, 2, 4, 6, 7, 9, 11],
+        #     'adjustments': {}
+        # },
+        # {
+        #     'modeName': 'todi',
+        #     'modePattern': [0, 1, 3, 6, 7, 8, 11],
+        #     'adjustments': {}
+        # }
     ]
 
-    return scales.get(mode)

@@ -27,6 +27,7 @@ SELECT * FROM get_notePattern_collection
 
 SELECT * FROM Collections;
 
+SELECT * FROM RhythmPatterns; 
 SELECT * FROM CollectionPatterns 
 where collectionID = 129
 ;

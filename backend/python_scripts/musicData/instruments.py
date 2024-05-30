@@ -1,14 +1,16 @@
+from objects.Instrument import Instrument
+
 def instrumentList():
     return [
             {
-        'instrumentName': 'saxophone',
-        'lowNote': {'beginner': 'd4',
-                    'intermediate': 'bb3',
-                    'advanced': 'bb3'},
-        'highNote': {'beginner': 'c6',
-                    'intermediate': 'f6',
-                    'advanced': 'g6'},
-        'defaultTonic': 'g4'
+            'instrumentName': 'saxophone',
+            'lowNote': {'beginner': 'd4',
+                        'intermediate': 'bb3',
+                        'advanced': 'bb3'},
+            'highNote': {'beginner': 'c6',
+                        'intermediate': 'f6',
+                        'advanced': 'g6'},
+            'defaultTonic': 'g4'
             }, {
             'instrumentName': 'clarinet',
             'lowNote': {'beginner': 'g3',
@@ -20,3 +22,21 @@ def instrumentList():
             'defaultTonic': 'c4'
             }
             ]
+
+
+def getInstrumentsBySkillLevel(level):
+    instruments = []
+    for instrument in instrumentList():
+        lowNote = instrument['lowNote'][level]
+        highNote = instrument['highNote'][level]
+        instruments.append(Instrument(instrument.get('instrumentName'), level, lowNote, highNote, instrument.get('defaultTonic')))
+    return instruments
+
+def getAllInstruments():
+    instruments = []
+    for instrument in instrumentList():
+        for level, lowNote in instrument.get('lowNote').items():
+            highNote = instrument['highNote'][level]
+            instruments.append(
+                Instrument(instrument.get('instrumentName'), level, lowNote, highNote, instrument.get('defaultTonic')))
+    return instruments

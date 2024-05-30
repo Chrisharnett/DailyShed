@@ -10,15 +10,17 @@ CREATE PROCEDURE add_new_exercise_proc(
     IN direction_p				VARCHAR(45),
     IN directionIndex_p			INT,
     IN userProgramID_p			INT,
-    IN userPracticeSessionID_p	INT
+    IN userPracticeSessionID_p	INT,
+    IN exerciseName_p			VARCHAR(255),
+    IN description_p			VARCHAR(255)
 )
 
 BEGIN
     DECLARE exerciseID_p 		INT 			DEFAULT NULL;
-    DECLARE exerciseName_p		VARCHAR(45) 	DEFAULT NULL;
-    DECLARE imageFilename_p		VARCHAR(45) 	DEFAULT NULL;
-    DECLARE description_p		VARCHAR(255)	DEFAULT NULL;
-    DECLARE imageURL_p			VARCHAR(45)		DEFAULT NULL;
+    -- DECLARE exerciseName_p		VARCHAR(45) 	DEFAULT NULL;
+    DECLARE imageFilename_p		VARCHAR(255) 	DEFAULT NULL;
+    -- DECLARE description_p		VARCHAR(255)	DEFAULT NULL;
+    DECLARE imageURL_p			VARCHAR(255)		DEFAULT NULL;
     DECLARE patternType_p		VARCHAR(45)		DEFAULT NULL;
     DECLARE collectionTitle_p	VARCHAR(255)	DEFAULT NULL;
     DECLARE programTitle_p		VARCHAR(255)	DEFAULT NULL;
@@ -63,7 +65,7 @@ BEGIN
 		  AND mode = mode_p
 		  AND directionIndex = directionIndex_p;
 		
-        
+        /*
         IF exerciseID_p IS NULL THEN
 			SELECT CONCAT(
 			COALESCE(CONCAT(UPPER(LEFT(tonic_p, 1)), LOWER(SUBSTRING(tonic_p, 2))), ''), ' ',
@@ -77,10 +79,8 @@ BEGIN
 				SET exerciseName_p =  CONCAT(exerciseName_p, ' ',UPPER(LEFT(direction_p, 1)), LOWER(SUBSTRING(direction_p, 2)));
 			END IF;
 			
-			SELECT RTRIM(exerciseName_p) INTO exerciseName_p;        
-			
-			
-			
+			SELECT RTRIM(exerciseName_p) INTO exerciseName_p;
+            */
 			INSERT INTO Exercises(
 				notePatternID, 
 				rhythmPatternID,
@@ -100,7 +100,7 @@ BEGIN
 				);
 				
 			SELECT LAST_INSERT_ID() INTO exerciseID_p;
-		END IF;
+		-- END IF;
         
         SELECT programID INTO programID_p
         FROM UserPrograms 
@@ -111,7 +111,8 @@ BEGIN
         INSERT INTO UserPracticeSessionExercises (exerciseID, UserPracticeSessionID) VALUES (exerciseID_p, userPracticeSessionID_p);
         
 		-- SELECT CONCAT(exerciseID_p, '-', REPLACE(exerciseName_p, ' ', '_')) INTO imageFilename_p;
-        SELECT CONCAT(exerciseID_p) INTO imageFilename_p;
+        SET imageFilename_p = CONCAT(
+			exerciseID_p, '-', exerciseName_p);
         
         UPDATE Exercises
         SET imageFilename = imageFilename_p
@@ -126,7 +127,7 @@ SELECT
     IF sql_error_code = 0 THEN
 		COMMIT;
 	ELSE
-		ROLLBACK; -- This is redundant due to the handler but can be explicitly stated for clarity
+		ROLLBACK;
 		SELECT 'Transaction rolled back due to error:', sql_error_message AS Error_Message;
 	END IF;
     

@@ -8,66 +8,77 @@ CREATE PROCEDURE insert_notePattern_proc (
     IN collectionType_p				VARCHAR(255),
     IN collectionLength_p			INT,
     IN description_p				TEXT,
-    IN direction_p					VARCHAR(45),
     IN directions_p					TEXT,
     IN holdLastNote_p				BOOLEAN,
     IN notePattern_p				TEXT,
     IN notePatternType_p			VARCHAR(45),
     IN repeatMe_p					BOOLEAN,
     IN collectionNotePatternID_p	VARCHAR(45),
-    IN noteLength_p					INT
+    IN noteLength_p					INT,
+    IN scalePatternType_p			VARCHAR(255)
 )
 BEGIN 
 	DECLARE collectionID_p				INT;
     DECLARE notePatternID_p				INT;
     DECLARE sql_error					TINYINT DEFAULT FALSE;
+    DECLARE message						VARCHAR(255);
         
 	DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
 		BEGIN
 			SET sql_error = TRUE;
 		END;
     
-    START TRANSACTION;
+    START TRANSACTION;		
+        
         SELECT collectionID INTO collectionID_p
         FROM Collections
         WHERE collectionTitle = collectionTitle_p
-			AND collectionType = collectionType_p
-            AND collectionLength = collectionLength_p;
-		
+		AND collectionType = collectionType_p
+		AND collectionLength = collectionLength_p;
+            
+		IF scalePatternType_p IS NOT NULL THEN
+			INSERT IGNORE INTO scalePatternTypes (scalePatternType) VALUES (scalePatternType_p);
+		END IF;
+        
         If collectionID_p IS NULL THEN
-			INSERT IGNORE INTO Collections (
+			INSERT INTO Collections (
 				collectionTitle, 
 				collectionType, 
-				collectionLength
+				collectionLength,
+                scalePatternType
 			) VALUES (
 				collectionTitle_p, 
 				collectionType_p, 
-				collectionLength_p
-				);
-		
+				collectionLength_p,
+                scalePatternType_p
+				);		
 			SET collectionID_p = LAST_INSERT_ID();
+		SET message = 'collectionID2';
 		END IF;
+        
+        SET message = scalePatternType_p;
+        
     
 		INSERT INTO NotePatterns(
 			description, 
-			direction, 
 			directions,
             holdLastNote,
             notePatternType, 
 			notePattern,
             repeatMe,
 			collectionNotePatternID,
-            noteLength
+            noteLength,
+            scalePatternType
 			) VALUES (
-			description_p, 
-			direction_p, 
+			description_p,
 			directions_p,
             holdLastNote_p,
             notePatternType_p, 
 			notePattern_p,
             repeatMe_p,
 			collectionNotePatternID_p,
-            noteLength_p
+            noteLength_p,
+            scalePatternType_p
 			);
 		SET notePatternID_p = LAST_INSERT_ID();
 			
@@ -84,60 +95,70 @@ BEGIN
         SELECT 'Transaction Comitted';
 	ELSE
 		ROLLBACK;
-        SELECT 'Transaction failed';
+        SELECT message;
 	END IF;
 
 END //
 
 DELIMITER ;
 
-
-CALL insert_notePattern_proc(
-    "Test 3 Collection",
-    "notePattern 3",
-    2,
-    "Description for new pattern",
-    "test direction 2",
-    "[test directions 2]",
-    FALSE,
-    "[1,2, 3]",
-    "test notepatternType 3",
-    FALSE,
-    "test notepattern ID 2"    
-);
+SELECT collectionID
+FROM Collections
+WHERE collectionTitle = 'major,scale_to_the_ninth'
+AND collectionType = 'notePattern'
+AND collectionLength = 32;
 
 INSERT INTO Collections (
-			collectionTitle, 
-			collectionType, 
-			collectionLength
-		) VALUES (
-			"asdf", 
-			"test", 
-			5
-			);
+				collectionTitle, 
+				collectionType, 
+				collectionLength
+			) VALUES (
+				'major,scale_to_the_ninth', 
+				'notePattern', 
+				32
+				);
+                
+INSERT IGNORE INTO scalePatternTypes (scalePatternType) VALUES ('scale_to_the_ninth');
 
 INSERT INTO NotePatterns(
-			notePatternType, 
-			notePattern, 
 			description, 
-			direction, 
-			directions, 
-			repeatMe, 
-			holdLastNote, 
-			collectionNotePatternID
+			directions,
+            holdLastNote,
+            notePatternType, 
+			notePattern,
+            repeatMe,
+			collectionNotePatternID,
+            noteLength,
+            scalePatternType
 			) VALUES (
-			"TYPE",
-			"[1,2]",
-			"DESCRIPTION",
-			"test",
-			"[test]",
-			TRUE, 
-			FALSE,
-			22
+			'Major,Scale To The Ninth. Play twice. Repeat both times.', 
+			'["ascending", "descending", "ascending/descending", "descending/ascending"]',
+			True,
+            'major,scale_to_the_ninth',
+			'[2, 0]', 
+            True, 
+			'0',
+			1, 
+			'scale_to_the_ninth'
 			);
-INSERT INTO CollectionPatterns (collectionID, notePatternID) VALUES (1, 1);
+
+
+CALL insert_notePattern_proc('major,scale_to_the_ninth', 
+							'notePattern', 
+							32, 
+							'Major,Scale To The Ninth. Play twice. Repeat both times.', 
+							'["ascending", "descending", "ascending/descending", "descending/ascending"]',
+							True,
+							'[2, 0]', 
+							'major,scale_to_the_ninth',
+							True, 
+							'0',
+							1, 
+							'test');
+
 
 USE Daily_Shed;
+SELECT * FROM scalePatternTypes;
 SELECT * FROM NotePatterns;
 SELECT * FROM RhythmPatterns;
 SELECT * FROM Collections;

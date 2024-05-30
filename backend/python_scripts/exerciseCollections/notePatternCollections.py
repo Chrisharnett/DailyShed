@@ -47,9 +47,9 @@ def stepwiseScaleNotePatterns(minNote, maxNote):
     scale1 = []
 
     # Ascending scalar options
+    directions = ['ascending', 'descending', 'ascending/descending', 'descending/ascending']
     for i in range(minNote + 1, maxNote + 1):
         notes = []
-        directions = ['ascending', 'descending', 'ascending/descending', 'descending/ascending']
         holdLastNote = True
         for j in range(1, i + 1):
             notes.append(j)

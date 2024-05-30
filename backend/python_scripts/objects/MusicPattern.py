@@ -3,7 +3,7 @@ class MusicPattern:
         self.__patternType = patternType
         self.__pattern = pattern
         self.__description = description
-        self.__collectionPatternID = patternID
+        self.__patternID = patternID
 
     @property
     def patternType(self):
@@ -28,3 +28,11 @@ class MusicPattern:
     @description.setter
     def description(self, value):
         self.__description = value
+
+    @property
+    def patternID(self):
+        return self.__patternID
+
+    @patternID.setter
+    def patternID(self, patternID):
+        self.__patternID = patternID
