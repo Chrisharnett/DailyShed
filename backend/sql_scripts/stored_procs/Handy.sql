@@ -24,6 +24,7 @@ SELECT * FROM Programs;
 SELECT * FROM scaleModes;
 SELECT * FROM Collections;
 SELECT * FROM scalePatternTypes;
+
 CALL clear_collections_and_exercises_proc();
 
 -- VIEWS
@@ -31,3 +32,8 @@ SELECT * FROM get_practice_session;
 
 -- STORED PROCS
 CALL clear_collections_and_exercises_proc();
+
+CALL clear_exercises_proc();
+CALL reset_player_proc();
+
+DELETE FROM UserPracticeSession;

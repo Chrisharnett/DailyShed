@@ -13,6 +13,8 @@ BEGIN
     UPDATE UserPrograms
     SET currentIndex = -1;
     
+    DELETE FROM UserPracticeSession;
+    
 END //
 
 DELIMITER ;

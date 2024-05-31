@@ -8,6 +8,7 @@ import TheShed from "./pages/TheShed";
 import UserProfile from "./pages/UserProfile";
 import PracticeJournal from "./pages/PracticeJournal";
 import HomePage from "./pages/HomePage";
+import Programs from "./pages/Programs";
 import { useEffect, useState } from "react";
 import { Backgrounds } from "./util/Backgrounds.js";
 import { useToken } from "./auth/useToken";
@@ -101,6 +102,7 @@ export function App() {
               path="/practiceJournal"
               element={<PracticeJournal user={user} />}
             />
+            <Route path="/programs" element={<Programs user={user} />} />
           </Route>
         </Routes>
       </BrowserRouter>

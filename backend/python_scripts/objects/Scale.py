@@ -14,6 +14,14 @@ class Scale:
         self.__notePattern = None
         self.__pitchesInRange = None
 
+    def toDict(self):
+        return {
+            "tonic": self.tonic,
+            "mode": self.mode,
+            "lowNote": self.lowNote,
+            "highNote": self.highNote
+        }
+
     # tonic property
     @property
     def tonic(self):

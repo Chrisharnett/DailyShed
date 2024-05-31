@@ -1,5 +1,4 @@
 from objects.NotePattern import (MusicPattern,
-                                 NotePattern,
                                  LongTone,
                                  ScalePattern)
 from objects.RhythmPattern import RhythmPattern
@@ -188,7 +187,7 @@ class RhythmCollection(PatternCollection):
 
 class SingleNoteLongToneRhythms(RhythmCollection):
     def __init__(self, timeSignature):
-        collectionType='rhythm'
+        collectionType='long_tone_rhythm'
         title='single_note_long_tone_rhythms'
         match timeSignature:
             case (4, 4):

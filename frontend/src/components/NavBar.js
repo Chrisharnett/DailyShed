@@ -28,6 +28,7 @@ const Navigation = ({ loggedIn, setLoggedIn, cognitoURL }) => {
               <Nav className="me-auto">
                 <Nav.Link href="/theShed">The Shed</Nav.Link>
                 <Nav.Link href="/userProfile">Practice Profile</Nav.Link>
+                <Nav.Link href="/programs">Programs</Nav.Link>
                 <Nav.Link href="/practiceJournal">Practice Journal</Nav.Link>
               </Nav>
             )}

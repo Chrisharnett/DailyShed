@@ -21,6 +21,24 @@ class PracticeSession:
         self.__userPracticeSession = userPracticeSession or []
         self.__collections = collections
 
+    def toDict(self):
+        return {
+            "sub": self.sub,
+            "userName": self.userName,
+            "rounds": self.rounds,
+            "setLength": self.setLength,
+            "collectionHistory": self.collectionHistory,
+            "exerciseDetails": [detail.toDict() if hasattr(detail, 'toDict') else detail for detail in
+                                self.exerciseDetails],
+            "intervals": [interval.toDict() if hasattr(interval, 'toDict') else interval for interval in
+                          self.intervals],
+            "userPracticeSessionID": self.userPracticeSessionID,
+            "userPracticeSession": [session.toDict() if hasattr(session, 'toDict') else session for session in
+                                    self.userPracticeSession],
+            "collections": self.collections.toDict() if hasattr(self.__collections,
+                                                                   'toDict') else self.collections
+        }
+
     @property
     def sub(self):
         return self.__sub

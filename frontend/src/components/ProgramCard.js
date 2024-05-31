@@ -7,17 +7,27 @@ const ProgramCard = ({ i, program }) => {
 
   useEffect(() => {}, []);
 
+  const programTitle = () => {
+    const scalePatternType = program.collectionTitle.split(",")[1];
+    return (
+      ToTitleCase(program.sequence[program.scaleTonicIndex]) +
+      " " +
+      ToTitleCase(program.scaleModeName) +
+      " " +
+      scalePatternType
+    );
+  };
+
   return (
     <>
       <Container key={i}>
         <Card className="">
-          <Card.Header>
-            {ToTitleCase(program.programTitle)} in{" "}
-            {ToTitleCase(program.tonicSequence[program.scaleTonicIndex])}{" "}
-            {ToTitleCase(program.mode)}
-          </Card.Header>
+          <Card.Header>{programTitle()}</Card.Header>
           <Card.Body>
-            <Card.Text>Instrument: {ToTitleCase(program.instrument)}</Card.Text>
+            <Card.Text>
+              Instrument: {ToTitleCase(program.instrumentName)}
+            </Card.Text>
+            <Card.Text>Level: {ToTitleCase(program.instrumentLevel)}</Card.Text>
             <Card.Text>
               Rhythm: {ToTitleCase(program.rhythmCollection)}
             </Card.Text>

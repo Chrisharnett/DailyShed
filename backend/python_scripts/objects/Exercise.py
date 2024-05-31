@@ -17,6 +17,7 @@ class Exercise:
         self.__mode = mode
         self.__directionIndex = None
         self.__direction = None
+        self.__directions = None
         self.__repeatMe = repeatMe
         self.__holdLastNote = holdLastNote
         self.__timeSignature = (4,4)
@@ -26,7 +27,27 @@ class Exercise:
         self.__filename = None
         self.__description = None
         self.__exerciseName = None
-        # self.__ties = []
+
+    def toDict(self):
+        return {
+            "notePatternID": self.notePatternID,
+            "rhythmPatternID": self.rhythmPatternID,
+            "notePattern": self.notePattern,
+            "rhythmPattern": self.rhythmPattern,
+            "tonic": self.tonic,
+            "mode": self.mode,
+            "directionIndex": self.directionIndex,
+            "direction": self.direction,
+            "repeatMe": self.repeatMe,
+            "holdLastNote": self.holdLastNote,
+            "timeSignature": self.timeSignature,
+            "preamble": self.preamble,
+            "articulation": self.articulation,
+            "exerciseID": self.exerciseID,
+            "filename": self.filename,
+            "description": self.description,
+            "exerciseName": self.exerciseName
+        }
 
     @property
     def notePatternID(self):
@@ -91,6 +112,14 @@ class Exercise:
     @directions.setter
     def directions(self, directions):
         self.__directions = directions
+
+    @property
+    def direction(self):
+        return self.__direction
+
+    @direction.setter
+    def direction(self, direction):
+        self.__direction = direction
 
     @property
     def filename(self):

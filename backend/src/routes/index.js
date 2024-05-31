@@ -9,8 +9,10 @@ import { getUserPracticeSessionRoute } from "./getUserPracticeSessionRoute.js";
 import { getUserProgramsRoute } from "./getUserProgramsRoute.js";
 import { getScaleModesRoute } from "./getScaleModesRoute.js";
 import { getRhythmOptionsRoute } from "./getRhythmOptionsRoute.js";
+import { getProgramDataRoute } from "./getProgramDataRoute.js";
 
 export const routes = [
+  getProgramDataRoute,
   getRhythmOptionsRoute,
   getScaleModesRoute,
   getUserProgramsRoute,

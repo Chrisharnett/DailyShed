@@ -9,7 +9,8 @@ from queries.queries import (insertCollectionsInDatabase,
                              fetchUserPrograms,
                              fetchModes,
                              fetchRhythmPatternOptions,
-                             fetchUserExerciseLog)
+                             fetchUserExerciseLog,
+                             fetchProgramData)
 from objects.PracticeSession import PracticeSession
 import boto3
 
@@ -82,14 +83,31 @@ def getUserPrograms():
             "error": str(e)
         })
 
+@app.route("/getProgramData", methods=["GET", "POST"])
+def getProgramData():
+    try:
+        sub = request.get_json().get('sub')
+        programData = fetchProgramData(sub)
+        return {
+                "statusCode": 200,
+                "programData": programData
+        }
+
+    except Exception as e:
+        return jsonify({
+            "statusCode": 400,
+            "error": str(e)
+        })
+
 @app.route("/getUserPracticeSession", methods=["GET", "POST"])
 def getUserPracticeSession():
     try:
         sub = request.get_json().get('sub')
         practiceSession = getPracticeSession(sub)
+        practiceSessionDict = practiceSession.toDict()
         return {
                 "statusCode": 200,
-                "practiceSession": practiceSession
+                "practiceSession": practiceSessionDict
         }
 
     except Exception as e:

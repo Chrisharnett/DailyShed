@@ -38,11 +38,17 @@ class NotePatternPracticeInterval(PracticeInterval):
                          scaleTonicSequence)
         self.__scalePatternType = scalePatternType
         self.__scale = Scale(tonic, mode, instrument.lowNote, instrument.highNote)
-        self.__scaleExercise = None
+        # self.__scaleExercise = None
 
-    # @property
-    # def filename(self):
-    #     return f"{self.instrument.level}_{self.instrument.instrumentName}_{self.scale.tonic}_{self.scale.mode.replace(' ', '_')}_{self.scalePatternType or None}"
+    def toDict(self):
+        parent_dict = super().toDict()
+        parent_dict.update({
+            "scalePatternType": self.scalePatternType,
+            "scale": self.scale.toDict() if hasattr(self.scale, 'toDict') else self.scale,
+            # "scaleExercise": self.__scaleExercise.to_dict() if self.__scaleExercise and hasattr(self.__scaleExercise,
+            #                                                                                     'to_dict') else self.__scaleExercise
+        })
+        return parent_dict
 
     @property
     def scalePatternType(self):
@@ -60,13 +66,13 @@ class NotePatternPracticeInterval(PracticeInterval):
     def scale(self, scale):
         self.__scale = scale
 
-    @property
-    def scaleExercise(self):
-        return self.__scaleExercise
-
-    @scaleExercise.setter
-    def scaleExercise(self, scaleExercise):
-        self.__scaleExercise = scaleExercise
+    # @property
+    # def scaleExercise(self):
+    #     return self.__scaleExercise
+    #
+    # @scaleExercise.setter
+    # def scaleExercise(self, scaleExercise):
+    #     self.__scaleExercise = scaleExercise
 
     def findTwoSum(self, nums, target):
         seen = {}

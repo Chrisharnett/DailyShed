@@ -1,5 +1,4 @@
 import { Row, Col, Form } from "react-bootstrap";
-import { useState } from "react";
 import ToTitleCase from "../util/ToTitleCase";
 
 const KeyAndModeSelector = ({
@@ -12,27 +11,6 @@ const KeyAndModeSelector = ({
   onModeChange,
   parentIndex,
 }) => {
-  // const [keys, setKeys] = useState([
-  //   "c",
-  //   "db",
-  //   "d",
-  //   "eb",
-  //   "e",
-  //   "f",
-  //   "f#",
-  //   "g",
-  //   "g#",
-  //   "a",
-  //   "a#",
-  //   "b",
-  // ]);
-  // const [scaleModes, setModes] = useState([
-  //   "major",
-  //   "minor",
-  //   "dorian",
-  //   "mixolydian",
-  // ]);
-
   const handleKeyChange = (e) => {
     onKeyChange(e.target.value);
   };

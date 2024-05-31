@@ -1,6 +1,5 @@
 import { Container, Form, Row, Col, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import ProgramCard from "../components/ProgramCard";
 import ExerciseDetailsForm from "../components/ExerciseDetailsForm";
 import SuccessModal from "../components/SuccessModal";
 import TopSpacer from "../util/TopSpacer";
@@ -21,12 +20,15 @@ const UserProfile = ({ user }) => {
           `/api/getUserPracticeSession/${user.sub}`
         );
         setPracticeSession(sessionResponse.data);
+
         const programResponse = await axios.post(
           `/api/getUserPrograms/${user.sub}`
         );
         setUserPrograms(programResponse.data);
+
         const scaleModesResponse = await axios.get("/api/getScaleModes");
         setScaleModes(scaleModesResponse.data);
+
         const rhythmOptionsResponse = await axios.post(
           `/api/getRhythmOptions/${user.sub}`
         );
@@ -87,24 +89,13 @@ const UserProfile = ({ user }) => {
       <>
         <TopSpacer />
         <Container className="midLayer glass">
-          <h1 className="dropShadow"> {userPrograms.userName} </h1>
+          <h1 className="dropShadow"> {userPrograms.programs.userName} </h1>
           <Form
             onSubmit={handleSubmit}
             className="container justify-content-center"
           >
             <Container>
               <h2 className="dropShadow">Your practice routine</h2>
-              <hr></hr>
-              <h4 className="dropShadow">Your Programs</h4>
-              <Row>
-                {userPrograms.programs.map((program, i) => {
-                  return (
-                    <Col key={i} className="mb-2" xs={12} sm={4}>
-                      <ProgramCard i={i} program={program} />
-                    </Col>
-                  );
-                })}
-              </Row>
               <hr></hr>
               {/* TODO: Add the ability to change the number of Exercises */}
               {/* TODO: Allow Custom Exercises */}

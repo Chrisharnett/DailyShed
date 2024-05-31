@@ -6,6 +6,62 @@ from musicData.tonicSequences import tonicSequenceList
 from musicData.modes import modeList
 from util.imageURL import imageURL
 
+def fetchProgramData(sub):
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.callproc('get_program_data', [sub])
+
+            programResults = cursor.fetchall()
+            userPrograms = {'userName': programResults[0].get('userName'),
+                        'programs': []}
+            for interval in programResults:
+                program = {
+                    'programTitle': interval.get('collectionTitle'),
+                    'collectionType': interval.get('collectionType'),
+                    'collectionLength': interval.get('collectionLength'),
+                    'instrument': interval.get('instrumentName'),
+                    'tonicSequence': json.loads(interval.get('sequence')),
+                    'tonicSequenceName': interval.get('tonicSequenceName'),
+                    'scaleTonicIndex': interval.get('scaleTonicIndex'),
+                    'mode': interval.get('scaleModeName'),
+                    'currentIndex': interval.get('currentIndex'),
+                    'rhythmCollection': interval.get('rhythmCollection')
+                }
+                userPrograms['programs'].append(program)
+            cursor.nextset()
+            rhythmCollections = cursor.fetchall()
+            cursor.nextset()
+            scalePatternPrograms = cursor.fetchall()
+            cursor.nextset()
+            tonicSequenceResults = cursor.fetchall()
+            tonicSequences = []
+            for sequence in tonicSequenceResults:
+                tonicSequences.append({
+                    'tonicSequenceID': sequence.get('tonicSequenceID'),
+                    'name': sequence.get('name'),
+                    'sequence': json.loads(sequence.get('sequence'))
+                })
+            cursor.nextset()
+            instruments = cursor.fetchall()
+            cursor.nextset()
+
+            conn.commit()
+            programData = {
+                'userPrograms': userPrograms,
+                'rhythmCollections': rhythmCollections,
+                'scalePatternPrograms': scalePatternPrograms,
+                'tonicSequences': tonicSequences,
+                'instruments': instruments}
+            return programData
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
+
+    finally:
+        conn.close()
 
 def fetchUserExerciseLog(sub):
     conn = getDBConnection()
@@ -498,7 +554,6 @@ def insertCollectionsInDatabase(collections):
                 collectionType = collectionPattern.collectionType
                 collectionTitle = collectionPattern.title
                 collectionLength = collectionPattern.collectionLength or 0
-                # patterns = json.dumps(collection['patterns'])
                 match collectionType:
                     case 'notePattern':
                         for pattern in collectionPattern.patterns:
@@ -515,7 +570,7 @@ def insertCollectionsInDatabase(collections):
                                       pattern.noteLength,
                                       getattr(pattern, 'scalePatternType', None))
                             cursor.callproc('insert_notePattern_proc', values)
-                    case 'rhythm':
+                    case 'rhythm' | 'long_tone_rhythm':
                         for i, pattern in enumerate(collectionPattern.patterns):
                             values = (collectionTitle,
                                       collectionType,

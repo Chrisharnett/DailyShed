@@ -37,6 +37,29 @@ class PracticeInterval(Exercise):
         self.__notePatternHistory = None
         self.__scaleTonicSequence = scaleTonicSequence
 
+    def toDict(self):
+        parent_dict = super().toDict()
+        parent_dict.update({
+            "primaryCollectionTitle": self.primaryCollectionTitle,
+            "rhythmCollectionTitle": self.rhythmCollectionTitle,
+            "currentIndex": self.currentIndex,
+            "userProgramID": self.userProgramID,
+            "primaryCollectionType": self.primaryCollectionType,
+            "primaryCollectionID": self.primaryCollectionID,
+            "rhythmCollectionID": self.rhythmCollectionID,
+            "collectionLength": self.collectionLength,
+            "reviewExercise": self.reviewExercise,
+            "instrument": self.instrument.toDict() if hasattr(self.__instrument, 'toDict') else self.__instrument,
+            "directions": self.directions,
+            "notePatternDetails": self.notePatternDetails,
+            "rhythmPatternDetails": self.rhythmPatternDetails,
+            "incrementMe": self.incrementMe,
+            "collections": self.collections,
+            "notePatternHistory": self.notePatternHistory,
+            "scaleTonicSequence": self.scaleTonicSequence
+        })
+        return parent_dict
+
     @property
     def instrument(self):
         return self.__instrument

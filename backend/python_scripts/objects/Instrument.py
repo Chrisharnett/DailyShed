@@ -6,6 +6,16 @@ class Instrument:
         self.__highNote = highNote
         self.__defaultTonic = defaultTonic
 
+    def toDict(self):
+        return {
+            "instrumentName": self.instrumentName,
+            "level": self.level,
+            "lowNote": self.lowNote,
+            "highNote": self.highNote,
+            "defaultTonic": self.defaultTonic
+        }
+
+
     def __str__(self):
         return f"{self.level}_{self.instrumentName}"
 
