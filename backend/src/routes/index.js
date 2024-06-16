@@ -1,8 +1,8 @@
 import { cognitoCallbackRoute } from "./cognitoCallbackRoute.js";
 import { getCognitoURLRoute } from "./getCognitoURL.js";
 import { generateSetRoute } from "./generateSetRoute.js";
-import { getUserDataRoute } from "./getUserDataRoute.js";
-import { updateUserDataRoute } from "./updateUserDataRoute.js";
+// import { getUserDataRoute } from "./getUserDataRoute.js";
+// import { updateUserDataRoute } from "./updateUserDataRoute.js";
 import { logExerciseRoute } from "./logExerciseRoute.js";
 import { getUserJournalRoute } from "./getUserJournalRoute.js";
 import { getUserPracticeSessionRoute } from "./getUserPracticeSessionRoute.js";
@@ -20,8 +20,8 @@ export const routes = [
   getUserProgramsRoute,
   getUserPracticeSessionRoute,
   getUserJournalRoute,
-  updateUserDataRoute,
-  getUserDataRoute,
+  // updateUserDataRoute,
+  // getUserDataRoute,
   generateSetRoute,
   getCognitoURLRoute,
   cognitoCallbackRoute,
