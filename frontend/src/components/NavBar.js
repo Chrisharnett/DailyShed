@@ -27,8 +27,9 @@ const Navigation = ({ loggedIn, setLoggedIn, cognitoURL }) => {
             {loggedIn && (
               <Nav className="me-auto">
                 <Nav.Link href="/theShed">The Shed</Nav.Link>
-                <Nav.Link href="/userProfile">Practice Profile</Nav.Link>
-                <Nav.Link href="/practiceJournal">Practice Journal</Nav.Link>
+                <Nav.Link href="/userProfile">My Practice Session</Nav.Link>
+                <Nav.Link href="/programs">My Practice Programs</Nav.Link>
+                <Nav.Link href="/practiceJournal">My Practice Journal</Nav.Link>
               </Nav>
             )}
             {loggedIn && (

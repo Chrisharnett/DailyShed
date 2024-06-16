@@ -1,53 +1,86 @@
 import { Container, Form, Row, Col, Button } from "react-bootstrap";
-import { useState } from "react";
-import CollectionCard from "../components/CollectionCard";
+import { useEffect, useState } from "react";
 import ExerciseDetailsForm from "../components/ExerciseDetailsForm";
 import SuccessModal from "../components/SuccessModal";
 import TopSpacer from "../util/TopSpacer";
+import axios from "axios";
 
-const UserProfile = ({ user, playerDetails, updatePlayerDetails }) => {
+const UserProfile = ({ user }) => {
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false);
   const [message, setMessage] = useState("");
+  const [practiceSession, setPracticeSession] = useState(null);
+  const [userPrograms, setUserPrograms] = useState(null);
+  const [scaleModes, setScaleModes] = useState(null);
+  const [rhythmOptions, setRhythmOptions] = useState(null);
+
+  useEffect(() => {
+    const fetchPracticeSession = async () => {
+      try {
+        const sessionResponse = await axios.post(
+          `/api/getUserPracticeSession/${user.sub}`
+        );
+        setPracticeSession(sessionResponse.data);
+
+        const programResponse = await axios.post(
+          `/api/getUserPrograms/${user.sub}`
+        );
+        setUserPrograms(programResponse.data);
+
+        const scaleModesResponse = await axios.get("/api/getScaleModes");
+        setScaleModes(scaleModesResponse.data);
+
+        const rhythmOptionsResponse = await axios.post(
+          `/api/getRhythmOptions/${user.sub}`
+        );
+        setRhythmOptions(rhythmOptionsResponse.data);
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    };
+    if (user) {
+      fetchPracticeSession();
+    }
+  }, [user]);
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    const newUserData = { ...playerDetails };
-    try {
-      await updatePlayerDetails(newUserData);
-      setMessage("Routine Saved!");
-      setOpenSuccessMessage(true);
-    } catch (error) {
-      console.error("Error: ", error);
-    }
+    // event.preventDefault();
+    // const newUserData = { ...playerDetails };
+    // try {
+    //   await updatePlayerDetails(newUserData);
+    //   setMessage("Routine Saved!");
+    //   setOpenSuccessMessage(true);
+    // } catch (error) {
+    //   console.error("Error: ", error);
+    // }
   };
 
   const handleRoundsChange = (event) => {
-    const newRounds = parseInt(event.target.value);
-    updatePlayerDetails({
-      ...playerDetails,
-      program: {
-        ...playerDetails.program,
-        rounds: newRounds,
-      },
-    });
+    // const newRounds = parseInt(event.target.value);
+    // updatePlayerDetails({
+    //   ...playerDetails,
+    //   program: {
+    //     ...playerDetails.program,
+    //     rounds: newRounds,
+    //   },
+    // });
   };
 
-  const handleDetailsChange = (index, updatedDetails) => {
-    const newExerciseDetails = [...playerDetails.program.exerciseDetails];
-    newExerciseDetails[index] = updatedDetails;
-    updatePlayerDetails({
-      ...playerDetails,
-      program: {
-        ...playerDetails.program,
-        exerciseDetails: newExerciseDetails,
-      },
-    });
+  const handleDetailsChange = (index) => {
+    // const newExerciseDetails = [...playerDetails.program.exerciseDetails];
+    // newExerciseDetails[index] = updatedDetails;
+    // updatePlayerDetails({
+    //   ...playerDetails,
+    //   program: {
+    //     ...playerDetails.program,
+    //     exerciseDetails: newExerciseDetails,
+    //   },
+    // });
   };
 
-  if (!playerDetails) {
+  if (!userPrograms || !practiceSession || !scaleModes || !rhythmOptions) {
     return (
       <>
-        <div style={{ height: "5vh" }}></div>
+        <TopSpacer />
         <p>Loading...</p>;
       </>
     );
@@ -56,24 +89,13 @@ const UserProfile = ({ user, playerDetails, updatePlayerDetails }) => {
       <>
         <TopSpacer />
         <Container className="midLayer glass">
-          <h1 className="dropShadow"> {playerDetails.name} </h1>
+          <h1 className="dropShadow"> {userPrograms.programs.userName} </h1>
           <Form
             onSubmit={handleSubmit}
             className="container justify-content-center"
           >
             <Container>
               <h2 className="dropShadow">Your practice routine</h2>
-              <hr></hr>
-              <h4 className="dropShadow">Your Collections</h4>
-              <Row>
-                {playerDetails.program.collections.map((collection, i) => {
-                  return (
-                    <Col key={i} className="mb-2" xs={12} sm={4}>
-                      <CollectionCard i={i} collection={collection} />
-                    </Col>
-                  );
-                })}
-              </Row>
               <hr></hr>
               {/* TODO: Add the ability to change the number of Exercises */}
               {/* TODO: Allow Custom Exercises */}
@@ -83,13 +105,15 @@ const UserProfile = ({ user, playerDetails, updatePlayerDetails }) => {
               >
                 <Form.Label className="dropShadow">Exercises</Form.Label>
                 <Row>
-                  {playerDetails.program.exerciseDetails.map((details, i) => {
+                  {practiceSession.intervals.map((interval, i) => {
                     return (
                       <Col key={i} xs={12} sm={3}>
                         <ExerciseDetailsForm
                           i={i}
-                          details={details}
-                          collections={playerDetails.program.collections}
+                          interval={interval}
+                          programs={userPrograms.programs}
+                          scaleModes={scaleModes}
+                          rhythmOptions={rhythmOptions}
                           onDetailsChange={(updatedDetails) =>
                             handleDetailsChange(i, updatedDetails)
                           }
@@ -112,7 +136,7 @@ const UserProfile = ({ user, playerDetails, updatePlayerDetails }) => {
                 <Col sm="1">
                   <Form.Control
                     type="number"
-                    value={playerDetails.program.rounds}
+                    value={practiceSession.rounds}
                     onChange={handleRoundsChange}
                     min="1"
                   />

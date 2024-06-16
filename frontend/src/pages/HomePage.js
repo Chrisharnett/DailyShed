@@ -3,12 +3,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import TopSpacer from "../util/TopSpacer";
 
-const HomePage = ({ loggedIn, cognitoURL }) => {
+const HomePage = ({ loggedIn, cognitoURL, user }) => {
   const [entryLink, setEntryLink] = useState(null);
 
   useEffect(() => {
     if (loggedIn) {
-      setEntryLink("/theShed");
+      setEntryLink(`/theShed`);
     } else {
       setEntryLink(cognitoURL);
     }

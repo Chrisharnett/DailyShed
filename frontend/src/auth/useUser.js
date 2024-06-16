@@ -19,36 +19,36 @@ const useUser = () => {
     } else {
       const newUser = getPayloadFromToken(token);
       setUser(newUser);
-      fetchPlayerDetails(newUser.sub);
+      // fetchPlayerDetails(newUser.sub);
     }
   }, [token]);
 
-  const fetchPlayerDetails = async (sub) => {
-    try {
-      const response = await axios.get(`/api/getUserData/${sub}`);
-      setPlayerDetails(response.data.userData);
-    } catch (error) {
-      console.error("Error fetching player data: ", error);
-      setPlayerDetails({
-        name: "",
-        email: "",
-        exerciseMetadata: [],
-        previousSet: [],
-        program: {},
-      });
-    }
-  };
+  // const fetchPlayerDetails = async (sub) => {
+  //   try {
+  //     const response = await axios.get(`/api/getUserData/${sub}`);
+  //     setPlayerDetails(response.data.userData);
+  //   } catch (error) {
+  //     console.error("Error fetching player data: ", error);
+  //     setPlayerDetails({
+  //       name: "",
+  //       email: "",
+  //       exerciseMetadata: [],
+  //       previousSet: [],
+  //       program: {},
+  //     });
+  //   }
+  // };
 
-  const updatePlayerDetails = async (newDetails) => {
-    try {
-      await axios.post("/api/updateUserData", newDetails);
-      setPlayerDetails(newDetails);
-    } catch (error) {
-      console.error("Error updating player details:", error);
-    }
-  };
+  // const updatePlayerDetails = async (newDetails) => {
+  //   try {
+  //     await axios.post("/api/updateUserData", newDetails);
+  //     setPlayerDetails(newDetails);
+  //   } catch (error) {
+  //     console.error("Error updating player details:", error);
+  //   }
+  // };
 
-  return { user, playerDetails, updatePlayerDetails };
+  return { user };
 };
 
 export default useUser;

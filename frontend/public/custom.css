@@ -63,6 +63,14 @@ html{
     border: 1px solid rgba(255, 255, 255, 0.125);
     border-radius: 15px;
   }
+
+  .glassModal{
+    backdrop-filter: blur(10px) saturate(99%);
+    -webkit-backdrop-filter: blur(21px) saturate(99%);
+    background-color: rgb(228, 227, 227, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    border-radius: 15px;
+  }
   
   .cardContainer{
     background-color: rgb(255, 255, 255, 1);
@@ -99,5 +107,34 @@ html{
     max-width: 100%;
     height: auto;
   }
+
+  .journal {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .journalImage {
+    width: 100%;
+    height: auto;
+    padding: 1em;
+  }
+
+  .historyContainer {
+    max-height: 200px; /* Adjust height as needed */
+    overflow-y: auto;
+  }
   
+  .journalEntry {
+    margin-bottom: 10px;
+  }
   
+  .journalModalBody {
+    display: flex;
+    flex-direction: column;
+    max-height: 400px; /* Static size for modal body */
+  }
+  
+  .journalModalBody > * {
+    flex-shrink: 0;
+  }

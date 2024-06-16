@@ -2,7 +2,6 @@ import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Form, Button, Container, Modal } from "react-bootstrap";
 import axios from "axios";
-import updatePlayerMetadata from "../util/UpdatePlayerMetadata.js";
 
 export const SelfAssessmentModal = ({
   show,
@@ -10,11 +9,11 @@ export const SelfAssessmentModal = ({
   sessionID,
   exercise,
   currentSet,
-  playerDetails,
-  updatePlayerDetails,
+  user,
   exerciseCount,
   setShowSessionCompleteModal,
   goToNextExercise,
+  rounds,
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [rating, setRating] = useState("");
@@ -30,35 +29,20 @@ export const SelfAssessmentModal = ({
       const exerciseEntry = {
         sessionID: sessionID,
         timestamp: new Date().toISOString(),
-        sub: playerDetails.sub,
-        exerciseName: exercise.fileName,
-        exercise: {
-          imageURL: exercise.imageURL,
-          notePatternRhythmLength: exercise.notePattern.notePatternRhythmLength,
-          notePatternType: exercise.notePattern.notePatternType,
-          rhythmMatcher: exercise.rhythmPattern.rhythmDescription,
-          direction: exercise.notePattern.direction,
-        },
+        sub: user.sub,
+        exerciseID: exercise.exerciseID,
         rating: rating,
         comment: comment,
+        incrementMe: exercise.incrementMe,
       };
 
       const logEntry = await axios.post("/api/logExercise", exerciseEntry);
 
-      const exerciseMetadata = {
-        exerciseName: exercise.fileName,
-        exercise: exerciseEntry.exercise,
-        rating: rating,
-        comment: comment,
-      };
+      if (exercise.incrementMe) {
+        exercise.incrementMe = false;
+      }
 
-      const updatedPlayer = updatePlayerMetadata(
-        playerDetails,
-        exerciseMetadata
-      );
-      updatePlayerDetails(updatedPlayer);
-
-      if (exerciseCount === currentSet.length * playerDetails.program.rounds) {
+      if (exerciseCount === currentSet.length * rounds) {
         setShowSessionCompleteModal(true);
       } else {
         goToNextExercise();
@@ -77,7 +61,7 @@ export const SelfAssessmentModal = ({
   return (
     <>
       <Container className="container">
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show} onHide={handleClose} className="glassModal">
           <Modal.Header closeButton>
             <Modal.Title className=""> Journal Entry </Modal.Title>
           </Modal.Header>

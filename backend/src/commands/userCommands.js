@@ -23,6 +23,17 @@ const docClient = DynamoDBDocumentClient.from(client);
 const user_table = process.env.USERS_TABLE;
 const exercise_log_table = process.env.EXERCISE_LOG_TABLE;
 
+export const getUserData = async (sub) => {
+  const command = new GetCommand({
+    TableName: user_table,
+    Key: {
+      sub: sub,
+    },
+  });
+  const response = await docClient.send(command);
+  return response;
+};
+
 export const getUserJournal = async (sub) => {
   const command = new QueryCommand({
     TableName: exercise_log_table,
@@ -37,18 +48,6 @@ export const getUserJournal = async (sub) => {
   });
   const response = await docClient.send(command);
   return response.Items;
-};
-
-export const getUserData = async (sub) => {
-  const command = new GetCommand({
-    TableName: user_table,
-    Key: {
-      sub: sub,
-    },
-  });
-
-  const response = await docClient.send(command);
-  return response;
 };
 
 export const putUserData = async (userData) => {
