@@ -18,6 +18,8 @@ BEGIN
     SELECT * FROM TonicSequences;
     
     SELECT * FROM Instruments;
+    
+    SELECT scaleModeID, scaleModeName FROM scaleModes;
 
 END //
 

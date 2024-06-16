@@ -19,13 +19,13 @@ class NotePattern(MusicPattern):
     def noteLength(self, value):
         self.__noteLength = value
 
-    @property
-    def direction(self):
-        return self._direction
-
-    @direction.setter
-    def direction(self, value):
-        self._direction = value
+    # @property
+    # def direction(self):
+    #     return self._direction
+    #
+    # @direction.setter
+    # def direction(self, value):
+    #     self._direction = value
 
     @property
     def directions(self):
@@ -51,18 +51,7 @@ class NotePattern(MusicPattern):
     def holdLastNote(self, value):
         self.__holdLastNote = value
 
-class LongTone(NotePattern):
-    def __init__(self, notePatternType, notePattern, description, directions='static', repeatMe = False, holdLastNote = False, patternID=None):
-        super().__init__(notePatternType, notePattern, description, directions, repeatMe, holdLastNote, patternID)
-        self.__scalePatternType = 'long_tone'
 
-    @property
-    def scalePatternType(self):
-        return self.__scalePatternType
-
-    @scalePatternType.setter
-    def scalePatternType(self, scalePattern):
-        self.__scalePatternType = scalePattern
 
 class ScalePattern(NotePattern):
     def __init__(self, notePatternType, notePattern, description, scalePatternType, directions = ['ascending', 'descending', 'ascending_descending', 'descending_ascending'], repeatMe = True, holdLastNote = True, patternID=None):
@@ -76,6 +65,10 @@ class ScalePattern(NotePattern):
     @scalePatternType.setter
     def scalePatternType(self, scalePattern):
         self.__scalePatternType = scalePattern
+
+class LongTone(ScalePattern):
+    def __init__(self, notePatternType, notePattern, description, directions='static', repeatMe = False, holdLastNote = False, patternID=None):
+        super().__init__(notePatternType, notePattern, description, 'long_tone', directions, repeatMe, holdLastNote, patternID)
 
 
 class CreativePattern(NotePattern):

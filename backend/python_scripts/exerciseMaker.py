@@ -1,8 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from exerciseCollections.collectionCreator import collectionCreator
-from queries.queries import (insertCollectionsInDatabase,
-                             insertPrograms,
+from queries.queries import (buildDatabase,
                              getCollections,
                              getPracticeSession,
                              logExerciseDetails,
@@ -10,7 +9,8 @@ from queries.queries import (insertCollectionsInDatabase,
                              fetchModes,
                              fetchRhythmPatternOptions,
                              fetchUserExerciseLog,
-                             fetchProgramData)
+                             fetchProgramData,
+                             insertNewUserProgram)
 from objects.PracticeSession import PracticeSession
 import boto3
 
@@ -21,6 +21,21 @@ s3_client = boto3.client("s3")
 @app.route("/")
 def home():
     return "Connected"
+
+@app.route("/addNewUserProgram", methods=["GET", "POST"])
+def addNewUserProgram():
+    try:
+        details = request.get_json().get('program')
+        userPrograms = insertNewUserProgram(details)
+        return {
+            "statusCode": 200,
+            "userPrograms": userPrograms}
+
+    except Exception as e:
+        return jsonify({
+            "statusCode": 400,
+            "error": str(e)
+        })
 
 @app.route("/userExerciseLog", methods=["GET", "POST"])
 def userExerciseLog():
@@ -153,8 +168,7 @@ def generateSet():
 def generateCollections():
     try:
         collections, programs = collectionCreator()
-        insertCollectionsInDatabase(collections)
-        insertPrograms(programs)
+        buildDatabase(collections, programs)
         return {
                 "statusCode": 200
         }

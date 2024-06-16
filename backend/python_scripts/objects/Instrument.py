@@ -1,10 +1,11 @@
 class Instrument:
-    def __init__(self, instrumentName, level, lowNote, highNote, defaultTonic):
+    def __init__(self, instrumentName, level, lowNote, highNote, defaultTonic, abbr):
         self.__instrumentName = instrumentName
         self.__level = level
         self.__lowNote = lowNote
         self.__highNote = highNote
         self.__defaultTonic = defaultTonic
+        self.__abbr = abbr
 
     def toDict(self):
         return {
@@ -63,3 +64,11 @@ class Instrument:
     @defaultTonic.setter
     def defaultTonic(self, defaultTonic):
         self.__defaultTonic = defaultTonic
+
+    @property
+    def abbr(self):
+        return self.__abbr
+
+    @abbr.setter
+    def abbr(self, abbr):
+        self.__abbr = abbr

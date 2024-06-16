@@ -25,25 +25,31 @@ BEGIN
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
     START TRANSACTION;    
-    
 		
+		-- SET message = CONCAT("DEBUG: ", primaryTitle_p);
+        SET message = primaryTitle_p;
+        
 		SELECT collectionID 
         INTO primaryCollectionID_p 
         FROM Collections 
         WHERE collectionTitle = primaryTitle_p;
         
-        SET message = CONCAT("DEBUG: ", primaryCollectionID_p);
+        SET message = CONCAT(primaryTitle_p, " ", primaryCollectionID_p);
         
         SELECT collectionID 
         INTO rhythmCollectionID_p 
         FROM Collections 
         WHERE collectionTitle = rhythmTitle_p;
+        
+        SET message = rhythmCollectionID_p;
 		
         SELECT instrumentID
         INTO instrumentID_p
         FROM Instruments
         WHERE instrumentName = instrumentName_p AND
         level = instrumentLevel_p;
+        
+        SET message = instrumentID_p;
         
         IF scaleMode_p IS NULL THEN
 			SELECT scaleModeID INTO scaleModeID_p
@@ -68,6 +74,8 @@ BEGIN
         INSERT INTO Programs (scaleModeID, rhythmCollectionID, primaryCollectionID, tonicSequenceID, instrumentID) 
 			VALUES (scaleModeID_p, rhythmCollectionID_p, primaryCollectionID_p, tonicSequenceID_p, instrumentID_p);
             
+		SET message = CONCAT('NewProgramId: ',  LAST_INSERT_ID());
+            
         -- SET message = CONCAT(tonic_p, ' ', scaleModeID_p, ' ', rhythmCollectionID_p, ' ', primaryCollectionID_p, ' ', instrumentLevel_p, ' ', instrumentID_p, ' ', tonicSequenceID_p); 
         
 		IF sql_error = FALSE THEN
@@ -81,21 +89,22 @@ END //
 
 DELIMITER ;
 
-CALL add_program_proc('major_scale_to_the_ninth', 'quarter_note_in_4-4', 'major', 'circle_of_fifths', 'saxophone', 'beginner');
+CALL add_program_proc('major,scale_to_the_ninth_builder', 'quarter_note_in_4-4', 'major', 'circle_of_fifths', 'saxophone', 'beginner');
+
 SELECT * FROM Programs;
 DELETE FROM Programs;
 CALL clear_collections_and_exercises_proc;
 
-SELECT collectionID 
-FROM Collections 
-WHERE collectionTitle = 'major_scale_to_the_ninth';
+DELETE 
+FROM Programs 
+WHERE ProgramID = 476;
 
 SELECT collectionID 
 FROM Collections 
 WHERE collectionTitle = 'quarter_note_in_4-4';
 		
 SELECT instrumentID
-FROM Instruments
+FROM Instrumentsadd_program_proc
 WHERE instrumentName = 'saxophone' AND
 level = 'beginner';
 
@@ -114,6 +123,9 @@ VALUES (729, 215, 218, 96, 183);
 
 SELECT * FROM TonicSequences;
 SELECT * FROM Instruments;
+SELECT * FROM Programs;
+SELECT * FROM Collections;
+
    
 
 

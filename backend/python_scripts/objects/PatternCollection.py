@@ -10,13 +10,17 @@ class PatternCollection:
         self.__title = title
         self.__collectionType = collectionType
         self.__patterns = patterns if patterns else []
-        self.__collectionLength = len(patterns) if patterns else 0
+        self.__collectionLength = 0
 
     def __str__(self):
         return self.__title
 
+    def calculateCollectionLength(self):
+        return len(self.patterns) if self.patterns else 0
+
     @property
     def collectionType(self):
+        self.__collectionLength = self.calculateCollectionLength()
         return self.__collectionType
 
     @collectionType.setter
@@ -50,7 +54,7 @@ class PatternCollection:
     def addPattern(self, pattern):
         if isinstance(pattern, MusicPattern):
             self.__patterns.append(pattern)
-            self.__collectionLength += 1
+            self.__collectionLength = self.calculateCollectionLength()
         else:
             raise TypeError("Only instances of MusicPatterns or its subclasses can be added.")
 
@@ -66,42 +70,79 @@ class PatternCollection:
     def findPatternByType(self, patternType):
         return [pattern for pattern in self.__patterns if pattern.patternType == patternType]
 
-class ScalePatternCollection(PatternCollection):
-    def __init__(self, mode, scalePatternType):
-        id = 0
-        collectionType = 'notePattern'
-        collectionName = 'scale_exercise'
-        title = f"{mode.get('modeName')},{collectionName}"
-        super().__init__(title, collectionType)
-        self.mode = mode
-        self.__scalePatternType = scalePatternType
-        notePattern = mode.get('modePattern')
-        description = f"{title.title().replace('_', ' ')}. Play twice. Repeat both times."
-        self.addPattern(ScalePattern(title, notePattern, description, scalePatternType, patternID=str(id)))
-        id += 1
-
-class ScaleToTheNinthBuilderCollection(PatternCollection):
-    def __init__(self, mode):
-        collectionType = 'notePattern'
-        title = f"{mode.get('modeName')},scale_to_the_ninth"
+class NotePatternCollection(PatternCollection):
+    def __init__(self, title, collectionType, mode, allKeys=False):
         super().__init__(title, collectionType)
         self.__mode = mode
-        directions = ['ascending', 'descending', 'ascending/descending', 'descending/ascending']
-        holdLastNote = True
-        repeatMe = True
-        modePattern = mode.get('modePattern')
-        topNote = modePattern[0]+12
-        ninth = modePattern[1]+12
-        modePattern.append(topNote)
-        modePattern.append(ninth)
-        notePatterns = self.createPatternLists(modePattern)
-        for pattern in notePatterns:
-            id = 0
-            #  FIXME
-            description = f"{title.title().replace('_', ' ')}. Play twice. Repeat both times."
-            self.addPattern(ScalePattern(f"{title}", pattern, description, 'scale_to_the_ninth', directions,
-                                      holdLastNote=holdLastNote, repeatMe=repeatMe, patternID=str(id)))
-            id += 1
+        self._allKeys = allKeys
+
+    @property
+    def mode(self):
+        return self.__mode
+
+    @mode.setter
+    def mode(self, mode):
+        self.__mode = mode
+
+    @property
+    def allKeys(self):
+        return self._allKeys
+
+    @allKeys.setter
+    def allKeys(self, bool):
+        self._allKeys = bool
+        self.collectionLength = self.calculateCollectionLength()
+
+    def calculateCollectionLength(self):
+        length = len(self.patterns) if self.patterns else 0
+        if self._allKeys:
+            length *= 12
+        return length
+
+class ScalePatternCollection(NotePatternCollection):
+    def __init__(self, mode, scalePatternType, allKeys = False):
+        # id = 0
+        collectionType = 'notePattern'
+        title = f"{mode.get('modeName')},{scalePatternType}"
+        super().__init__(title, collectionType, mode, allKeys)
+
+        self.__scalePatternType = scalePatternType
+
+        # notePattern = mode.get('modePattern')
+        # description = f"{title.title().replace('_', ' ')}. Play twice. Repeat both times."
+        # self.addPattern(ScalePattern(self.collectionType, title, notePattern, description, scalePatternType, patternID=str(id)))
+        # id += 1
+
+    @property
+    def scalePatternType(self):
+        return self.__scalePatternType
+
+    @scalePatternType.setter
+    def scalePatternType(self, type):
+        self.__scalePatternType = type
+
+class ScaleToTheNinthBuilderCollection(ScalePatternCollection):
+    def __init__(self, mode, allKeys = False):
+        scalePatternType = 'scale_to_the_ninth_builder'
+        self.title = f"{mode.get('modeName')},{scalePatternType}"
+        super().__init__(mode, scalePatternType, allKeys)
+
+        # directions = ['ascending', 'descending', 'ascending/descending', 'descending/ascending']
+        # holdLastNote = True
+        # repeatMe = True
+        # modePattern = mode.get('modePattern')
+        # topNote = modePattern[0]+12
+        # ninth = modePattern[1]+12
+        # modePattern.append(topNote)
+        # modePattern.append(ninth)
+        # notePatterns = self.createPatternLists(modePattern)
+        # for pattern in notePatterns:
+        #     id = 0
+        #     #  FIXME
+        #     description = f"{title.title().replace('_', ' ')}. Play twice. Repeat both times."
+        #     self.addPattern(ScalePattern(self.collectionType, pattern, description, scalePatternType, directions,
+        #                               holdLastNote=holdLastNote, repeatMe=repeatMe, patternID=str(id)))
+        #     id += 1
 
     def createPatternLists(self, elements):
         if not elements:
@@ -139,28 +180,20 @@ class ScaleToTheNinthBuilderCollection(PatternCollection):
 
         return result
 
-class SingleNoteDiatonicLongToneCollection(PatternCollection):
-    def __init__(self, mode):
-        id = 0
-        collectionType = 'notePattern'
-        title = f"{mode.get('modeName')},single_note_long_tone"
-        super().__init__(title, collectionType)
+class SingleNoteDiatonicLongToneCollection(ScalePatternCollection):
+    def __init__(self, mode, scalePatternType, allKeys=False):
+        super().__init__(mode, scalePatternType, allKeys)
 
-        self.__mode = mode
-
-        directions = ['static']
-        holdLastNote = False
-        repeatMe = False
-        modePattern = mode.get('modePattern')
-
-        singleNoteLongToneCollections = []
-        for note in modePattern:
-            id = 0
-            #  FIXME
-            description = f"{title.title().replace('_', ' ')}. Play twice. Internalize the sound you create."
-            self.addPattern(LongTone(collectionType, [note], description, directions,
-                                      holdLastNote=holdLastNote, repeatMe=repeatMe, patternID=str(id)))
-            id += 1
+        # directions = ['static']
+        # holdLastNote = False
+        # repeatMe = False
+        # modePattern = mode.get('modePattern')
+        # id = 0
+        # for note in modePattern:
+        #     description = f"{self.title.title().replace('_', ' ')}. Play twice. Internalize the sound you create."
+        #     self.addPattern(LongTone(self.collectionType, [note], description, directions,
+        #                               holdLastNote=holdLastNote, repeatMe=repeatMe, patternID=str(id)))
+        #     id += 1
 
 class RhythmCollection(PatternCollection):
     def __init__(self, title, collectionType, timeSignature=(4,4)):
@@ -215,7 +248,7 @@ class SingleNoteLongToneRhythms(RhythmCollection):
         id += 1
 
         pattern = [noteRhythm, ["~"], noteRhythm]
-        description = f"{title[:-1].title().replace('_', ' ')}.Hold 2 measures."
+        description = f"{title.title().replace('_', ' ')}.Hold 2 measures."
         articulation = None
         measureLength = 2
         self.addPattern(RhythmPattern(collectionType,

@@ -5,6 +5,7 @@ from musicData.instruments import getAllInstruments
 from musicData.tonicSequences import tonicSequenceList
 from musicData.modes import modeList
 from util.imageURL import imageURL
+import pymysql
 
 def fetchProgramData(sub):
     conn = getDBConnection()
@@ -13,6 +14,8 @@ def fetchProgramData(sub):
             cursor.callproc('get_program_data', [sub])
 
             programResults = cursor.fetchall()
+            if not programResults:
+                programResults = addDefaultPrograms('major,scale_to_the_ninth_builder', 'major,single_note_long_tone', 'saxophone', sub)
             userPrograms = {'userName': programResults[0].get('userName'),
                         'programs': []}
             for interval in programResults:
@@ -20,7 +23,8 @@ def fetchProgramData(sub):
                     'programTitle': interval.get('collectionTitle'),
                     'collectionType': interval.get('collectionType'),
                     'collectionLength': interval.get('collectionLength'),
-                    'instrument': interval.get('instrumentName'),
+                    'instrumentName': interval.get('instrumentName'),
+                    'instrumentLevel': interval.get('instrumentLevel'),
                     'tonicSequence': json.loads(interval.get('sequence')),
                     'tonicSequenceName': interval.get('tonicSequenceName'),
                     'scaleTonicIndex': interval.get('scaleTonicIndex'),
@@ -45,6 +49,7 @@ def fetchProgramData(sub):
             cursor.nextset()
             instruments = cursor.fetchall()
             cursor.nextset()
+            scaleModes = cursor.fetchall()
 
             conn.commit()
             programData = {
@@ -52,7 +57,8 @@ def fetchProgramData(sub):
                 'rhythmCollections': rhythmCollections,
                 'scalePatternPrograms': scalePatternPrograms,
                 'tonicSequences': tonicSequences,
-                'instruments': instruments}
+                'instruments': instruments,
+                'modes': scaleModes}
             return programData
 
     except Exception as e:
@@ -192,6 +198,30 @@ def incrementProgramIndex(userProgramID):
         print(f"Error: {str(e)}")
         return False
 
+    finally:
+        conn.close()
+
+def insertNewUserProgram(details):
+    conn = getDBConnection()
+    values = [
+        details.get('sub'),
+        details.get('scaleModeID'),
+        details.get('rhythmCollectionID'),
+        details.get('primaryCollectionTitle'),
+        details.get('tonicSequenceID'),
+        details.get('instrumentID'),
+        details.get('startingTonicIndex')
+    ]
+    try:
+        cursor = conn.cursor()
+        cursor.callproc('add_user_program_proc', [*values])
+        result = cursor.fetchall()
+        conn.commit()
+        return fetchProgramData(details.get('sub'))
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
     finally:
         conn.close()
 
@@ -343,7 +373,7 @@ def getPracticeSession(sub):
             cursor.execute(query, (sub, ))
             result = cursor.fetchall()
         if not result:
-            result = addDefaultPrograms('major,scale_to_the_ninth', 'major,single_note_long_tone', 'saxophone', sub)
+            result = addDefaultPrograms('major,scale_to_the_ninth_builder', 'major,single_note_long_tone', 'saxophone', sub)
         sub =  result[0].get('sub')
         userName = result[0].get('userName')
         rounds = result[0].get('rounds')
@@ -369,7 +399,7 @@ def getPracticeSession(sub):
             lowNote = exercise.get('lowNote')
             highNote = exercise.get('highNote')
             defaultTonic = exercise.get('defaultTonic')
-            instrument = Instrument(instrumentName, level, lowNote, highNote, defaultTonic)
+            instrument = Instrument(instrumentName, level, lowNote, highNote, defaultTonic, exercise.get('abbr'))
             # Divide among different collectionTypes here to make different notepattern.
             values = (  tonic,
                         mode,
@@ -478,39 +508,133 @@ def addNewExercise(values):
     finally:
         conn.close()
 
-def addTheBasics():
+def buildDatabase(collections, programs):
     conn = getDBConnection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SET foreign_key_checks = 0;")
+        conn.commit()
+
+        addTheBasics(conn)
+        insertCollectionsInDatabase(conn, collections)
+        insertPrograms(conn, programs)
+        updateRhythmTypes(conn)
+
+        cursor.execute("SET foreign_key_checks = 1;")
+        conn.commit()
+
+        return True
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
+
+    finally:
+        conn.close()
+
+def updateRhythmTypes(conn):
+    try:
+        with conn.cursor() as cursor:
+            updateRhythmType = """
+                UPDATE scalePatternTypes
+                SET rhythmType = (
+                    SELECT collectionType
+                    FROM Collections
+                    WHERE Collections.scalePatternType = scalePatternTypes.scalePatternType
+                     LIMIT 1
+                )
+                WHERE rhythmType IS NULL;
+                """
+            cursor.execute(updateRhythmType)
+        conn.commit()
+        return True
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
+
+def addTheBasics(conn):
+    from musicData.scalePatternLists import scalePatternPrograms
+
     instruments = getAllInstruments()
     tonicSequences = tonicSequenceList()
     modes =  modeList()
+    scalePatternPrograms = scalePatternPrograms()
     try:
-        cursor = conn.cursor()
-        query = "INSERT IGNORE INTO Instruments (" \
-                "instrumentName, " \
-                "lowNote, " \
-                "highNote, " \
-                "level, " \
-                "defaultTonic" \
-                ") VALUES (%s, %s, %s, %s, %s)"
+        with conn.cursor() as cursor:
+            instrument_query = """
+                INSERT IGNORE INTO Instruments (
+                    instrumentName, 
+                    lowNote, 
+                    highNote, 
+                    level, 
+                    defaultTonic, 
+                    abbr
+                ) VALUES (%s, %s, %s, %s, %s, %s)
+                """
+            instrument_values = [
+                (
+                    instrument.instrumentName,
+                    instrument.lowNote,
+                    instrument.highNote,
+                    instrument.level,
+                    instrument.defaultTonic,
+                    instrument.abbr
+                )
+                for instrument in instruments
+            ]
+            cursor.executemany(instrument_query, instrument_values)
 
-        for instrument in instruments:
-            values = (instrument.instrumentName, instrument.lowNote, instrument.highNote, instrument.level, instrument.defaultTonic)
-            cursor.execute(query, values)
+            tonic_sequence_query = """
+                INSERT IGNORE INTO TonicSequences (name, sequence) 
+                VALUES (%s, %s)
+                """
+            tonic_sequence_values = [
+                (sequence['name'], json.dumps(sequence['sequence']))
+                for sequence in tonicSequences
+            ]
+            cursor.executemany(tonic_sequence_query, tonic_sequence_values)
 
-        query = "INSERT IGNORE INTO TonicSequences (name, sequence) VALUES (%s, %s)"
 
-        for sequence in tonicSequences:
-            values = (sequence['name'], json.dumps(sequence['sequence']))
-            cursor.execute(query, values)
+            scale_mode_query = """
+                INSERT IGNORE INTO scaleModes (
+                    scaleModeName, 
+                    scaleModePattern, 
+                    diatonicTriads, 
+                    adjustments
+                ) VALUES (%s, %s, %s, %s)
+                """
+            scale_mode_values = [
+                (
+                    mode['modeName'],
+                    json.dumps(mode['modePattern']),
+                    json.dumps(mode.get('diatonicTriads', None)),
+                    json.dumps(mode.get('adjustments', None))
+                )
+                for mode in modes
+            ]
+            cursor.executemany(scale_mode_query, scale_mode_values)
 
-        query = "INSERT IGNORE INTO scaleModes (scaleModeName, scaleModePattern, diatonicTriads, adjustments) VALUES (%s, %s, %s, %s)"
-        for mode in modes:
-            values = (mode['modeName'],
-                      json.dumps(mode['modePattern']),
-                      json.dumps(mode.get('diatonicTriads', None)),
-                      json.dumps(mode.get('adjustments', None)))
-            cursor.execute(query, values)
-        conn.commit()
+            scale_pattern_query = """
+                INSERT IGNORE INTO scalePatternTypes (
+                    scalePatternType, 
+                    allKeys, 
+                    rhythmType
+                ) VALUES (%s, %s, %s)
+                """
+            scale_pattern_values = [
+                (
+                    program.get('scalePatternType'),
+                    program.get('allKeys'),
+                    program.get('collectionType')
+                )
+                for program in scalePatternPrograms
+            ]
+            cursor.executemany(scale_pattern_query, scale_pattern_values)
+
+            conn.commit()
         return True
 
     except Exception as e:
@@ -518,23 +642,20 @@ def addTheBasics():
         print(f"Error: {str(e)}")
         return False
 
-    finally:
-        conn.close()
-
-def insertPrograms(programs):
-    conn = getDBConnection()
+def insertPrograms(conn, programs):
     #Being used now to create default starting programs for a give user on saxophone
-    addTheBasics()
     try:
         with conn.cursor() as cursor:
-            for program in programs:
-                values = (program.primaryCollection.title,
-                          program.rhythmCollection.title,
-                          program.mode,
-                          program.tonicSequence.get('name'),
-                          program.instrument.instrumentName,
-                          program.instrument.level)
-                cursor.callproc('add_program_proc', values)
+            if programs:
+                programData = [(
+                    program.primaryCollection.title,
+                    program.rhythmCollection.title,
+                    program.mode,
+                    program.tonicSequence.get('name'),
+                    program.instrument.instrumentName,
+                    program.instrument.level
+                ) for program in programs]
+                cursor.executemany('CALL add_program_proc(%s, %s, %s, %s, %s, %s)', programData)
         conn.commit()
         return True
 
@@ -543,59 +664,80 @@ def insertPrograms(programs):
         print(f"Error: {str(e)}")
         return False
 
-    finally:
-        conn.close()
-
-def insertCollectionsInDatabase(collections):
-    conn = getDBConnection()
+def insertCollectionsInDatabase(conn, collections):
     try:
-        with conn.cursor() as cursor:
-            for collectionPattern in collections:
-                collectionType = collectionPattern.collectionType
-                collectionTitle = collectionPattern.title
-                collectionLength = collectionPattern.collectionLength or 0
-                match collectionType:
-                    case 'notePattern':
-                        for pattern in collectionPattern.patterns:
-                            values = (collectionTitle,
-                                      collectionType,
-                                      collectionLength,
-                                      pattern.description,
-                                      json.dumps(pattern.directions),
-                                      pattern.holdLastNote,
-                                      json.dumps(pattern.pattern),
-                                      pattern.patternType,
-                                      pattern.repeatMe,
-                                      pattern.patternID,
-                                      pattern.noteLength,
-                                      getattr(pattern, 'scalePatternType', None))
-                            cursor.callproc('insert_notePattern_proc', values)
-                    case 'rhythm' | 'long_tone_rhythm':
-                        for i, pattern in enumerate(collectionPattern.patterns):
-                            values = (collectionTitle,
-                                      collectionType,
-                                      collectionLength,
-                                      pattern.description,
-                                      json.dumps(pattern.articulation),
-                                      json.dumps(pattern.timeSignature),
-                                      json.dumps(pattern.pattern),
-                                      pattern.patternID,
-                                      pattern.rhythmLength,
-                                      pattern.measureLength
-                                      )
-                            cursor.callproc('insert_rhythmPattern_proc', values)
-                    case _:
-                        pass
+        notePatternData, rhythmPatternData = collectionMatcher(collections)
 
-                conn.commit()
+        with conn.cursor() as cursor:
+
+            if notePatternData:
+                cursor.executemany('CALL insert_notePattern_proc(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', notePatternData)
+
+            if rhythmPatternData:
+                cursor.executemany('CALL insert_rhythmPattern_proc(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', rhythmPatternData)
+
+            cursor.execute("SHOW WARNINGS")
+            warnings = cursor.fetchall()
+            for warning in warnings:
+                print(warning)
+
+            conn.commit()
+
         return jsonify({"status": "success", "message": "Collection added successfully"}), 200
+    except pymysql.MySQLError as e:
+        print("Error occurred while inserting data:", e)
 
     except Exception as e:
         conn.rollback()
         return jsonify({"status": "error", "message": str(e)}), 500
 
-    finally:
-        conn.close()
+def collectionMatcher(collections):
+    notePatternData = []
+    rhythmPatternData = []
+
+    for collectionPattern in collections:
+        collectionType = collectionPattern.collectionType
+        collectionTitle = collectionPattern.title
+        collectionLength = collectionPattern.collectionLength or 0
+        match collectionType:
+            case 'notePattern':
+                # collectionTitle_p, collectionType_p, collectionLength_p,
+                # description_p, directions_p, holdLastNote_p,
+                # notePattern_p, notePatternType_p, repeatMe_p,
+                # collectionNotePatternID_p, noteLength_p, scalePatternType_p
+                for pattern in collectionPattern.patterns:
+                    notePatternData.append([
+                        collectionTitle,
+                        collectionType,
+                        collectionLength,
+                        pattern.description,
+                        json.dumps(pattern.directions),
+                        pattern.holdLastNote,
+                        json.dumps(pattern.pattern),
+                        pattern.patternType,
+                        pattern.repeatMe,
+                        pattern.patternID,
+                        pattern.noteLength,
+                        getattr(pattern, 'scalePatternType', None)
+                    ])
+            case 'rhythm' | 'long_tone_rhythm':
+                for pattern in collectionPattern.patterns:
+                    rhythmPatternData.append((
+                        collectionTitle,
+                        collectionType,
+                        collectionLength,
+                        pattern.description,
+                        json.dumps(pattern.articulation),
+                        json.dumps(pattern.timeSignature),
+                        json.dumps(pattern.pattern),
+                        pattern.patternID,
+                        pattern.rhythmLength,
+                        pattern.measureLength
+                    ))
+            case _:
+                pass
+
+    return notePatternData, rhythmPatternData
 
 def insertNewRhythmPattern(
         collectionID,

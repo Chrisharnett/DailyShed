@@ -6,16 +6,18 @@ import SuccessModal from "../components/SuccessModal";
 import TopSpacer from "../util/TopSpacer";
 import axios from "axios";
 
-// A program has scaleMode, rhythmCollection, primaryCollection, tonicSequence, instrument.
-
 const Programs = ({ user }) => {
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false);
   const [message, setMessage] = useState("");
-  const [userPrograms, setUserPrograms] = useState(null);
+  const [userPrograms, setUserPrograms] = useState({
+    userName: "",
+    programs: [],
+  });
   const [rhythmCollections, setRhythmCollections] = useState(null);
   const [scalePatternPrograms, setScalePatternPrograms] = useState(null);
   const [tonicSequences, setTonicSequences] = useState(null);
   const [instruments, setInstruments] = useState(null);
+  const [modes, setModes] = useState(null);
   const [gotWhatINeed, setGotWhatINeed] = useState(false);
 
   useEffect(() => {
@@ -24,19 +26,7 @@ const Programs = ({ user }) => {
         const programResponse = await axios.post(
           `/api/getProgramData/${user.sub}`
         );
-        const {
-          userPrograms,
-          rhythmCollections,
-          scalePatternPrograms,
-          tonicSequences,
-          instruments,
-        } = programResponse.data;
-        setUserPrograms(userPrograms);
-        setRhythmCollections(rhythmCollections);
-        setScalePatternPrograms(scalePatternPrograms);
-        setTonicSequences(tonicSequences);
-        setInstruments(instruments);
-        setGotWhatINeed(true);
+        handleProgramUpdate(programResponse.data);
       } catch (error) {
         console.error("Error: ", error);
       }
@@ -45,6 +35,24 @@ const Programs = ({ user }) => {
       fetchProgramData();
     }
   }, [user]);
+
+  const handleProgramUpdate = async (updatedPrograms) => {
+    const {
+      userPrograms,
+      rhythmCollections,
+      scalePatternPrograms,
+      tonicSequences,
+      instruments,
+      modes,
+    } = updatedPrograms;
+    setUserPrograms(userPrograms);
+    setRhythmCollections(rhythmCollections);
+    setScalePatternPrograms(scalePatternPrograms);
+    setTonicSequences(tonicSequences);
+    setInstruments(instruments);
+    setModes(modes);
+    setGotWhatINeed(true);
+  };
 
   const handleSubmit = async (event) => {
     // event.preventDefault();
@@ -70,7 +78,7 @@ const Programs = ({ user }) => {
     // });
   };
 
-  if (!gotWhatINeed) {
+  if (userPrograms.programs.length < 1) {
     return (
       <>
         <TopSpacer />
@@ -93,22 +101,33 @@ const Programs = ({ user }) => {
               <hr></hr>
               <h4 className="dropShadow">Your Programs</h4>
               <Row>
-                {userPrograms.map((program, i) => {
-                  return (
+                {userPrograms.programs.length > 0 ? (
+                  userPrograms.programs.map((program, i) => (
                     <Col key={i} className="mb-2" xs={12} sm={4}>
-                      <ProgramCard i={i} program={program} />
+                      <ProgramCard i={i} user={user} program={program} />
                     </Col>
-                  );
-                })}
+                  ))
+                ) : (
+                  <p>No programs available</p>
+                )}
               </Row>
               <hr></hr>
-              {/* <Col className="mb-2" xs={12} sm={4}>
-                <ProgramBuilderCard />
-              </Col> */}
-              <hr></hr>
-              <Button variant="primary" type="submit" className="mt-2">
-                Add Program
-              </Button>
+              <Col className="mb-2" xs={12} sm={4}>
+                <ProgramBuilderCard
+                  user={user}
+                  rhythmCollections={rhythmCollections}
+                  scalePatternPrograms={scalePatternPrograms}
+                  tonicSequences={tonicSequences}
+                  instruments={instruments}
+                  modes={modes}
+                  userDefaultInstrument={
+                    userPrograms.programs[0].instrumentName
+                  }
+                  setMessage={setMessage}
+                  setOpenSuccessMessage={setOpenSuccessMessage}
+                  handleProgramUpdate={handleProgramUpdate}
+                />
+              </Col>
             </Container>
           </Form>
         </Container>

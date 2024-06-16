@@ -10,8 +10,10 @@ import { getUserProgramsRoute } from "./getUserProgramsRoute.js";
 import { getScaleModesRoute } from "./getScaleModesRoute.js";
 import { getRhythmOptionsRoute } from "./getRhythmOptionsRoute.js";
 import { getProgramDataRoute } from "./getProgramDataRoute.js";
+import { saveUserProgramRoute } from "./saveUserProgramRoute.js";
 
 export const routes = [
+  saveUserProgramRoute,
   getProgramDataRoute,
   getRhythmOptionsRoute,
   getScaleModesRoute,

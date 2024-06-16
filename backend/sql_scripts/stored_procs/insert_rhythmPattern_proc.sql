@@ -26,7 +26,8 @@ BEGIN
 		END;
     
     START TRANSACTION;
- 
+		INSERT IGNORE INTO CollectionType (collectionType) VALUE (collectionType_p);
+        
         SELECT collectionID INTO collectionID_p
         FROM Collections
         WHERE collectionTitle = collectionTitle_p
