@@ -7,8 +7,8 @@ CREATE PROCEDURE add_new_exercise_proc(
     IN rhythmPatternID_p		INT,
     IN tonic_p					VARCHAR(25),
     IN mode_p					VARCHAR(45),
-    IN direction_p				VARCHAR(45),
-    IN directionIndex_p			INT,
+   --  IN direction_p				VARCHAR(45),
+--     IN directionIndex_p			INT,
     IN userProgramID_p			INT,
     IN userPracticeSessionID_p	INT,
     IN exerciseName_p			VARCHAR(255),
@@ -62,45 +62,25 @@ BEGIN
 		WHERE notePatternID = notePatternID_p
 		  AND rhythmPatternID = rhythmPatternID_p
 		  AND tonic = tonic_p
-		  AND mode = mode_p
-		  AND directionIndex = directionIndex_p;
-		
-        /*
-        IF exerciseID_p IS NULL THEN
-			SELECT CONCAT(
-			COALESCE(CONCAT(UPPER(LEFT(tonic_p, 1)), LOWER(SUBSTRING(tonic_p, 2))), ''), ' ',
-			COALESCE(CONCAT(UPPER(LEFT(mode_p, 1)), LOWER(SUBSTRING(mode_p, 2))), ''), ' ',
-			COALESCE(collectionTitle_p, ''), ' in ',
-			COALESCE(timeSignature_p, ''), ' '
-			)
-			INTO exerciseName_p;
-			
-			 IF direction_p <> 'static' THEN
-				SET exerciseName_p =  CONCAT(exerciseName_p, ' ',UPPER(LEFT(direction_p, 1)), LOWER(SUBSTRING(direction_p, 2)));
-			END IF;
-			
-			SELECT RTRIM(exerciseName_p) INTO exerciseName_p;
-            */
+		  AND mode = mode_p;
+
 			INSERT INTO Exercises(
 				notePatternID, 
 				rhythmPatternID,
 				exerciseName,
 				tonic,
 				mode,
-				description,
-				directionIndex
+				description
 				) VALUES (
 				notePatternID_p,
 				rhythmPatternID_p,
 				exerciseName_p,
 				tonic_p,
 				mode_p,
-				description_p,
-				directionIndex_p
+				description_p
 				);
 				
 			SELECT LAST_INSERT_ID() INTO exerciseID_p;
-		-- END IF;
         
         SELECT programID INTO programID_p
         FROM UserPrograms 
@@ -110,9 +90,7 @@ BEGIN
         
         INSERT INTO UserPracticeSessionExercises (exerciseID, UserPracticeSessionID) VALUES (exerciseID_p, userPracticeSessionID_p);
         
-		-- SELECT CONCAT(exerciseID_p, '-', REPLACE(exerciseName_p, ' ', '_')) INTO imageFilename_p;
-        SET imageFilename_p = CONCAT(
-			exerciseID_p, '-', exerciseName_p);
+        SET imageFilename_p = exerciseID_p;
         
         UPDATE Exercises
         SET imageFilename = imageFilename_p

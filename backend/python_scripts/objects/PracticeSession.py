@@ -5,6 +5,7 @@ It will process those inputs and create the specific exercises for a new practic
 from queries.queries import startUserPracticeSession, getNotePatternHistory, addNewExercise, fetchExercise
 from util.imageURL import imageURL
 from objects.UserExercise import UserExercise
+from util.exerciseBucket import checkTheBucketForImage
 
 
 class PracticeSession:
@@ -144,8 +145,6 @@ class PracticeSession:
             interval.rhythmPatternID,
             interval.tonic,
             interval.mode,
-            direction,
-            interval.directionIndex,
             interval.userProgramID,
             userPracticeSessionID,
             interval.exerciseName,
@@ -167,16 +166,17 @@ class PracticeSession:
                 interval.notePatternID,
                 interval.rhythmPatternID,
                 interval.tonic,
-                interval.mode,
-                interval.directionIndex)
+                interval.mode)
             if not exerciseDetails:
                 interval.exerciseID = self.insertExercise(self.userPracticeSessionID, interval).get('exerciseID')
             else:
-                # FIXME
                 interval.storeExerciseAttributes(exerciseDetails)
+            # Create the image if it doesn't exist
+            if not checkTheBucketForImage(interval.filename):
+                interval.createImage()
+
             # interval.createTestImage(intervalID)
             intervalID += 1
-            interval.createImage()
             intervalExercise = UserExercise(interval.exerciseID, interval.exerciseName, imageURL(interval.filename), interval.description, interval.incrementMe)
             self.addExerciseToPracticeSession(intervalExercise)
 

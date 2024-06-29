@@ -4,7 +4,9 @@ SELECT * FROM CollectionPatterns;
 SELECT * FROM ExerciseLog;
 SELECT * FROM pitchNames;
 SELECT * FROM ProgramExercises;
-SELECT * FROM UserPracticeRoutines;
+SELECT * FROM UserPracticeRoutines 
+	-- WHERE sub = '0b44c9de-c681-479d-8f89-e8af14a57458'
+    ;
 SELECT * FROM UserPracticeSession;
 SELECT * FROM UserPracticeSessionExercises;
 SELECT * FROM UserPrograms;
@@ -23,12 +25,30 @@ SELECT * FROM CollectionType;
 CALL clear_collections_and_exercises_proc();
 
 -- VIEWS
-SELECT * FROM get_practice_session WHERE sub = '0b44c9de-c681-479d-8f89-e8af14a57458';
+SELECT sub, reviewExercise, programID, PrimaryCollectionTitle, rhythmCollectionTitle FROM get_practice_session WHERE sub = '0b44c9de-c681-479d-8f89-e8af14a57458';
+SELECT * FROM get_user_practice_session 
+-- WHERE sub = '0b44c9de-c681-479d-8f89-e8af14a57458'
+;
+SELECT * FROM get_user_programs;
+SELECT 
+	*
+	-- up.userProgramID, c.collectionTitle 
+FROM UserRoutineExercises ure
+JOIN UserPrograms up ON ure.UserProgramID = up.userProgramID
+JOIN Programs p ON p.programID = up.programID
+JOIN Collections c ON p.primaryCollectionID = c.collectionID
+WHERE ure.UserPracticeRoutineID = 106
+;
+
+SELECT * FROM view_exercises
+WHERE notePatternID = 14362;
+
 
 -- STORED PROCS
 CALL clear_collections_and_exercises_proc();
 
 CALL clear_exercises_proc();
+
 CALL reset_player_proc();
 
 DELETE FROM UserPrograms;

@@ -108,7 +108,7 @@ const Programs = ({ user }) => {
                     </Col>
                   ))
                 ) : (
-                  <p>No programs available</p>
+                  <p>Create a new program first</p>
                 )}
               </Row>
               <hr></hr>

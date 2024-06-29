@@ -1,17 +1,24 @@
 USE Daily_Shed;
 CREATE OR REPLACE VIEW get_user_programs AS
 	 SELECT
+		u.sub,
 		u.userName,
-		pc.collectionTitle,
-		pc.collectionLength,
-		pc.collectionType,
+        p.programID,
+		pc.collectionTitle as primaryCollectionTitle,
+        pc.collectionID as primaryCollectionID,
+		pc.collectionLength AS collectionLength,
+		pc.collectionType AS collectionType,
 		i.instrumentName,
+        i.abbr,
         i.level AS instrumentLevel,
 		ts.name AS tonicSequenceName,
 		ts.sequence,
 		sm.scaleModeName,
-        rc.collectionTitle AS rhythmCollection,
-		up.* 
+        rc.collectionTitle AS rhythmCollectionTitle,
+        rc.collectionID AS rhythmCollectionID,
+		up.currentIndex,
+        up.userProgramID,
+        up.scaleTonicIndex
 	FROM UserPrograms up
     JOIN users u ON u.sub = up.sub
 	LEFT JOIN Programs p ON p.programID = up.programID

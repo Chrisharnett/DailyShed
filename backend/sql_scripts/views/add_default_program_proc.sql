@@ -49,6 +49,7 @@ BEGIN
         AND i.level = 'beginner';
         
         SELECT CONCAT(defaultMode_p, '-', defaultProgram1_p, '-', defaultProgram2_p) INTO message;
+        
 		INSERT INTO UserPrograms(programID, sub, scaleTonicIndex) VALUES (defaultProgram1_p, sub_p, 1);	
 		IF ROW_COUNT() > 0 THEN
 			SELECT LAST_INSERT_ID() INTO userProgramID1_p;
@@ -57,8 +58,12 @@ BEGIN
 			IF ROW_COUNT() > 0 THEN
 				SELECT LAST_INSERT_ID() INTO userProgramID2_p;                    
 				SET message = CONCAT(message, ' | Inserted UserProgram2:', userProgramID2_p);
+                -- Make any existing routines inactive.
+                UPDATE UserPracticeRoutines
+				SET isActive = false
+				WHERE sub = sub_p;
 				-- Insert default routine into UserPracticeRoutines
-				INSERT INTO UserPracticeRoutines(sub) VALUES (sub_p);
+				INSERT INTO UserPracticeRoutines(sub, rounds, isActive) VALUES (sub_p, 3, true);
                 IF ROW_COUNT() > 0 THEN
 					SELECT LAST_INSERT_ID() INTO userPracticeRoutine_p;
 					SET message = CONCAT(message, ' | Inserted UserPracticeRoutine:', userPracticeRoutine_p);
@@ -99,62 +104,5 @@ END //
 
 DELIMITER ;
 
-CALL add_default_program_proc('major_scale_to_the_ninth', 'major_single_note_long_tone', 'saxophone', '534' );
-
-SELECT scaleModeID
-FROM scaleModes sm
-WHERE sm.scaleModeName = 'major';
-                            
-SELECT p.programID
-FROM Programs p
-JOIN Collections c ON p.primaryCollectionID = c.collectionID
-JOIN Instruments i ON p.instrumentID = i.instrumentID
-WHERE c.collectionTitle = 'major_scale_to_the_ninth'
-AND i.instrumentName = 'saxophone'
-AND i.level = 'beginner';
-
-SELECT * FROM Collections WHERE collectionTitle = 'major_scale_to_the_ninth';
-
-SELECT p.programID
-FROM Programs p
-JOIN Collections c ON p.primaryCollectionID = c.collectionID
-JOIN Instruments i ON p.instrumentID = i.instrumentID
-WHERE c.collectionTitle = 'major_single_note_long_tone'
-AND i.instrumentName = 'saxophone'
-AND i.level = 'beginner';
-        
-INSERT INTO UserPrograms(programID, sub) VALUES (350, '534');
-INSERT INTO UserPrograms(programID, sub, scaleTonicIndex) VALUES (351, '534', 1);
-INSERT INTO UserPracticeRoutines(sub) VALUES ('534');
-
+CALL add_default_program_proc('major,scale_to_the_ninth_builder', 'major,single_note_long_tone', 'saxophone', '0b44c9de-c681-479d-8f89-e8af14a57458' );
 SELECT * FROM UserPrograms;
-SELECT * FROM UserPracticeRoutines;
-INSERT INTO UserRoutineExercises (UserPracticeRoutineID, UserProgramID, reviewExercise) 
-VALUES 
-	(49, 107, TRUE),
-	(49, 107, FALSE),
-	(49, 108, TRUE),
-	(49, 108, FALSE);
-
-SELECT * FROM UserRoutineExercises;
-
-CALL add_new_user_proc('534', 'testemail','testname');
-SELECT * FROM users;
-DELETE FROM users WHERE sub='534';
-INSERT INTO users (sub, email, userName) VALUES ('534', 'testemail','testname');
-
-SELECT * FROM UserPrograms;
-SELECT * FROM UserPracticeRoutines;
-SELECT * FROM UserRoutineExercises;
-
-SELECT * FROM get_practice_session WHERE sub = '0b44c9de-c681-479d-8f89-e8af14a57458';
-SELECT * FROM get_practice_session WHERE sub = '534';
-
-SELECT * FROM users;
-DELETE FROM UserRoutineExercises;
-DELETE FROM UserPrograms;
-DELETE FROM UserPracticeRoutines;
-
-SELECT scaleModeID
-FROM scaleModes sm
-WHERE sm.scaleModeName = 'major';

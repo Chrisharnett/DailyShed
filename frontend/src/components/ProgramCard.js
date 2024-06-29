@@ -9,7 +9,8 @@ const ProgramCard = ({ i, user, program }) => {
   useEffect(() => {}, []);
 
   const programTitle = () => {
-    const scalePatternType = program.programTitle.split(",")[1];
+    // const scalePatternType = program.programTitle.split(",")[1];
+    const scalePatternType = program.programTitle;
     return (
       ToTitleCase(program.tonicSequence[program.scaleTonicIndex]) +
       " " +
@@ -17,14 +18,6 @@ const ProgramCard = ({ i, user, program }) => {
       " " +
       scalePatternType
     );
-  };
-
-  const removeUserProgram = async () => {
-    try {
-      await axios.post(`/api/removeUserProgram`, [user.sub, program.programID]);
-    } catch (error) {
-      console.error("Error: ", error);
-    }
   };
 
   return (
@@ -47,9 +40,6 @@ const ProgramCard = ({ i, user, program }) => {
           <Card.Footer>
             Exercises completed: {program.currentIndex + 1} of{" "}
             {program.collectionLength}
-            {/* <Button variant="danger" onClick={removeUserProgram}>
-              Remove
-            </Button> */}
           </Card.Footer>
         </Card>
       </Container>

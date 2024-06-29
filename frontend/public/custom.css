@@ -138,3 +138,33 @@ html{
   .journalModalBody > * {
     flex-shrink: 0;
   }
+
+  .addIntervalButtonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Ensure it takes the full width of the column */
+    height: 100%; /* Ensure it takes the full height of the column */
+  }
+  .addIntervalButton {
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    width: 40px; /* Fixed width */
+    height: 40px; /* Fixed height */
+    display: flex; /* Use flexbox for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    font-size: 24px; /* Increase font size */
+    border-radius: 50%; /* Rounded edges */
+    cursor: pointer; /* Pointer/hand icon */
+    transition: background-color 0.3s; /* Transition for hover effect */
+    padding: 0; /* Remove padding */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: add a slight shadow */
+    margin-left: auto; /* Align the button to the right */
+  }
+  
+  .addIntervalButton:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }
+  

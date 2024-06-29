@@ -38,27 +38,35 @@ class PracticeInterval(Exercise):
         self.__scaleTonicSequence = scaleTonicSequence
 
     def toDict(self):
-        parent_dict = super().toDict()
-        parent_dict.update({
-            "primaryCollectionTitle": self.primaryCollectionTitle,
-            "rhythmCollectionTitle": self.rhythmCollectionTitle,
+        exerciseDict = super().toDict()
+        exerciseDict.update({
+            "primaryCollection": {
+                "primaryCollectionTitle": self.primaryCollectionTitle,
+                "primaryCollectionType": self.primaryCollectionType,
+                "primaryCollectionID": self.primaryCollectionID,
+            },
+            "rhythmCollection": {
+                "rhythmCollectionTitle": self.rhythmCollectionTitle,
+                "rhythmCollectionID": self.rhythmCollectionID,
+            },
             "currentIndex": self.currentIndex,
             "userProgramID": self.userProgramID,
-            "primaryCollectionType": self.primaryCollectionType,
-            "primaryCollectionID": self.primaryCollectionID,
-            "rhythmCollectionID": self.rhythmCollectionID,
             "collectionLength": self.collectionLength,
             "reviewExercise": self.reviewExercise,
             "instrument": self.instrument.toDict() if hasattr(self.__instrument, 'toDict') else self.__instrument,
             "directions": self.directions,
-            "notePatternDetails": self.notePatternDetails,
-            "rhythmPatternDetails": self.rhythmPatternDetails,
+            "notePattern": {
+                "notePatternDetails": self.notePatternDetails,
+            },
+            "rhythmPattern": {
+                "rhythmPatternDetails": self.rhythmPatternDetails,
+            },
             "incrementMe": self.incrementMe,
             "collections": self.collections,
             "notePatternHistory": self.notePatternHistory,
             "scaleTonicSequence": self.scaleTonicSequence
         })
-        return parent_dict
+        return exerciseDict
 
     @property
     def instrument(self):

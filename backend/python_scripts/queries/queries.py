@@ -20,9 +20,12 @@ def fetchProgramData(sub):
                         'programs': []}
             for interval in programResults:
                 program = {
-                    'programTitle': interval.get('collectionTitle'),
-                    'collectionType': interval.get('collectionType'),
+                    'programTitle': interval.get('primaryCollectionTitle'),
+                    'primaryCollectionID': interval.get('primaryCollectionID'),
+                    'length': interval.get('collectionLength'),
                     'collectionLength': interval.get('collectionLength'),
+                    'collectionType': interval.get('collectionType'),
+                    'abbr': interval.get('abbr'),
                     'instrumentName': interval.get('instrumentName'),
                     'instrumentLevel': interval.get('instrumentLevel'),
                     'tonicSequence': json.loads(interval.get('sequence')),
@@ -30,7 +33,7 @@ def fetchProgramData(sub):
                     'scaleTonicIndex': interval.get('scaleTonicIndex'),
                     'mode': interval.get('scaleModeName'),
                     'currentIndex': interval.get('currentIndex'),
-                    'rhythmCollection': interval.get('rhythmCollection')
+                    'rhythmCollection': interval.get('rhythmCollectionTitle')
                 }
                 userPrograms['programs'].append(program)
             cursor.nextset()
@@ -218,6 +221,37 @@ def insertNewUserProgram(details):
         result = cursor.fetchall()
         conn.commit()
         return fetchProgramData(details.get('sub'))
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
+    finally:
+        conn.close()
+
+def updateUserSession(details):
+    conn = getDBConnection()
+    sub=details.get('sub')
+    rounds=details.get('practiceSession').get('rounds')
+    practiceIntervals = details.get('practiceSession').get('intervals')
+    try:
+        with conn.cursor() as cursor:
+            # insertSQL = "INSERT INTO UserPracticeRoutines (sub, rounds) VALUES (%s, %s) ON DUPLICATE KEY UPDATE rounds = VALUES(rounds)"
+            cursor.callproc('new_user_practice_routine_proc', [sub, rounds])
+            newRoutineID = cursor.fetchone().get('newRoutineID')
+
+            if practiceIntervals:
+                insertIntervalSQL = 'INSERT INTO UserRoutineExercises (userPracticeRoutineID, UserProgramID, reviewExercise) ' \
+                                    'VALUES (%s, %s, %s)'
+                practiceIntervalData = [(
+                    newRoutineID,
+                    interval.get('userProgramID'),
+                    interval.get('reviewExercise')
+                ) for interval in practiceIntervals]
+                cursor.executemany(insertIntervalSQL, practiceIntervalData)
+            conn.commit()
+
+        return fetchUserPracticeSession(sub)
+
     except Exception as e:
         conn.rollback()
         print(f"Error: {str(e)}")
@@ -432,6 +466,47 @@ def getPracticeSession(sub):
     finally:
         conn.close()
 
+def fetchUserPracticeSession(sub):
+
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            query = "SELECT * FROM get_user_practice_session WHERE sub = %s"
+            cursor.execute(query, (sub,))
+            result = cursor.fetchall()
+        if not result:
+            result = addDefaultPrograms('major,scale_to_the_ninth_builder', 'major,single_note_long_tone', 'saxophone',
+                                        sub)
+        rounds = result[0].get('rounds')
+
+        session = {'rounds': rounds,
+                   'intervals': []}
+        for interval in result:
+            programID = interval.get('programID')
+            scaleTonicIndex = interval.get('scaleTonicIndex')
+            reviewExercise = interval.get('reviewExercise')
+            currentIndex = interval.get('currentIndex')
+            userProgramID = interval.get('userProgramID')
+            rhythmCollectionID = interval.get('rhythmCollectionID')
+            primaryCollectionID = interval.get('primaryCollectionID')
+            session.get('intervals').append({
+                'programID': programID,
+                'scaleTonicIndex': scaleTonicIndex,
+                'reviewExercise': reviewExercise,
+                'currentIndex': currentIndex,
+                'userProgramID': userProgramID,
+                'rhythmCollectionID': rhythmCollectionID,
+                'primaryCollectionID': primaryCollectionID
+            })
+
+        return session
+
+    except Exception as e:
+        return str(e), 500
+
+    finally:
+        conn.close()
+
 def fetchUserPrograms(sub):
     conn = getDBConnection()
     try:
@@ -443,16 +518,26 @@ def fetchUserPrograms(sub):
                     'programs': []}
         for interval in result:
             program = {
-                        'programTitle': interval.get('collectionTitle'),
-                        'collectionType': interval.get('collectionType'),
-                        'collectionLength': interval.get('collectionLength'),
-                        'instrument': interval.get('instrumentName'),
-                        'tonicSequence': json.loads(interval.get('sequence')),
-                        'tonicSequenceName': interval.get('tonicSequenceName'),
-                        'scaleTonicIndex': interval.get('scaleTonicIndex'),
+                        'programID': interval.get('programID'),
+                        'userProgramID': interval.get('userProgramID'),
+                        'primaryCollection': {
+                            'primaryCollectionTitle': interval.get('primaryCollectionTitle'),
+                            'collectionType': interval.get('collectionType'),
+                            'primaryCollectionID': interval.get('primaryCollectionID'),
+                        },
+                        'instrument': {'instrumentName': interval.get('instrumentName'),
+                                       'level': interval.get('instrumentLevel'),
+                                       'abbr': interval.get('abbr'),
+                                       },
+                        'tonic': {
+                            'tonicSequence': json.loads(interval.get('sequence')),
+                            'tonicSequenceName': interval.get('tonicSequenceName'),
+                            'scaleTonicIndex': interval.get('scaleTonicIndex'),
+                        },
                         'mode': interval.get('scaleModeName'),
                         'currentIndex': interval.get('currentIndex'),
-                        'rhythmCollection': interval.get('rhythmCollection')
+                        'rhythmCollection': {'rhythmCollectionTitle': interval.get('rhythmCollectionTitle'),
+                                             'rhythmCollectionID': interval.get('rhythmCollectionID')}
                         }
             programs['programs'].append(program)
         return programs
@@ -463,7 +548,7 @@ def fetchUserPrograms(sub):
     finally:
         conn.close()
 
-def fetchExercise(notePatternID, rhythmPatternID, tonic, mode, directionIndex):
+def fetchExercise(notePatternID, rhythmPatternID, tonic, mode):
     conn = getDBConnection()
     try:
         with conn.cursor() as cursor:
@@ -472,14 +557,12 @@ def fetchExercise(notePatternID, rhythmPatternID, tonic, mode, directionIndex):
                     "WHERE notePatternID = %s AND " \
                     "rhythmPatternID = %s AND " \
                     "tonic = %s AND " \
-                    "mode = %s AND " \
-                    "directionIndex = %s"
+                    "mode = %s "
             cursor.execute(query, [
                 notePatternID,
                 rhythmPatternID,
                 tonic,
-                mode,
-                directionIndex
+                mode
             ])
             exercise = cursor.fetchone()
             conn.commit()
@@ -701,10 +784,6 @@ def collectionMatcher(collections):
         collectionLength = collectionPattern.collectionLength or 0
         match collectionType:
             case 'notePattern':
-                # collectionTitle_p, collectionType_p, collectionLength_p,
-                # description_p, directions_p, holdLastNote_p,
-                # notePattern_p, notePatternType_p, repeatMe_p,
-                # collectionNotePatternID_p, noteLength_p, scalePatternType_p
                 for pattern in collectionPattern.patterns:
                     notePatternData.append([
                         collectionTitle,
@@ -746,21 +825,23 @@ def insertNewRhythmPattern(
         timeSignature,
         rhythmPattern,
         rhythmLength,
-        subRhythms
+        subRhythms,
+        measureLength
     ):
     conn = getDBConnection()
     try:
         with conn.cursor() as cursor:
-            cursor.callproc('insert_new_rhythmPattern_proc',
-                            [
-                                collectionID,
-                                rhythmDescription,
-                                json.dumps(articulation),
-                                json.dumps(timeSignature),
-                                json.dumps(rhythmPattern),
-                                rhythmLength,
-                                json.dumps(subRhythms)
-                            ])
+            values = [
+                    collectionID,
+                    rhythmDescription,
+                    json.dumps(articulation),
+                    json.dumps(timeSignature),
+                    json.dumps(rhythmPattern),
+                    rhythmLength,
+                    json.dumps(subRhythms),
+                    measureLength
+                    ]
+            cursor.callproc('insert_new_rhythmPattern_proc', [*values])
             result = cursor.fetchone()
             conn.commit()
             return result.get('rhythmPatternID')

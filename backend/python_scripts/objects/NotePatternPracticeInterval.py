@@ -41,14 +41,14 @@ class NotePatternPracticeInterval(PracticeInterval):
         # self.__scaleExercise = None
 
     def toDict(self):
-        parent_dict = super().toDict()
-        parent_dict.update({
+        exerciseDict = super().toDict()
+        exerciseDict.update({
             "scalePatternType": self.scalePatternType,
             "scale": self.scale.toDict() if hasattr(self.scale, 'toDict') else self.scale,
             # "scaleExercise": self.__scaleExercise.to_dict() if self.__scaleExercise and hasattr(self.__scaleExercise,
             #                                                                                     'to_dict') else self.__scaleExercise
         })
-        return parent_dict
+        return exerciseDict
 
     @property
     def scalePatternType(self):
@@ -66,14 +66,6 @@ class NotePatternPracticeInterval(PracticeInterval):
     def scale(self, scale):
         self.__scale = scale
 
-    # @property
-    # def scaleExercise(self):
-    #     return self.__scaleExercise
-    #
-    # @scaleExercise.setter
-    # def scaleExercise(self, scaleExercise):
-    #     self.__scaleExercise = scaleExercise
-
     def findTwoSum(self, nums, target):
         seen = {}
         for num in nums:
@@ -84,8 +76,8 @@ class NotePatternPracticeInterval(PracticeInterval):
         return None
 
     def findRepeatedSum(self, nums, target):
-        for i in range(len(nums)):
-            repeated_num = nums[i]
+        nums.sort(reverse=True)
+        for repeated_num in nums:
             j = 1
             while repeated_num * j < target:
                 remainder = target - repeated_num * j
@@ -95,25 +87,34 @@ class NotePatternPracticeInterval(PracticeInterval):
         return None
 
     def multipleBarRhythm(self):
-        rhythms = self.getRhythmCollection()
+        rhythmCollection = self.getRhythmCollection()
+        rhythms = rhythmCollection.get('patterns')
         length = len(self.notePattern)
+        # length = len(self.notePattern) if not self.holdLastNote else len(self.notePattern) - 1
+        # length = self.getNotePatternRhythmLength()
+        measureLength = 0
         remainder = length
         r = []
-        id = []
+        subRhythms = []
         rLength = 0
         articulations = []
-        lengths = [r.get('rhythmLength') for r in rhythms]
-        possibleRhythms = [x for x in rhythms if remainder % x.get('rhythmLength') == 0]  or None
-        lastMeasure = None
-        finalLength =0
-        if not possibleRhythms:
-            repeatedLength, finalLength = self.findRepeatedSum(lengths, length)
-            possibleRhythms =  [x for x in rhythms if x.get('rhythmLength') == repeatedLength]
-            lastMeasure = random.choice([x for x in rhythms if x.get('rhythmLength') == finalLength])
+        lengths = [x.get('rhythmLength') for x in rhythms]
+        # possibleRhythms = [x for x in rhythms if remainder % x.get('rhythmLength') == 0]  or None
+        repeatedLength, finalLength = self.findRepeatedSum(lengths, length)
+        possibleRhythms = [x for x in rhythms if x.get('rhythmLength') == repeatedLength]
         measure = random.choice(possibleRhythms)
+        lastMeasure = random.choice([x for x in rhythms if x.get('rhythmLength') == finalLength])
+        # lastMeasure = None
+        finalLength = 0
+        # if not possibleRhythms:
+        #     repeatedLength, finalLength = self.findRepeatedSum(lengths, length)
+        #     possibleRhythms =  [x for x in rhythms if x.get('rhythmLength') == repeatedLength]
+        #     lastMeasure = random.choice([x for x in rhythms if x.get('rhythmLength') == finalLength])
+
         nextRemainder = remainder - measure.get('rhythmLength')
-        id.append(f"-{str(measure.get('rhythmPatternID'))}")
+        subRhythms.append(measure.get('rhythmPatternID'))
         while nextRemainder >= finalLength:
+            measureLength += 1
             r.extend(measure.get('rhythmPattern'))
             rLength += measure.get('rhythmLength')
             remainder -= measure.get('rhythmLength')
@@ -122,23 +123,27 @@ class NotePatternPracticeInterval(PracticeInterval):
             nextRemainder -= measure.get('rhythmLength')
         if lastMeasure:
             r.extend(lastMeasure.get('rhythmPattern'))
+            measureLength += 1
         else:
-            lastMeasure = measure
-        id.append(f"-{str(lastMeasure.get('rhythmPatternID'))}")
+            r.extend(measure)
+            measureLength += 1
+            # lastMeasure = measure
+        subRhythms.append(lastMeasure.get('rhythmPatternID'))
         rLength += lastMeasure.get('rhythmLength')
         if lastMeasure.get('articulation'):
             articulations.extend(lastMeasure.get('articulation'))
-        rhythmDescription = lastMeasure.get('rhythmDescription')
+        rhythmDescription = 'multi-measure pattern'
         timeSignature = lastMeasure.get('timeSignature')
         # FIXME: Bring back the insert to DB
         self.rhythmPatternID = insertNewRhythmPattern(
-            rhythms.get('collectionID'),
+            rhythmCollection.get('collectionID'),
             rhythmDescription,
             articulations,
             timeSignature,
             r,
             rLength,
-            id
+            subRhythms,
+            measureLength
             )
         self.rhythmPattern = r
         self.timeSignature = timeSignature
@@ -147,7 +152,13 @@ class NotePatternPracticeInterval(PracticeInterval):
     def selectRandomRhythmPattern(self):
         rhythms = self.getRhythmCollection().get('patterns')
         notePatternLength = self.getNotePatternRhythmLength()
-        matchingRhythms = [pattern for pattern in rhythms if pattern.get('rhythmLength') == notePatternLength]
+
+        # For one bar rhythms
+        matchingRhythms = [pattern for pattern in rhythms
+                           if pattern.get('rhythmLength') == notePatternLength
+                           and pattern.get('measureLength') == 1
+                           ]
+        # Create longer rhythms
         if not matchingRhythms:
             self.multipleBarRhythm()
         else:
@@ -308,8 +319,8 @@ class NotePatternPracticeInterval(PracticeInterval):
     def createImage(self):
         lilypond_file = abjad.LilyPondFile([self.preamble, self.buildScore()])
         if not self.filename:
-            self.filename = f"{self.exerciseID}_{self.instrument.level}_{self.instrument.instrumentName}_{self.scale.tonic}_{self.scale.mode.replace(' ', '_')}_{self.scalePatternType or None}"
-            self.exerciseName = self.filename
+            self.exerciseName = f"{self.instrument.level}_{self.instrument.instrumentName}_{self.scale.tonic}_{self.scale.mode.replace(' ', '_')}_{self.scalePatternType or None}"
+            self.filename = self.exerciseID if self.exerciseID else self.exerciseName
         if not self.description:
             self.description = f"{self.tonic.title()} {self.mode.title()} {self.scalePatternType.title()} Scale for {self.instrument.instrumentName} {self.instrument.level}"
         localPath = self.filename

@@ -1,16 +1,20 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from exerciseCollections.collectionCreator import collectionCreator
-from queries.queries import (buildDatabase,
-                             getCollections,
-                             getPracticeSession,
-                             logExerciseDetails,
-                             fetchUserPrograms,
-                             fetchModes,
-                             fetchRhythmPatternOptions,
-                             fetchUserExerciseLog,
-                             fetchProgramData,
-                             insertNewUserProgram)
+from queries.queries import (
+    updateUserSession,
+    buildDatabase,
+    getCollections,
+    getPracticeSession,
+    logExerciseDetails,
+    fetchUserPrograms,
+    fetchModes,
+    fetchRhythmPatternOptions,
+    fetchUserExerciseLog,
+    fetchProgramData,
+    insertNewUserProgram,
+    fetchUserPracticeSession
+)
 from objects.PracticeSession import PracticeSession
 import boto3
 
@@ -27,6 +31,21 @@ def addNewUserProgram():
     try:
         details = request.get_json().get('program')
         userPrograms = insertNewUserProgram(details)
+        return {
+            "statusCode": 200,
+            "userPrograms": userPrograms}
+
+    except Exception as e:
+        return jsonify({
+            "statusCode": 400,
+            "error": str(e)
+        })
+
+@app.route("/addNewUserSession", methods=["GET", "POST"])
+def addNewUserSession():
+    try:
+        details = request.get_json().get('session')
+        userPrograms = updateUserSession(details)
         return {
             "statusCode": 200,
             "userPrograms": userPrograms}
@@ -118,11 +137,10 @@ def getProgramData():
 def getUserPracticeSession():
     try:
         sub = request.get_json().get('sub')
-        practiceSession = getPracticeSession(sub)
-        practiceSessionDict = practiceSession.toDict()
+        practiceSession = fetchUserPracticeSession(sub)
         return {
                 "statusCode": 200,
-                "practiceSession": practiceSessionDict
+                "practiceSession": practiceSession
         }
 
     except Exception as e:

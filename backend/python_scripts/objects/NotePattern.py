@@ -19,14 +19,6 @@ class NotePattern(MusicPattern):
     def noteLength(self, value):
         self.__noteLength = value
 
-    # @property
-    # def direction(self):
-    #     return self._direction
-    #
-    # @direction.setter
-    # def direction(self, value):
-    #     self._direction = value
-
     @property
     def directions(self):
         return self.__directions

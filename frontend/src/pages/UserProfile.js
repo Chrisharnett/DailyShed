@@ -1,7 +1,9 @@
 import { Container, Form, Row, Col, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import ExerciseDetailsForm from "../components/ExerciseDetailsForm";
+import AddButton from "../components/AddButton";
+import IntervalDetails from "../components/IntervalDetails";
 import SuccessModal from "../components/SuccessModal";
+import AddIntervalModal from "../components/AddIntervalModal";
 import TopSpacer from "../util/TopSpacer";
 import axios from "axios";
 
@@ -12,6 +14,7 @@ const UserProfile = ({ user }) => {
   const [userPrograms, setUserPrograms] = useState(null);
   const [scaleModes, setScaleModes] = useState(null);
   const [rhythmOptions, setRhythmOptions] = useState(null);
+  const [openNewInterval, setOpenNewInterval] = useState(false);
 
   useEffect(() => {
     const fetchPracticeSession = async () => {
@@ -42,39 +45,63 @@ const UserProfile = ({ user }) => {
     }
   }, [user]);
 
+  const updatePlayerSession = async (newSession) => {
+    try {
+      await axios.post(`/api/saveUserSession`, newSession);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
   const handleSubmit = async (event) => {
-    // event.preventDefault();
-    // const newUserData = { ...playerDetails };
-    // try {
-    //   await updatePlayerDetails(newUserData);
-    //   setMessage("Routine Saved!");
-    //   setOpenSuccessMessage(true);
-    // } catch (error) {
-    //   console.error("Error: ", error);
-    // }
+    event.preventDefault();
+    try {
+      await updatePlayerSession({
+        sub: user.sub,
+        practiceSession: practiceSession,
+      });
+      setMessage("Routine Saved!");
+      setOpenSuccessMessage(true);
+    } catch (error) {
+      console.error("Error: ", error);
+    }
   };
 
   const handleRoundsChange = (event) => {
-    // const newRounds = parseInt(event.target.value);
-    // updatePlayerDetails({
-    //   ...playerDetails,
-    //   program: {
-    //     ...playerDetails.program,
-    //     rounds: newRounds,
-    //   },
-    // });
+    const newRounds = parseInt(event.target.value);
+    setPracticeSession({ ...practiceSession, rounds: newRounds });
   };
 
-  const handleDetailsChange = (index) => {
-    // const newExerciseDetails = [...playerDetails.program.exerciseDetails];
-    // newExerciseDetails[index] = updatedDetails;
-    // updatePlayerDetails({
-    //   ...playerDetails,
-    //   program: {
-    //     ...playerDetails.program,
-    //     exerciseDetails: newExerciseDetails,
-    //   },
-    // });
+  const handleDetailsChange = (index, updatedDetails) => {
+    const newExerciseDetails = [...practiceSession.intervals];
+    newExerciseDetails[index] = updatedDetails;
+
+    setPracticeSession({
+      ...practiceSession,
+      intervals: newExerciseDetails,
+    });
+  };
+
+  const removeInterval = (index) => {
+    const newExerciseDetails = practiceSession.intervals.filter(
+      (interval, i) => i !== index
+    );
+    setPracticeSession({
+      ...practiceSession,
+      intervals: newExerciseDetails,
+    });
+  };
+
+  const addIntervalToSession = (newInterval) => {
+    setPracticeSession((prevState) => ({
+      ...prevState,
+      intervals: [...prevState.intervals, newInterval],
+    }));
+  };
+
+  const handleAddInterval = (e) => {
+    e.preventDefault();
+    setOpenNewInterval(true);
   };
 
   if (!userPrograms || !practiceSession || !scaleModes || !rhythmOptions) {
@@ -97,23 +124,21 @@ const UserProfile = ({ user }) => {
             <Container>
               <h2 className="dropShadow">Your practice routine</h2>
               <hr></hr>
-              {/* TODO: Add the ability to change the number of Exercises */}
-              {/* TODO: Allow Custom Exercises */}
               <Form.Group
                 as={Row}
                 className="align-items-center dropShadow fs-3"
               >
-                <Form.Label className="dropShadow">Exercises</Form.Label>
+                <h1>Exercises</h1>
                 <Row>
                   {practiceSession.intervals.map((interval, i) => {
                     return (
                       <Col key={i} xs={12} sm={3}>
-                        <ExerciseDetailsForm
+                        <IntervalDetails
                           i={i}
                           interval={interval}
                           programs={userPrograms.programs}
-                          scaleModes={scaleModes}
-                          rhythmOptions={rhythmOptions}
+                          removeInterval={removeInterval}
+                          userPrograms={userPrograms}
                           onDetailsChange={(updatedDetails) =>
                             handleDetailsChange(i, updatedDetails)
                           }
@@ -121,6 +146,9 @@ const UserProfile = ({ user }) => {
                       </Col>
                     );
                   })}
+                  <Col xs="auto">
+                    <AddButton onClick={handleAddInterval} />
+                  </Col>
                 </Row>
               </Form.Group>
 
@@ -149,11 +177,18 @@ const UserProfile = ({ user }) => {
             </Container>
           </Form>
         </Container>
+        <AddIntervalModal
+          show={openNewInterval}
+          setShow={setOpenNewInterval}
+          programs={userPrograms.programs}
+          addIntervalToSession={addIntervalToSession}
+        />
         <SuccessModal
           show={openSuccessMessage}
           setShow={setOpenSuccessMessage}
           message={message}
         />
+
         <TopSpacer></TopSpacer>
       </>
     );

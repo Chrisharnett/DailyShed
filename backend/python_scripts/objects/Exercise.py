@@ -30,18 +30,21 @@ class Exercise:
 
     def toDict(self):
         return {
-            "notePatternID": self.notePatternID,
-            "rhythmPatternID": self.rhythmPatternID,
-            "notePattern": self.notePattern,
-            "rhythmPattern": self.rhythmPattern,
+            "notePattern": {
+                "notePatternID": self.notePatternID,
+                "notePattern": self.notePattern},
+            "rhythmPattern":{
+                "rhythmPatternID": self.rhythmPatternID,
+                "rhythmPattern": self.rhythmPattern
+            },
             "tonic": self.tonic,
             "mode": self.mode,
-            "directionIndex": self.directionIndex,
-            "direction": self.direction,
+            # "directionIndex": self.directionIndex,
+            # "direction": self.direction,
             "repeatMe": self.repeatMe,
             "holdLastNote": self.holdLastNote,
             "timeSignature": self.timeSignature,
-            "preamble": self.preamble,
+            # "preamble": self.preamble,
             "articulation": self.articulation,
             "exerciseID": self.exerciseID,
             "filename": self.filename,
@@ -195,18 +198,12 @@ class Exercise:
     def exerciseName(self, exerciseName):
         self.__exerciseName = exerciseName
 
-    # @property
-    # def ties(self):
-    #     return self.__ties
-
     def getNotePatternRhythmLength(self):
-        # if self.holdLastNote:
-        #     length = len((self.notePattern)) - 1
-        #     return length
+        if self.holdLastNote:
+            length = len((self.notePattern)) - 1
+            return length
         return len(self.notePattern)
 
-    # def addTie(self, tie):
-    #     self.__ties.append(tie)
 
     def notationPattern(self):
         if not self.repeatMe:

@@ -3,29 +3,56 @@ DROP PROCEDURE IF EXISTS reset_player_proc;
 DELIMITER //
 
 CREATE PROCEDURE reset_player_proc(
+	IN sub_p	VARCHAR(45)
 )
 BEGIN
-    DELETE FROM ExerciseLog;
-    
-    UPDATE UserPrograms
-	SET scaleTonicIndex = 1;
-    
-    UPDATE UserPrograms
-    SET currentIndex = -1;
-    
-    DELETE FROM UserPracticeSession;
+    DELETE FROM ExerciseLog WHERE sub = sub_p;
+	DELETE FROM UserPracticeSessionExercises
+	WHERE UserPracticeSessionID IN (
+		SELECT UserPracticeSessionID
+		FROM UserPracticeSession
+		WHERE sub = sub_p
+		);   
+		
+	DELETE FROM UserRoutineExercises 
+	WHERE UserProgramID IN (
+		SELECT UserProgramID
+		FROM UserPrograms
+		WHERE sub = sub_p
+		);
+
+	DELETE FROM UserPracticeRoutines WHERE sub = sub_p;
+
+	DELETE FROM UserPracticeSession WHERE sub = sub_p;
+
+	DELETE FROM UserPrograms WHERE sub = sub_p;
     
 END //
 
 DELIMITER ;
 
-CALL reset_player_proc;
-SELECT * FROM Exercises;
+CALL reset_player_proc('0b44c9de-c681-479d-8f89-e8af14a57458');
 
-SELECT * FROM UserPrograms;
+DELETE FROM ExerciseLog WHERE sub = '0b44c9de-c681-479d-8f89-e8af14a57458';
+DELETE FROM UserPracticeSessionExercises
+WHERE UserPracticeSessionID IN (
+	SELECT UserPracticeSessionID
+    FROM UserPracticeSession
+    WHERE sub = '0b44c9de-c681-479d-8f89-e8af14a57458'
+    );   
+    
+DELETE FROM UserRoutineExercises 
+WHERE UserProgramID IN (
+	SELECT UserProgramID
+    FROM UserPrograms
+	WHERE sub = '0b44c9de-c681-479d-8f89-e8af14a57458'
+    );
 
-DELETE FROM UserPracticeSessionExercises;
-DELETE FROM ProgramExercises;
-DELETE FROM Exercises;
+DELETE FROM UserPracticeRoutines WHERE sub = '0b44c9de-c681-479d-8f89-e8af14a57458';
+
+DELETE FROM UserPracticeSession WHERE sub = '0b44c9de-c681-479d-8f89-e8af14a57458';
+
+DELETE FROM UserPrograms WHERE sub = '0b44c9de-c681-479d-8f89-e8af14a57458';
+
 
  

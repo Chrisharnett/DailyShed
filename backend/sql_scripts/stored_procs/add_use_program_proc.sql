@@ -38,14 +38,14 @@ BEGIN
         AND tonicSequenceID = tonicSequenceID_p
         AND instrumentId = instrumentID_p;
 	
-        SET message = 'B';
+        SET message = rhythmCollectionID_p;
         
         IF newProgramID_p IS NULL THEN
 			INSERT INTO Programs (scaleModeID, rhythmCollectionID, primaryCollectionID, tonicSequenceID, instrumentID)
 			VALUES (scaleModeID_p, rhythmCollectionID_p, primaryCollectionID_p, tonicSequenceID_p, instrumentID_p);
         
 			SELECT LAST_INSERT_ID() INTO newProgramID_p;
-            SET message = 'NewProgramID - Created: ';
+            -- SET message = 'NewProgramID - Created: ';
 		END IF;             
         
         SELECT userProgramID
@@ -54,18 +54,19 @@ BEGIN
         WHERE programID = newProgramID_p
         AND sub = sub_p;
         
-        SET message = 'userProgramID exists';
+        -- SET message = 'userProgramID exists';
         
         IF newUserProgramID_p IS NULL THEN
 			INSERT INTO UserPrograms (programID, currentIndex, sub, scaleTonicIndex)
 			VALUES (newProgramID_p, -1, sub_p, scaleTonicIndex_p);
             SELECT LAST_INSERT_ID() INTO newUserProgramID_p;
-            SET message = 'userProgramID created';
+            -- SET message = 'userProgramID created';
 		END IF;
         
 		IF sql_error = FALSE THEN
-			SELECT * FROM UserPrograms 
-            WHERE sub = sub_p;
+			-- SELECT * FROM UserPrograms 
+            -- WHERE sub = sub_p;
+            SELECT message AS Message;
 			COMMIT;
 		ELSE
 			SELECT message AS message;
@@ -77,17 +78,20 @@ DELIMITER ;
 
 CALL add_user_program_proc(
 	'0b44c9de-c681-479d-8f89-e8af14a57458',
-    1522,
-    1410,
-    'altered,full_range_ascending_scale',
+    1520,
+    1409,
+    'melodic_minor,full_range_ascending_scale',
     273,
     537,
     1
     );
 
+SELECT * FROM scaleModes;
 SELECT collectionID
 FROM Collections
 WHERE collectionTitle = 'altered,one_octave_ascending_descending_scale';
 
 SELECT * FROM UserPrograms;
-SELECT * FROM Programs;
+DELETE FROM UserPrograms WHERE programID >= 479;
+DELETE FROM Programs WHERE programID >= 479;
+SELECT p.*, r.collectionTitle FROM Programs p JOIN Collections r ON p.rhythmCollectionID = r.collectionID;
