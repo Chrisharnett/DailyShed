@@ -1,0 +1,50 @@
+collection = {
+    'collectionType': 'pattern',
+    'title': 'scale_to_the_ninth',
+    'patterns': [{
+        'notePatternId': '0',
+        'patternType': 'scale',
+        'pattern': [1, 2],
+        'description': 'Play twice. Repeat both times.',
+         'direction': 'ascending',
+         'description': True,
+         'description': True
+         }, {
+         'notePatternId': '1',
+         'patternType': 'scale',
+         'pattern': [1, 2, 3],
+         'description': 'Play twice. Repeat both times.',
+         'direction': 'ascending',
+         'description': True,
+         'description': True
+          }, {
+          'notePatternId': '2',
+          'patternType': 'scale',
+          'pattern': [1, 2, 3, 4],
+          'description': 'Play twice. Repeat both times.',
+          'direction': 'ascending',
+          'description': True,
+          'description': True
+          }, {
+          'notePatternId': '3', 'patternType': 'scale', 'pattern': [1, 2, 3, 4, 5], 'description': 'Play twice. Repeat both times.', 'direction': 'ascending', 'description': True, 'description': True
+          }, {
+          'notePatternId': '4', 'patternType': 'scale', 'pattern': [1, 2, 3, 4, 5, 6], 'description': 'Play twice. Repeat both times.', 'direction': 'ascending', 'description': True, 'description': True
+          }, {
+          'notePatternId': '5', 'patternType': 'scale', 'pattern': [1, 2, 3, 4, 5, 6, 7], 'description': 'Play twice. Repeat both times.', 'direction': 'ascending', 'description': True, 'description': True
+          }, {
+          'notePatternId': '6',
+          'patternType': 'scale',
+          'pattern': [1, 2, 3, 4, 5, 6, 7, 8],
+          'description': 'Play twice. Repeat both times.',
+          'direction': 'ascending',
+          'description': True,
+          'description': True
+          }, {
+          'notePatternId': '7',
+          'patternType': 'scale',
+          'pattern': [1, 2, 3, 4, 5, 6, 7, 8, 9],
+          'description': 'Play twice. Repeat both times.',
+          'direction': 'ascending',
+          'description': True,
+          'description': True
+          }]}

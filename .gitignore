@@ -1,5 +1,35 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Docker files
+.dockerignore
+Dockerfile
+
+venv/
+env/
+.venv/
+.env/
+
 samconfig.toml
 params.json
 .env
