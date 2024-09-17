@@ -7,7 +7,7 @@ const Navigation = ({ loggedIn, setLoggedIn, cognitoURL }) => {
   const navigate = useNavigate();
 
   const logOutHandler = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     setLoggedIn(false);
     navigate("/");
   };

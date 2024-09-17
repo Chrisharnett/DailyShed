@@ -133,27 +133,27 @@ const UserProfile = ({ user }) => {
                 className="align-items-center dropShadow fs-3"
               >
                 <h1>Exercises</h1>
-                <Row>
-                  {practiceSession.intervals.map((interval, i) => {
-                    return (
-                      <Col key={i} xs={12} sm={3}>
-                        <IntervalDetails
-                          i={i}
-                          interval={interval}
-                          programs={userPrograms.programs}
-                          removeInterval={removeInterval}
-                          userPrograms={userPrograms}
-                          onDetailsChange={(updatedDetails) =>
-                            handleDetailsChange(i, updatedDetails)
-                          }
-                        />
-                      </Col>
-                    );
-                  })}
-                  <Col xs="auto">
-                    <AddButton onClick={handleAddInterval} />
-                  </Col>
-                </Row>
+                {/* <Row> */}
+                {practiceSession.intervals.map((interval, i) => {
+                  return (
+                    <Row key={i}>
+                      <IntervalDetails
+                        i={i}
+                        interval={interval}
+                        programs={userPrograms.programs}
+                        removeInterval={removeInterval}
+                        userPrograms={userPrograms}
+                        onDetailsChange={(updatedDetails) =>
+                          handleDetailsChange(i, updatedDetails)
+                        }
+                      />
+                    </Row>
+                  );
+                })}
+                <Col xs="auto">
+                  <AddButton onClick={handleAddInterval} />
+                </Col>
+                {/* </Row> */}
               </Form.Group>
 
               <hr></hr>

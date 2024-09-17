@@ -1,4 +1,4 @@
-import { Form, Container, Col, Button } from "react-bootstrap";
+import { Form, Container, Col, Button, Row } from "react-bootstrap";
 import ToTitleCase from "../util/ToTitleCase";
 import { useEffect, useState } from "react";
 
@@ -47,9 +47,10 @@ const IntervalDetails = ({
   if (currentInterval) {
     return (
       <>
-        <Container className="midlayer glass mb-3" style={{ width: "auto" }}>
+        <Container className="midlayer glass mb-3" style={{ width: "100%" }}>
           <Col xs={12} md="auto" className="my-2 fs-4">
-            <h1>Exercise {i + 1}</h1>
+            <h2>Exercise {i + 1}</h2>
+            <Form.Label>Your Programs</Form.Label>
             <Form.Select
               value={currentInterval.primaryCollection.primaryCollectionTitle}
               onChange={handleCollectionChange}
@@ -68,38 +69,45 @@ const IntervalDetails = ({
               ))}
             </Form.Select>
           </Col>
-          <h3>Current Key</h3>
-          <p>
-            {ToTitleCase(
-              currentInterval.tonic.tonicSequence[
-                currentInterval.tonic.scaleTonicIndex
-              ]
-            )}{" "}
-            {ToTitleCase(currentInterval.mode)}
-          </p>
-          <h3>Rhythms</h3>
-          <p>
-            {ToTitleCase(
-              currentInterval.rhythmCollection.rhythmCollectionTitle
-            )}
-          </p>
-          <Col xs={12} md="auto" className="my-2 d-flex align-items-left fs-4">
-            <Form.Check
-              type="checkbox"
-              label="Review Exercise"
-              id={`reviewBool-${i}`}
-              checked={interval.reviewExercise}
-              onChange={handleCheckboxChange}
-              className="dropShadow"
-            />
-          </Col>
-          <Button
-            variant="warning"
-            className="m-3"
-            onClick={handleRemoveInterval}
-          >
-            Remove
-          </Button>
+
+          <Row>
+            <Col xs={4}>
+              <h3>Current Key</h3>
+              {ToTitleCase(
+                currentInterval.tonic.tonicSequence[
+                  currentInterval.tonic.scaleTonicIndex
+                ]
+              )}{" "}
+              {ToTitleCase(currentInterval.mode)}
+            </Col>
+            <Col xs={4}>
+              <h3>Rhythms</h3>
+              {ToTitleCase(
+                currentInterval.rhythmCollection.rhythmCollectionTitle
+              )}
+            </Col>
+            <Col xs={4} md="auto" className="my-2 d-flex align-items-left fs-4">
+              <Form.Check
+                type="checkbox"
+                label="Review Exercise"
+                id={`reviewBool-${i}`}
+                checked={interval.reviewExercise}
+                onChange={handleCheckboxChange}
+                className="dropShadow"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={6}>
+              <Button
+                variant="warning"
+                className="m-3"
+                onClick={handleRemoveInterval}
+              >
+                Remove
+              </Button>
+            </Col>
+          </Row>
         </Container>
       </>
     );

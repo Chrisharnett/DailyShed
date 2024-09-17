@@ -2,11 +2,11 @@ import { useState } from "react";
 
 export const useToken = () => {
   const [token, setTokenInternal] = useState(() => {
-    return localStorage.getItem("token");
+    return sessionStorage.getItem("id_token");
   });
 
   const setToken = (newToken) => {
-    localStorage.setItem("token", newToken);
+    sessionStorage.setItem("id_token", newToken);
     setTokenInternal(newToken);
   };
 

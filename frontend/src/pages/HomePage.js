@@ -1,17 +1,18 @@
 import { Container } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getCognitoURL } from "../util/getCognitoURL";
 
-const HomePage = ({ loggedIn, cognitoURL, user }) => {
+const HomePage = ({ loggedIn, user }) => {
   const [entryLink, setEntryLink] = useState(null);
 
   useEffect(() => {
     if (loggedIn) {
       setEntryLink(`/theShed`);
     } else {
-      setEntryLink(cognitoURL);
+      setEntryLink(getCognitoURL);
     }
-  }, [loggedIn, cognitoURL]);
+  }, [loggedIn]);
 
   return (
     <>

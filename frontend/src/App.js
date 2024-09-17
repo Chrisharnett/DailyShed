@@ -14,47 +14,22 @@ import { useEffect, useState } from "react";
 import { Backgrounds } from "./util/Backgrounds.js";
 import { useToken } from "./auth/useToken";
 import useUser from "./auth/useUser";
-import axios from "axios";
 import Spacer from "./util/Spacer.js";
+import Callback from "./auth/Callback";
 
 export function App() {
   const [, setToken] = useToken();
-  const [cognitoURL, setCognitoURL] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get("token");
 
   const { user } = useUser();
 
   useEffect(() => {
-    const t = localStorage.getItem("token");
-    if (t) {
+    const storedToken = sessionStorage.getItem("id_token");
+    if (storedToken) {
       setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
     }
-  }, []);
-
-  useEffect(() => {
-    if (token && !loggedIn) {
-      setToken(token);
-      setLoggedIn(true);
-    }
-  }, [token, setToken, loggedIn]);
-
-  useEffect(() => {
-    const loadCognitoURL = async () => {
-      try {
-        const response = await axios.get(
-          // `${process.env.REACT_APP_API_GATEWAY_PROD}/api/auth/cognito/url`
-          `${process.env.REACT_APP_COGNITO_URL}`
-        );
-        const { url } = response.data;
-        setCognitoURL(url);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    loadCognitoURL();
   }, []);
 
   useEffect(() => {
@@ -70,26 +45,17 @@ export function App() {
   return (
     <>
       <BrowserRouter>
-        <Navigation
-          loggedIn={loggedIn}
-          setLoggedIn={setLoggedIn}
-          cognitoURL={cognitoURL}
-        />
+        <Navigation loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
         <Spacer />
         <Footer />
 
         <Routes>
           <Route
             path="/"
-            element={
-              <HomePage
-                loggedIn={loggedIn}
-                cognitoURL={cognitoURL}
-                user={user}
-              />
-            }
+            element={<HomePage loggedIn={loggedIn} user={user} />}
           />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="/callback" element={<Callback />} />
           <Route element={<PrivateRoute />}>
             <Route path="/theShed" element={<TheShed user={user} />} />
             <Route path="/userProfile" element={<UserProfile user={user} />} />
