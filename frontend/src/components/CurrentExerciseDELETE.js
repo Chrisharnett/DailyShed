@@ -13,4 +13,4 @@ const CurrentExercise = (props) => {
   );
 };
 
-export default CurrentExercise;
+// export default CurrentExercise;

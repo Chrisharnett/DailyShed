@@ -1,9 +1,9 @@
-import { Container, Form, Row, Col, Button } from "react-bootstrap";
+import { Container, Form, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import ProgramCard from "../components/ProgramCard";
 import ProgramBuilderCard from "../components/ProgramBuilderCard";
 import SuccessModal from "../components/SuccessModal";
-import TopSpacer from "../util/TopSpacer";
+import { getProgramData } from "../util/flaskRoutes";
 import axios from "axios";
 
 const Programs = ({ user }) => {
@@ -24,9 +24,9 @@ const Programs = ({ user }) => {
     const fetchProgramData = async () => {
       try {
         const programResponse = await axios.post(
-          `/api/getProgramData/${user.sub}`
+          `${getProgramData}/${user.sub}`
         );
-        handleProgramUpdate(programResponse.data);
+        handleProgramUpdate(programResponse.data.programData);
       } catch (error) {
         console.error("Error: ", error);
       }
@@ -54,45 +54,19 @@ const Programs = ({ user }) => {
     setGotWhatINeed(true);
   };
 
-  const handleSubmit = async (event) => {
-    // event.preventDefault();
-    // const newUserData = { ...playerDetails };
-    // try {
-    //   await updatePlayerDetails(newUserData);
-    //   setMessage("Routine Saved!");
-    //   setOpenSuccessMessage(true);
-    // } catch (error) {
-    //   console.error("Error: ", error);
-    // }
-  };
-
-  const handleDetailsChange = (index) => {
-    // const newExerciseDetails = [...playerDetails.program.exerciseDetails];
-    // newExerciseDetails[index] = updatedDetails;
-    // updatePlayerDetails({
-    //   ...playerDetails,
-    //   program: {
-    //     ...playerDetails.program,
-    //     exerciseDetails: newExerciseDetails,
-    //   },
-    // });
-  };
-
   if (userPrograms.programs.length < 1) {
     return (
       <>
-        <TopSpacer />
         <p>Loading...</p>;
       </>
     );
   } else {
     return (
       <>
-        <TopSpacer />
         <Container className="midLayer glass">
           <h1 className="dropShadow"> {userPrograms.userName} </h1>
           <Form
-            onSubmit={handleSubmit}
+            // onSubmit={handleSubmit}
             className="container justify-content-center"
           >
             <Container>
@@ -136,7 +110,6 @@ const Programs = ({ user }) => {
           setShow={setOpenSuccessMessage}
           message={message}
         />
-        <TopSpacer></TopSpacer>
       </>
     );
   }

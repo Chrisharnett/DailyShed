@@ -2,6 +2,7 @@ import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Form, Button, Container, Modal } from "react-bootstrap";
 import axios from "axios";
+import { logExercise } from "../util/flaskRoutes";
 
 export const SelfAssessmentModal = ({
   show,
@@ -36,7 +37,7 @@ export const SelfAssessmentModal = ({
         incrementMe: exercise.incrementMe,
       };
 
-      const logEntry = await axios.post("/api/logExercise", exerciseEntry);
+      await axios.post(`${logExercise}`, exerciseEntry);
 
       if (exercise.incrementMe) {
         exercise.incrementMe = false;

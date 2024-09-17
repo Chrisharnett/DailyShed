@@ -33,7 +33,7 @@ def collectionCreator():
                 repeatMe = False
                 description = f"{longToneCollection.title.title().replace('_', ' ')}. Play twice. Internalize the sound you create."
                 longToneCollection.addPattern(LongTone(longToneCollection.collectionType, [note], description, directions,
-                                         holdLastNote=holdLastNote, repeatMe=repeatMe, patternID=str(id)))
+                                                    scalePatternType='single_note_long_tone', holdLastNote=holdLastNote, repeatMe=repeatMe, patternID=str(id)))
                 id += 1
             collections.append(longToneCollection)
 

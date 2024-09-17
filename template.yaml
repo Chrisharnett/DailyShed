@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigin: "'*'"
+
+  CognitoCallbackFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: cognitoCallbackHandler.cognitoCallbackHandler
+      Runtime: nodejs16.x
+      CodeUri: ./lambda
+      Environment:
+        Variables:
+          COGNITO_DOMAIN: !Ref CognitoDomain
+          COGNITO_CLIENT_ID: !Ref CognitoClientId
+          COGNITO_CALLBACK: !Ref CognitoCallbackUrl
+          COGNITO_USER_POOL_ID: !Ref CognitoUserPoolId
+          JWT_SECRET: !Ref JwtSecret
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /api/auth/cognito/callback
+            Method: post
+
+  GetCognitoURLFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: getCognitoURLHandler.getCognitoURLHandler
+      Runtime: nodejs16.x
+      CodeUri: ./lambda
+      Environment:
+        Variables:
+          COGNITO_DOMAIN: !Ref CognitoDomain
+          COGNITO_CLIENT_ID: !Ref CognitoClientId
+          COGNITO_CALLBACK: !Ref CognitoCallbackUrl
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApi
+            Path: /api/auth/cognito/url
+            Method: get
+# Optional: Parameterize your environment variables
+Parameters:
+  CognitoDomain:
+    Type: String
+  CognitoClientId:
+    Type: String
+  CognitoCallbackUrl:
+    Type: String
+  CognitoUserPoolId:
+    Type: String
+  JwtSecret:
+    Type: String

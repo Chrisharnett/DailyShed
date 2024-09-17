@@ -40,4 +40,4 @@ const updatePlayerMetadata = (playerDetails, exerciseMetadata) => {
   };
 };
 
-export default updatePlayerMetadata;
+// export default updatePlayerMetadata;

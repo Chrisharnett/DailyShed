@@ -343,7 +343,8 @@ def getCollections(session):
                             'rhythmDescription': pattern.get('rhythmDescription'),
                             'articulation': json.loads(pattern.get('articulation')),
                             'timeSignature': json.loads(pattern.get('timeSignature')),
-                            'rhythmPattern': json.loads(pattern.get('rhythmPattern'))
+                            'rhythmPattern': json.loads(pattern.get('rhythmPattern')),
+                            'measureLength': pattern.get('measureLength')
                         })
                     collections.append({
                         'collectionID': rhythmPatternCollectionID,
@@ -415,7 +416,7 @@ def getPracticeSession(sub):
         session = PracticeSession(sub, userName, rounds, setLength)
 
         for exercise in result:
-            scaleTonicIndex = exercise.get('scaleTonicIndex')
+            # scaleTonicIndex = exercise.get('scaleTonicIndex')
             scaleTonicSequence = json.loads(exercise.get('tonicSequence'))
             tonic = scaleTonicSequence[exercise.get('scaleTonicIndex')]
             mode = exercise.get('mode')
@@ -467,7 +468,6 @@ def getPracticeSession(sub):
         conn.close()
 
 def fetchUserPracticeSession(sub):
-
     conn = getDBConnection()
     try:
         with conn.cursor() as cursor:

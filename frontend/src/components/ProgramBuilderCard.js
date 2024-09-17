@@ -1,6 +1,7 @@
 import { Container, Card, Form, Button } from "react-bootstrap";
 import ToTitleCase from "../util/ToTitleCase";
 import { useEffect, useState } from "react";
+import { saveUserProgram } from "../util/flaskRoutes";
 import axios from "axios";
 
 const ProgramBuilderCard = ({
@@ -138,7 +139,7 @@ const ProgramBuilderCard = ({
     };
 
     try {
-      const response = await axios.post("/api/saveUserProgram", { program });
+      const response = await axios.post(`${saveUserProgram}`, { program });
       setMessage("Program Saved!");
       setOpenSuccessMessage(true);
       handleProgramUpdate(response.data);

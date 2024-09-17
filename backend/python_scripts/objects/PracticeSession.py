@@ -171,11 +171,7 @@ class PracticeSession:
                 interval.exerciseID = self.insertExercise(self.userPracticeSessionID, interval).get('exerciseID')
             else:
                 interval.storeExerciseAttributes(exerciseDetails)
-            # Create the image if it doesn't exist
-            if not checkTheBucketForImage(interval.filename):
-                interval.createImage()
 
-            # interval.createTestImage(intervalID)
             intervalID += 1
             intervalExercise = UserExercise(interval.exerciseID, interval.exerciseName, imageURL(interval.filename), interval.description, interval.incrementMe)
             self.addExerciseToPracticeSession(intervalExercise)

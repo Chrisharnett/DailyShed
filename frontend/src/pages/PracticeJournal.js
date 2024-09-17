@@ -1,8 +1,8 @@
 import Container from "react-bootstrap/Container";
-import TopSpacer from "../util/TopSpacer";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import JournalExerciseCard from "../components/JournalExerciseCard";
+import { getUserJournal } from "../util/flaskRoutes";
 
 const PracticeJournal = ({ user }) => {
   const [journal, setJournal] = useState([]);
@@ -11,8 +11,8 @@ const PracticeJournal = ({ user }) => {
   useEffect(() => {
     const fetchJournal = async () => {
       try {
-        const response = await axios.post(`/api/getUserJournal/${user.sub}`);
-        const { userName, exerciseHistory } = response.data;
+        const response = await axios.post(`${getUserJournal}/${user.sub}`);
+        const { userName, exerciseHistory } = response.data.userHistory;
         setJournal(exerciseHistory);
         setUserName(userName);
       } catch (error) {
@@ -27,14 +27,12 @@ const PracticeJournal = ({ user }) => {
   if (!journal || !userName) {
     return (
       <>
-        <TopSpacer />
         <p>Loading...</p>;
       </>
     );
   } else {
     return (
       <>
-        <TopSpacer />
         <Container className="midLayer glass">
           <h1>{userName}'s Practice Journal</h1>
           <Container className="journal">
@@ -43,7 +41,6 @@ const PracticeJournal = ({ user }) => {
             })}
           </Container>
         </Container>
-        <TopSpacer />
       </>
     );
   }

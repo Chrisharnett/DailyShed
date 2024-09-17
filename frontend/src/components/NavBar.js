@@ -1,7 +1,7 @@
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import Container from "react-bootstrap/Container";
+import { Container, Nav, Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { getCognitoURL } from "../util/getCognitoURL";
+import { useEffect } from "react";
 
 const Navigation = ({ loggedIn, setLoggedIn, cognitoURL }) => {
   const navigate = useNavigate();
@@ -11,6 +11,10 @@ const Navigation = ({ loggedIn, setLoggedIn, cognitoURL }) => {
     setLoggedIn(false);
     navigate("/");
   };
+
+  useEffect(() => {
+    console.log("COGNITO URL NAVBAR: ", getCognitoURL);
+  }, []);
 
   return (
     <>
@@ -45,7 +49,8 @@ const Navigation = ({ loggedIn, setLoggedIn, cognitoURL }) => {
                   className=""
                   href="#login"
                   onClick={() => {
-                    window.location.href = cognitoURL;
+                    window.location.href = getCognitoURL;
+                    // window.location.href = cognitoURL;
                   }}
                 >
                   <h4>Login</h4>

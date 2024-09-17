@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+// import "dotenv/config";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PrivateRoute } from "./auth/privateRoute";
 import Footer from "./components/Footer";
@@ -14,12 +15,12 @@ import { Backgrounds } from "./util/Backgrounds.js";
 import { useToken } from "./auth/useToken";
 import useUser from "./auth/useUser";
 import axios from "axios";
+import Spacer from "./util/Spacer.js";
 
 export function App() {
   const [, setToken] = useToken();
   const [cognitoURL, setCognitoURL] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
-  // const [playerDetails, setPlayerDetails] = useState(null);
 
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
@@ -43,7 +44,10 @@ export function App() {
   useEffect(() => {
     const loadCognitoURL = async () => {
       try {
-        const response = await axios.get("/api/auth/cognito/url");
+        const response = await axios.get(
+          // `${process.env.REACT_APP_API_GATEWAY_PROD}/api/auth/cognito/url`
+          `${process.env.REACT_APP_COGNITO_URL}`
+        );
         const { url } = response.data;
         setCognitoURL(url);
       } catch (e) {
@@ -52,16 +56,6 @@ export function App() {
     };
     loadCognitoURL();
   }, []);
-
-  // useEffect(() => {
-  //   const fetchPlayerDetails = async () => {
-  //     const response = await axios.get(`/api/getUserData/${user.sub}`);
-  //     setPlayerDetails(response.data.userData);
-  //   };
-  //   if (user) {
-  //     fetchPlayerDetails();
-  //   }
-  // }, [user]);
 
   useEffect(() => {
     const randomBackground =
@@ -81,8 +75,9 @@ export function App() {
           setLoggedIn={setLoggedIn}
           cognitoURL={cognitoURL}
         />
-
+        <Spacer />
         <Footer />
+
         <Routes>
           <Route
             path="/"
@@ -106,6 +101,7 @@ export function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      <Spacer />
     </>
   );
 }

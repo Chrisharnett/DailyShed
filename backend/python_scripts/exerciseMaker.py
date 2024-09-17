@@ -4,7 +4,6 @@ from exerciseCollections.collectionCreator import collectionCreator
 from queries.queries import (
     updateUserSession,
     buildDatabase,
-    getCollections,
     getPracticeSession,
     logExerciseDetails,
     fetchUserPrograms,
@@ -15,8 +14,9 @@ from queries.queries import (
     insertNewUserProgram,
     fetchUserPracticeSession
 )
-from objects.PracticeSession import PracticeSession
+from util.exerciseBucket import checkTheBucketForImage
 import boto3
+import traceback
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -26,6 +26,7 @@ s3_client = boto3.client("s3")
 def home():
     return "Connected"
 
+#ACTIVE
 @app.route("/addNewUserProgram", methods=["GET", "POST"])
 def addNewUserProgram():
     try:
@@ -56,10 +57,10 @@ def addNewUserSession():
             "error": str(e)
         })
 
-@app.route("/userExerciseLog", methods=["GET", "POST"])
-def userExerciseLog():
+@app.route("/userExerciseLog/<sub>", methods=["GET", "POST"])
+def userExerciseLog(sub):
     try:
-        sub = request.get_json().get('sub')
+        # sub = request.get_json().get('sub')
         history = fetchUserExerciseLog(sub)
         return {
                 "statusCode": 200,
@@ -71,10 +72,10 @@ def userExerciseLog():
             "error": str(e)
         })
 
-@app.route("/getRhythmPatternOptions", methods=["GET", "POST"])
-def getRhythmPatternOptions():
+@app.route("/getRhythmPatternOptions/<sub>", methods=["GET", "POST"])
+def getRhythmPatternOptions(sub):
     try:
-        sub = request.get_json().get('sub')
+        # sub = request.get_json().get('sub')
         options = fetchRhythmPatternOptions(sub)
         return {
                 "statusCode": 200,
@@ -101,10 +102,11 @@ def getScaleModes():
             "error": str(e)
         })
 
-@app.route("/getUserPrograms", methods=["GET", "POST"])
-def getUserPrograms():
+#ACTIVE
+@app.route("/getUserPrograms/<sub>", methods=["GET", "POST"])
+def getUserPrograms(sub):
     try:
-        sub = request.get_json().get('sub')
+        # sub = request.get_json().get('sub')
         programs = fetchUserPrograms(sub)
         return {
                 "statusCode": 200,
@@ -117,10 +119,11 @@ def getUserPrograms():
             "error": str(e)
         })
 
-@app.route("/getProgramData", methods=["GET", "POST"])
-def getProgramData():
+#ACTIVE
+@app.route("/getProgramData/<sub>", methods=["GET", "POST"])
+def getProgramData(sub):
     try:
-        sub = request.get_json().get('sub')
+        # sub = request.get_json().get('sub')
         programData = fetchProgramData(sub)
         return {
                 "statusCode": 200,
@@ -133,10 +136,11 @@ def getProgramData():
             "error": str(e)
         })
 
-@app.route("/getUserPracticeSession", methods=["GET", "POST"])
-def getUserPracticeSession():
+#ACTIVE
+@app.route("/getUserPracticeSession/<sub>", methods=["GET", "POST"])
+def getUserPracticeSession(sub):
     try:
-        sub = request.get_json().get('sub')
+        # sub = request.get_json().get('sub')
         practiceSession = fetchUserPracticeSession(sub)
         return {
                 "statusCode": 200,
@@ -163,12 +167,16 @@ def logExercise():
             "error": str(e)
         })
 
-@app.route("/generateSet", methods=["GET", "POST"])
-def generateSet():
+@app.route("/generateSet/<sub>", methods=["GET", "POST"])
+def generateSet(sub):
     try:
-        sub = request.get_json().get('sub')
+        # sub = request.get_json().get('sub')
         practiceSession = getPracticeSession(sub)
         practiceSession.createSession()
+        for interval in practiceSession.intervals:
+            # Create the image if it doesn't exist
+            if not checkTheBucketForImage(interval.filename):
+                interval.createImage()
         return {
                 "statusCode": 200,
                 "sessionID": practiceSession.userPracticeSessionID,
@@ -177,6 +185,7 @@ def generateSet():
         }
 
     except Exception as e:
+        traceback.print_exc()
         return jsonify({
             "statusCode": 400,
             "error": str(e)

@@ -43,8 +43,6 @@ class NotePattern(MusicPattern):
     def holdLastNote(self, value):
         self.__holdLastNote = value
 
-
-
 class ScalePattern(NotePattern):
     def __init__(self, notePatternType, notePattern, description, scalePatternType, directions = ['ascending', 'descending', 'ascending_descending', 'descending_ascending'], repeatMe = True, holdLastNote = True, patternID=None):
         super().__init__(notePatternType, notePattern, description, directions, repeatMe, holdLastNote, patternID=patternID)
@@ -60,7 +58,7 @@ class ScalePattern(NotePattern):
 
 class LongTone(ScalePattern):
     def __init__(self, notePatternType, notePattern, description, directions='static', repeatMe = False, holdLastNote = False, patternID=None):
-        super().__init__(notePatternType, notePattern, description, 'long_tone', directions, repeatMe, holdLastNote, patternID)
+        super().__init__(notePatternType, notePattern, description, scalePatternType='long_tone', directions=directions, repeatMe = repeatMe, holdLastNote = holdLastNote, patternID=patternID)
 
 
 class CreativePattern(NotePattern):

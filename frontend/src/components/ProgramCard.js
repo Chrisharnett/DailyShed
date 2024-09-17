@@ -1,7 +1,6 @@
-import { Container, Card, Button } from "react-bootstrap";
+import { Container, Card } from "react-bootstrap";
 import ToTitleCase from "../util/ToTitleCase";
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 const ProgramCard = ({ i, user, program }) => {
   const [programLength, setProgramLength] = useState(0);
@@ -9,7 +8,6 @@ const ProgramCard = ({ i, user, program }) => {
   useEffect(() => {}, []);
 
   const programTitle = () => {
-    // const scalePatternType = program.programTitle.split(",")[1];
     const scalePatternType = program.programTitle;
     return (
       ToTitleCase(program.tonicSequence[program.scaleTonicIndex]) +

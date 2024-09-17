@@ -1,8 +1,8 @@
 import Container from "react-bootstrap/Container";
 import ExerciseCard from "../components/ExerciseCard";
 import { useState, useEffect, useRef } from "react";
+import { setGenerator } from "../util/flaskRoutes";
 import axios from "axios";
-import TopSpacer from "../util/TopSpacer";
 
 const TheShed = ({ user }) => {
   const [currentSet, setCurrentSet] = useState(null);
@@ -25,7 +25,7 @@ const TheShed = ({ user }) => {
   useEffect(() => {
     const handleNextPracticeSession = async () => {
       try {
-        const response = await axios.post(`/api/generateSet/${user.sub}`);
+        const response = await axios.post(`${setGenerator}/${user.sub}`);
         const sessionData = response.data;
         setSessionID(sessionData.sessionID);
         setCurrentSet(sessionData.set);
@@ -43,7 +43,6 @@ const TheShed = ({ user }) => {
   if (!currentSet) {
     return (
       <>
-        <TopSpacer />
         <Container className="midLayer glass">
           <div className="titles p-2">
             <h2 className="dropShadow">Loading Practice Routine</h2>
@@ -54,7 +53,6 @@ const TheShed = ({ user }) => {
   } else {
     return (
       <>
-        <TopSpacer />
         <Container className="midLayer glass">
           <div className="titles p-2">
             <h2 className="dropShadow">Practice Time</h2>
@@ -78,7 +76,6 @@ const TheShed = ({ user }) => {
             }
           </div>
         </Container>
-        <TopSpacer />
       </>
     );
   }

@@ -4,7 +4,13 @@ import AddButton from "../components/AddButton";
 import IntervalDetails from "../components/IntervalDetails";
 import SuccessModal from "../components/SuccessModal";
 import AddIntervalModal from "../components/AddIntervalModal";
-import TopSpacer from "../util/TopSpacer";
+import {
+  getUserPracticeSession,
+  getScaleModes,
+  getRhythmOptions,
+  saveUserSession,
+  getUserPrograms,
+} from "../util/flaskRoutes";
 import axios from "axios";
 
 const UserProfile = ({ user }) => {
@@ -20,22 +26,22 @@ const UserProfile = ({ user }) => {
     const fetchPracticeSession = async () => {
       try {
         const sessionResponse = await axios.post(
-          `/api/getUserPracticeSession/${user.sub}`
+          `${getUserPracticeSession}/${user.sub}`
         );
-        setPracticeSession(sessionResponse.data);
+        setPracticeSession(sessionResponse.data.practiceSession);
 
         const programResponse = await axios.post(
-          `/api/getUserPrograms/${user.sub}`
+          `${getUserPrograms}/${user.sub}`
         );
-        setUserPrograms(programResponse.data);
+        setUserPrograms(programResponse.data.programs);
 
-        const scaleModesResponse = await axios.get("/api/getScaleModes");
-        setScaleModes(scaleModesResponse.data);
+        const scaleModesResponse = await axios.get(`${getScaleModes}`);
+        setScaleModes(scaleModesResponse.data.modes);
 
         const rhythmOptionsResponse = await axios.post(
-          `/api/getRhythmOptions/${user.sub}`
+          `${getRhythmOptions}/${user.sub}`
         );
-        setRhythmOptions(rhythmOptionsResponse.data);
+        setRhythmOptions(rhythmOptionsResponse.data.rhythmPatternOptions);
       } catch (error) {
         console.error("Error: ", error);
       }
@@ -47,7 +53,7 @@ const UserProfile = ({ user }) => {
 
   const updatePlayerSession = async (newSession) => {
     try {
-      await axios.post(`/api/saveUserSession`, newSession);
+      await axios.post(`${saveUserSession}`, newSession);
     } catch (error) {
       console.error("Error: ", error);
     }
@@ -107,14 +113,12 @@ const UserProfile = ({ user }) => {
   if (!userPrograms || !practiceSession || !scaleModes || !rhythmOptions) {
     return (
       <>
-        <TopSpacer />
         <p>Loading...</p>;
       </>
     );
   } else {
     return (
       <>
-        <TopSpacer />
         <Container className="midLayer glass">
           <h1 className="dropShadow"> {userPrograms.programs.userName} </h1>
           <Form
@@ -188,8 +192,6 @@ const UserProfile = ({ user }) => {
           setShow={setOpenSuccessMessage}
           message={message}
         />
-
-        <TopSpacer></TopSpacer>
       </>
     );
   }

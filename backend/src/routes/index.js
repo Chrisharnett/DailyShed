@@ -12,17 +12,17 @@ import { saveUserProgramRoute } from "./saveUserProgramRoute.js";
 import { saveUserSessionRoute } from "./saveUserSessionRoute.js";
 
 export const routes = [
-  saveUserSessionRoute,
-  saveUserProgramRoute,
-  getProgramDataRoute,
-  getRhythmOptionsRoute,
-  getScaleModesRoute,
-  getUserProgramsRoute,
-  getUserPracticeSessionRoute,
-  getUserJournalRoute,
-  generateSetRoute,
+  // saveUserSessionRoute,
+  // saveUserProgramRoute,
+  // getProgramDataRoute,
+  // getRhythmOptionsRoute,
+  // getScaleModesRoute,
+  // getUserProgramsRoute,
+  // getUserPracticeSessionRoute,
+  // getUserJournalRoute,
+  // generateSetRoute,
   getCognitoURLRoute,
   cognitoCallbackRoute,
-  generateSetRoute,
-  logExerciseRoute,
+  // generateSetRoute,
+  // logExerciseRoute,
 ];

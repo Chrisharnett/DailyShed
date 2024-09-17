@@ -1,7 +1,5 @@
-from musicData.modes import modeList
 from objects.NotePattern import NotePattern
 from objects.PatternCollection import PatternCollection
-from musicData.modes import modeList
 
 def getNotePatternRhythmLength(pattern, holdLastNote):
     if holdLastNote:
