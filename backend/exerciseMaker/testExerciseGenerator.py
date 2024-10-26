@@ -1,6 +1,4 @@
 from musicData.instruments import instrumentList
-from musicData.modes import modeList
-from musicData.tonicSequences import tonicSequenceList
 from objects.Instrument import Instrument
 from objects.Scale import Scale
 from objects.ScaleExercise import ScaleExercise
