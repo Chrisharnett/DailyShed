@@ -72,6 +72,42 @@ def fetchProgramData(sub):
     finally:
         conn.close()
 
+def fetchUserPracticeLog(sub):
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            query = "SELECT * FROM get_practice_log WHERE sub = %s"
+            cursor.execute(query, (sub,))
+            result = cursor.fetchall()
+        history = {'userName': result[0].get('userName'),
+                   'exerciseHistory': []}
+        for exercise in result:
+            playHistoryRaw = exercise.get('playHistory').split('| ')
+            playHistory = []
+            for play in playHistoryRaw:
+                details = play.split('-', 1)
+                if len(details) == 2:
+                    playHistory.append({'date': details[0], 'comment': '', 'rating': details[1][1:]})
+                else:
+                    playHistory.append({'date': details[0], 'comment': details[1], 'rating': details[2]})
+            history.get('exerciseHistory').append({
+                'exerciseName': exercise.get('exerciseName'),
+                'playCount': exercise.get('playCount'),
+                'lastPlay': exercise.get('lastPlay'),
+                'playHistory': playHistory,
+                'averageRating': exercise.get('averageRating'),
+                'imageFilename': imageURL(exercise.get('imageFilename')),
+            })
+        return history
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {str(e)}")
+        return False
+
+    finally:
+        conn.close()
+
 def fetchUserExerciseLog(sub):
     conn = getDBConnection()
     try:
