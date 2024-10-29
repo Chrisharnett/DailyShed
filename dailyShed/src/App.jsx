@@ -1,9 +1,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PrivateRoute } from "./auth/privateRoute";
-import Footer from "./components/Footer";
+import Footer from "./components/navigation/Footer.jsx";
 import NotFoundPage from "./pages/NotFoundPage";
-import Navigation from "./components/NavBar";
+import Navigation from "./components/navigation/NavBar";
 import TheShed from "./pages/TheShed";
 import UserProfile from "./pages/UserProfile";
 import PracticeJournal from "./pages/PracticeJournal";
@@ -14,6 +14,7 @@ import { Backgrounds } from "./util/Backgrounds.jsx";
 import Spacer from "./util/Spacer.jsx";
 import Callback from "./auth/Callback.jsx";
 import { UserProvider } from "./auth/UserContext.jsx";
+import RoutineProvider from "./context/RoutineContext.jsx";
 
 export function App() {
   useEffect(() => {
@@ -35,7 +36,14 @@ export function App() {
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/callback" element={<Callback />} />
           <Route element={<PrivateRoute />}>
-            <Route path="/theShed" element={<TheShed />} />
+            <Route
+              path="/theShed"
+              element={
+                <RoutineProvider>
+                  <TheShed />
+                </RoutineProvider>
+              }
+            />
             <Route path="/userProfile" element={<UserProfile />} />
             <Route path="/practiceJournal" element={<PracticeJournal />} />
             <Route path="/programs" element={<Programs />} />

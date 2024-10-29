@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Container } from "react-bootstrap";
-import { FadeInContainer } from "../animation/animations";
+import { FadeInContainer } from "../../animation/animations";
 
 const GlassContainer = ({
   title,

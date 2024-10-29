@@ -2,7 +2,7 @@ import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Form, Button, Container, Modal } from "react-bootstrap";
 import axios from "axios";
-import { logExercise } from "../util/flaskRoutes";
+import { logExercise } from "../../util/flaskRoutes";
 import PropTypes from "prop-types";
 
 export const SelfAssessmentModal = ({

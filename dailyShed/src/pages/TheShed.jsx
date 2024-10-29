@@ -1,83 +1,75 @@
-import Container from "react-bootstrap/Container";
-import ExerciseCard from "../components/ExerciseCard";
-import { useState, useEffect, useRef } from "react";
-import { setGenerator } from "../util/flaskRoutes";
-import axios from "axios";
-import { useUserContext } from "../auth/useUserContext";
-import LoadingScreen from "../components/LoadingScreen";
-import GlassContainer from "../components/GlassContainer";
+// Desc: This is the main page for the dailyShed app. It will use the Routine Builder for users to set up their practice routine and display their practice routine.
+import { useEffect, useState } from "react";
+import LoadingScreen from "../components/common/LoadingScreen";
+import GlassContainer from "../components/common/GlassContainer";
+import PracticeRoutine from "../components/PracticeRoutine/PracticeRoutine";
+import RoutineBuilder from "../components/RoutineBuilder/RoutineBuilder";
+import PracticeDebrief from "../components/PracticeDebrief/PracticeDebrief";
 
 const TheShed = () => {
-  const [currentSet, setCurrentSet] = useState(null);
-  const [exerciseCount, setExerciseCount] = useState(1);
-  const [buttonText, setButtonText] = useState("Next Exercise");
-  const [sessionID, setSessionID] = useState(null);
-  const [cueExerciseCard, setCueExerciseCard] = useState(false);
-  const setCreated = useRef(false);
-  const [rounds, setRounds] = useState(1);
-  const { user } = useUserContext();
+  const [title, setTitle] = useState("");
+  const [subtitle, setSubtitle] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
 
   useEffect(() => {
-    if (currentSet) {
-      if (exerciseCount === currentSet.length) {
-        setButtonText("Complete!");
-      } else {
-        setButtonText("Next Exercise");
-      }
+    switch (currentStep) {
+      case 1:
+        setSubtitle("Create Your Practice Routine");
+        break;
+      case 2:
+        setSubtitle("Practice time");
+        break;
+      case 3:
+        setSubtitle("Excellent work!");
+        break;
+      default:
+        setSubtitle("Just a moment");
+        break;
     }
-  }, [currentSet, exerciseCount]);
+  }, [currentStep]);
 
-  useEffect(() => {
-    const handleNextPracticeSession = async () => {
-      try {
-        const response = await axios.post(`${setGenerator}/${user.sub}`);
-        const sessionData = response.data;
-        setSessionID(sessionData.sessionID);
-        setCurrentSet(sessionData.set);
-        setRounds(sessionData.rounds);
-      } catch (error) {
-        console.error("Error: ", error);
-      }
-    };
-    if (!setCreated.current && user) {
-      setCreated.current = true;
-      handleNextPracticeSession();
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <RoutineBuilder
+            onNext={() => setCurrentStep(2)}
+            setSubtitle={setTitle}
+          />
+        );
+      case 2:
+        setTitle("Practice time");
+        return (
+          <PracticeRoutine
+            onNext={() => setCurrentStep(2)}
+            setSubtitle={setTitle}
+          />
+        );
+      case 3:
+        setTitle("Excellent work!");
+        return (
+          <PracticeDebrief
+            onNext={() => setCurrentStep(2)}
+            setSubtitle={setTitle}
+          />
+        );
+      default:
+        return <LoadingScreen message="Just a moment" />;
     }
-  }, [user]);
+  };
 
-  if (!currentSet) {
-    return <LoadingScreen message="Loading Practice Routine" />;
-  } else {
-    return (
-      <>
-        <GlassContainer
-          title="Practice Time"
-          subtitle={`Exercise ${exerciseCount} of ${
-            currentSet.length * rounds
-          }`}
-          startAnimation={true}
-          cueNextAnimation={setCueExerciseCard}
-        >
-          <Container className="d-flex flex-column align-items-center">
-            {
-              <ExerciseCard
-                sessionID={sessionID}
-                exerciseCount={exerciseCount}
-                setExerciseCount={setExerciseCount}
-                currentSet={currentSet}
-                setCurrentSet={setCurrentSet}
-                buttonText={buttonText}
-                setCreated={setCreated}
-                rounds={rounds}
-                user={user}
-                startAnimation={cueExerciseCard}
-              />
-            }
-          </Container>
-        </GlassContainer>
-      </>
-    );
-  }
+  return (
+    <>
+      <GlassContainer
+        title={title}
+        subtitle={subtitle}
+        startAnimation={true}
+        // cueNextAnimation={setCueExerciseCard}
+      >
+        {renderStep()}
+      </GlassContainer>
+    </>
+  );
 };
 
 export default TheShed;

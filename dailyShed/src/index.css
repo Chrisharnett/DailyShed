@@ -183,8 +183,10 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%; /* Ensure it takes the full width of the column */
-  height: 100%; /* Ensure it takes the full height of the column */
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
 }
 .addIntervalButton {
   background-color: #4caf50; /* Green background */
@@ -206,6 +208,33 @@ code {
 
 .addIntervalButton:hover {
   background-color: #45a049; /* Darker green on hover */
+}
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: rgb(214, 214, 214);
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the button */
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }
 
 @media (prefers-color-scheme: light) {

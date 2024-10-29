@@ -13,3 +13,4 @@ export const getUserJournal = `${flaskURL}/userExerciseLog`;
 export const getProgramData = `${flaskURL}/getProgramData`;
 export const saveUserProgram = `${flaskURL}/addNewUserProgram`;
 export const saveUserSession = `${flaskURL}/addNewUserSession`;
+export const getRoutine = `${flaskURL}/getRoutine`;

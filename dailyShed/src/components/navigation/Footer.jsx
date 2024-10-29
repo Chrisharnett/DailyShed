@@ -1,19 +1,20 @@
 import { Nav, Navbar, Container } from "react-bootstrap";
-import { InFromBelowAnimation } from "../animation/animations";
+import { InFromBelowAnimation } from "../../animation/animations";
 
 const Footer = () => {
   return (
     <Navbar className="navbar-dark bg-black p-2 fixed-bottom mt-2">
-      <Container>
+      <Container
+        fluid
+        className="d-flex justify-content-between align-items-center"
+      >
         <InFromBelowAnimation>
-          <Navbar.Brand className="">
-            <h6>Copyright 2023</h6>
-          </Navbar.Brand>
+          <Navbar.Text className="">HarnettMusic 2023</Navbar.Text>
         </InFromBelowAnimation>
         <Nav>
           <InFromBelowAnimation>
             <Nav.Link className="" href="#top">
-              <h6>Back to Top</h6>
+              Back to Top
             </Nav.Link>
           </InFromBelowAnimation>
         </Nav>

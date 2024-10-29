@@ -12,7 +12,8 @@ from queries.queries import (
     fetchUserExerciseLog,
     fetchProgramData,
     insertNewUserProgram,
-    fetchUserPracticeSession
+    fetchUserPracticeSession,
+    fetchRoutine
 )
 from util.exerciseBucket import checkTheBucketForImage
 import boto3
@@ -147,6 +148,20 @@ def getUserPracticeSession(sub):
                 "practiceSession": practiceSession
         }
 
+    except Exception as e:
+        return jsonify({
+            "statusCode": 400,
+            "error": str(e)
+        })
+
+@app.route("/getRoutine/<sub>", methods=["GET"])
+def getRoutine(sub):
+    try:
+        session = fetchRoutine(sub)
+        return {
+            "statusCode": 200,
+            "session": session
+        }
     except Exception as e:
         return jsonify({
             "statusCode": 400,

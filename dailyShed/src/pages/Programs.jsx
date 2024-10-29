@@ -2,7 +2,7 @@ import { Container, Form, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import ProgramCard from "../components/ProgramCard";
 import ProgramBuilderCard from "../components/ProgramBuilderCard";
-import SuccessModal from "../components/SuccessModal";
+import SuccessModal from "../components/modals/SuccessModal";
 import { getProgramData } from "../util/flaskRoutes";
 import axios from "axios";
 import { useUserContext } from "../auth/useUserContext";

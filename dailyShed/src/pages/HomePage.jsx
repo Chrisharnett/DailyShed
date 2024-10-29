@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getCognitoURL } from "../util/getCognitoURL";
 import { useUserContext } from "../auth/useUserContext";
-import GlassContainer from "../components/GlassContainer";
+import GlassContainer from "../components/common/GlassContainer";
 
 const HomePage = () => {
   const [entryLink, setEntryLink] = useState(null);

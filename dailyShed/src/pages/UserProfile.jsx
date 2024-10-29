@@ -1,8 +1,8 @@
-import { Form, Row, Col, Button } from "react-bootstrap";
+import { Form, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import AddButton from "../components/AddButton";
+import AddButton from "../components/common/AddButton";
 import IntervalDetails from "../components/IntervalDetails";
-import SuccessModal from "../components/SuccessModal";
+import SuccessModal from "../components/modals/SuccessModal";
 import AddIntervalModal from "../components/AddIntervalModal";
 import {
   getUserPracticeSession,
@@ -13,14 +13,14 @@ import {
 } from "../util/flaskRoutes";
 import axios from "axios";
 import { useUserContext } from "../auth/useUserContext";
-import GlassContainer from "../components/GlassContainer";
-import LoadingScreen from "../components/LoadingScreen";
+import GlassContainer from "../components/common/GlassContainer";
+import LoadingScreen from "../components/common/LoadingScreen";
 import { motion } from "framer-motion";
 import {
   itemSpellerVariantDefaults,
   containerSpellerVariantDefaults,
 } from "../config/animationConfig";
-import AnimatedButton from "../components/AnimatedButton";
+import AnimatedButton from "../components/common/AnimatedButton";
 
 const UserProfile = () => {
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false);
@@ -31,15 +31,7 @@ const UserProfile = () => {
   const [rhythmOptions, setRhythmOptions] = useState(null);
   const [openNewInterval, setOpenNewInterval] = useState(false);
   const [cueExercises, setCueExercises] = useState(false);
-  const [cueNextIntervalAnimation, setCueNextIntervalAnimation] = useState([]);
   const { user } = useUserContext();
-
-  // useEffect(() => {
-  //   if (practiceSession?.intervals) {
-  //     const initialAnimations = practiceSession.intervals.map(() => false);
-  //     setCueNextIntervalAnimation(initialAnimations);
-  //   }
-  // }, [practiceSession?.intervals]);
 
   useEffect(() => {
     const fetchPracticeSession = async () => {
@@ -69,16 +61,6 @@ const UserProfile = () => {
       fetchPracticeSession();
     }
   }, [user]);
-
-  // useEffect(() => {
-  //   if (cueExercises && cueNextIntervalAnimation.length > 0) {
-  //     setCueNextIntervalAnimation((prevAnimations) => {
-  //       const updatedAnimations = [...prevAnimations];
-  //       updatedAnimations[0] = true;
-  //       return updatedAnimations;
-  //     });
-  //   }
-  // }, [cueExercises, cueNextIntervalAnimation]);
 
   const updatePlayerSession = async (newSession) => {
     try {
@@ -138,16 +120,6 @@ const UserProfile = () => {
     e.preventDefault();
     setOpenNewInterval(true);
   };
-
-  // const cueNextAnimation = (currentIndex) => {
-  //   setCueNextIntervalAnimation((prevAnimations) => {
-  //     const updatedAnimations = [...prevAnimations];
-  //     if (currentIndex + 1 < updatedAnimations.length) {
-  //       updatedAnimations[currentIndex + 1] = true;
-  //     }
-  //     return updatedAnimations;
-  //   });
-  // };
 
   if (!userPrograms || !practiceSession || !scaleModes || !rhythmOptions) {
     return <LoadingScreen />;

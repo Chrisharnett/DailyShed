@@ -2,7 +2,7 @@ import { Form, Container, Col, Row } from "react-bootstrap";
 import ToTitleCase from "../util/ToTitleCase";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import AnimatedButton from "./AnimatedButton";
+import AnimatedButton from "./common/AnimatedButton";
 
 const IntervalDetails = ({
   i,

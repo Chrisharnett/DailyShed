@@ -1,9 +1,9 @@
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getCognitoURL } from "../util/getCognitoURL";
-import { useUserContext } from "../auth/useUserContext";
-import { applicationData } from "../config/applicationConfig";
-import { InFromAboveAnimation } from "../animation/animations";
+import { getCognitoURL } from "../../util/getCognitoURL";
+import { useUserContext } from "../../auth/useUserContext";
+import { applicationData } from "../../config/applicationConfig";
+import { InFromAboveAnimation } from "../../animation/animations";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -26,15 +26,15 @@ const Navigation = () => {
         id="top"
         fixed="top"
       >
-        <InFromAboveAnimation>
-          <Navbar.Brand href={homePage.path}>{homePage.brand}</Navbar.Brand>
-        </InFromAboveAnimation>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          {user && (
-            <Container className="">
-              <Nav className="me-auto">
-                {pageLinks.map(
+        <Container fluid>
+          <InFromAboveAnimation>
+            <Navbar.Brand href={homePage.path}>{homePage.brand}</Navbar.Brand>
+          </InFromAboveAnimation>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              {user &&
+                pageLinks.map(
                   (page, index) =>
                     location.pathname !== page.path && (
                       <InFromAboveAnimation key={index}>
@@ -42,21 +42,14 @@ const Navigation = () => {
                       </InFromAboveAnimation>
                     )
                 )}
-              </Nav>
-            </Container>
-          )}
-          <Container className="d-flex justify-content-center align-items-right">
-            {user ? (
-              <Nav>
-                <InFromAboveAnimation>
+            </Nav>
+            <Nav className="ms-auto">
+              <InFromAboveAnimation>
+                {user ? (
                   <Nav.Link className="" href="#" onClick={logOutHandler}>
                     <h4>Logout</h4>
                   </Nav.Link>
-                </InFromAboveAnimation>
-              </Nav>
-            ) : (
-              <Nav>
-                <InFromAboveAnimation>
+                ) : (
                   <Nav.Link
                     className=""
                     href="#login"
@@ -66,11 +59,11 @@ const Navigation = () => {
                   >
                     <h4>Login</h4>
                   </Nav.Link>
-                </InFromAboveAnimation>
-              </Nav>
-            )}
-          </Container>
-        </Navbar.Collapse>
+                )}
+              </InFromAboveAnimation>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
       </Navbar>
     </>
   );

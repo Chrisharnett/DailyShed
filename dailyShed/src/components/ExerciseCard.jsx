@@ -1,10 +1,10 @@
 import { Card, Container } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { SelfAssessmentModal } from "./SelfAssessmentModal";
-import { SessionCompleteModal } from "./SessionCompleteModal";
+import { SelfAssessmentModal } from "./modals/SelfAssessmentModal";
+import { SessionCompleteModal } from "./modals/SessionCompleteModal";
 import PropTypes from "prop-types";
 import { FadeInContainer } from "../animation/animations";
-import AnimatedButton from "./AnimatedButton";
+import AnimatedButton from "./common/AnimatedButton";
 
 const ExerciseCard = ({
   exerciseCount,

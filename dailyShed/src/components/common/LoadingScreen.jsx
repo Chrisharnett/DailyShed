@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { FadeInContainer } from "../animation/animations";
+import { FadeInContainer } from "../../animation/animations";
 import { useEffect, useState } from "react";
 
 const LoadingScreen = ({ message }) => {

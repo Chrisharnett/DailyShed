@@ -543,6 +543,24 @@ def fetchUserPracticeSession(sub):
     finally:
         conn.close()
 
+def fetchRoutine(sub):
+    conn = getDBConnection()
+    try:
+        with conn.cursor() as cursor:
+            query = "SELECT * FROM Daily_Shed.get_routine WHERE sub = %s"
+            cursor.execute(query, (sub,))
+            result = cursor.fetchall()
+        if not result:
+            # TODO: Create default programs
+            result = ["ERROR", "ALSO AN ERROR"]
+        return result
+
+    except Exception as e:
+        return str(e), 500
+
+    finally:
+        conn.close()
+
 def fetchUserPrograms(sub):
     conn = getDBConnection()
     try:

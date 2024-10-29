@@ -6,7 +6,7 @@ import {
   defaultInFromAboveAnimation,
   defaultInFromBelowAnimation,
 } from "../config/animationConfig";
-import AnimatedButton from "../components/AnimatedButton";
+import AnimatedButton from "../components/common/AnimatedButton";
 
 const randomizedDuration = (defaultDuration) => {
   return defaultDuration + Math.random() * 0.4 - 0.2;
